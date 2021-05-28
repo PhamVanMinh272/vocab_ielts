@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vocab</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='home_page.css') }}">
+</head>
+<body>
+    <header>
+        <img class="logo" src="{{ url_for('static', filename='logo.png') }}">
+    </header>
+    <div class="menu">
+
+    </div>
+    <div class="content">
+        <div class="form-container">
+            <form class="add-words" action="/save_words" method="POST">
+                <div>
+                    <label>
+                        Vietnamese word:
+                    </label>
+                    <input name="viet">
+                </div>
+                <div>
+                    <label>
+                        English word:
+                    </label>
+                    <input name="eng">
+                </div>
+                <button type="submit">
+                    Save
+                </button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
