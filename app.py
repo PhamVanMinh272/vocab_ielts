@@ -4,7 +4,7 @@ from flask import (
 import json
 
 app = Flask(__name__)
-app.secret_key = 'aksna'
+app.secret_key = 'why_do_we_need_this?'
 
 @app.route('/', methods=['GET'])
 def home_page():
@@ -31,7 +31,6 @@ def save_words():
     except Exception as ex:
         flash('The words {} - {} were failed to save'.format(viet, eng), 'error')
         return redirect('/')
-
 
 
 if __name__ == "__main__":
