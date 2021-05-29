@@ -7,18 +7,17 @@
 {% block content %}
     <div class="form-container">
         <form class="add-words" action="/save_words" method="POST">
-            <div>
-                <label>
-                    Vietnamese word:
-                </label>
-                <input type="text" name="viet">
-            </div>
-            <div>
-                <label>
-                    English word:
-                </label>
-                <input type="text" name="eng">
-            </div>
+            {% for field in form %}
+                <div>
+                    {{ field.label }}
+                    {{ field }}
+                    {% for field, errors in form.errors.items() %}
+                        <small class="form-text text-muted ">
+                            {{ ', '.join(errors) }}
+                        </small>
+                    {% endfor %}
+                </div>
+            {% endfor %}
             <button type="submit">
                 Save
             </button>
