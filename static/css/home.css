@@ -4,7 +4,7 @@
 
 .add-words input[type="text"] {
     float: right;
-    width: 70%;
+    width: 60%;
     height: calc(100% - 2px);
     border: 1px solid darkcyan;
     border-radius: 10px;
@@ -32,9 +32,10 @@
 
 .form-container {
     display: block;
-    padding: 50px 150px;
+    padding: 50px 10%;
     border: 1px solid darkcyan;
     border-radius: 15px;
+    margin-top: 10px;
 }
 
 .form-container button {
