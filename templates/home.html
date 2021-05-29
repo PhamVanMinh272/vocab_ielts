@@ -1,10 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-
-</body>
-</html>
+{% extends 'base.html' %}
+{% block title %}Vocab{% endblock %}
+{% block head %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+{% endblock %}
+{% block content %}
+    <div class="form-container">
+        <form class="add-words" action="/save_words" method="POST">
+            <div>
+                <label>
+                    Vietnamese word:
+                </label>
+                <input type="text" name="viet">
+            </div>
+            <div>
+                <label>
+                    English word:
+                </label>
+                <input type="text" name="eng">
+            </div>
+            <button type="submit">
+                Save
+            </button>
+        </form>
+    </div>
+    <hr>
+    <div class="form-container">
+        <button onclick="onClickLearn()">Learn</button>
+    </div>
+{% endblock %}
