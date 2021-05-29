@@ -12,7 +12,7 @@
                     {{ field.label }}
                     {{ field }}
                     {% for field, errors in form.errors.items() %}
-                        <small class="form-text text-muted ">
+                        <small>
                             {{ ', '.join(errors) }}
                         </small>
                     {% endfor %}
