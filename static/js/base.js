@@ -14,3 +14,9 @@ function change_words() {         //  create a loop function
   }, 3000)
 }
 
+function showMessage(message) {
+    alert(message);
+}
+
+
+
