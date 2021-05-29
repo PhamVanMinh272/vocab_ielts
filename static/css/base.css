@@ -1,0 +1,28 @@
+:root {
+    --element-header-size: 100px
+}
+
+header {
+    height: var(--element-header-size);
+    background-color: #F2F1DF;
+    color: white
+}
+body {
+    margin: 0;
+}
+
+.logo {
+    width: var(--element-header-size);
+    height: var(--element-header-size);
+}
+
+.content {
+    margin: 0 100px 0 100px;
+    padding-top: 50px;
+    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+}
+
+.menu {
+    height: 30px;
+    background-color: darkcyan;
+}

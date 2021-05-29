@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 @app.route('/', methods=['GET'])
 def home_page():
-    return render_template('base.html')
+    return render_template('home.html')
 
 
 @app.route('/save_words', methods=['POST'])
