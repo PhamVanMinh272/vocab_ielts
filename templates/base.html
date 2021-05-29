@@ -15,7 +15,9 @@
     <div class="menu">
 
     </div>
-    {% block content %}{% endblock %}
+    <div class="content">
+        {% block content %}{% endblock %}
+    </div>
     <script type="text/javascript" src="{{ url_for('static', filename='js/home_page.js') }}"></script>
 </body>
 </html>
