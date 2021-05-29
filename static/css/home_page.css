@@ -31,7 +31,7 @@ body {
     width: 30%
 }
 
-.add-words input {
+.add-words input[type="text"] {
     float: right;
     width: 70%;
     height: calc(100% - 2px);
@@ -56,8 +56,15 @@ body {
 
 .form-container {
     display: block;
-    height: 400px;
     padding: 50px 150px;
     border: 1px solid darkcyan;
     border-radius: 15px;
+}
+
+.form-container button {
+    height: 30px;
+    width: 100px;
+    background-color: lightseagreen;
+    border: 1px solid darkcyan;
+    border-radius: 10px;
 }
