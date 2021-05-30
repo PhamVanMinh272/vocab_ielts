@@ -19,14 +19,12 @@
     <div class="messages-container">
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
-                <ul class=messages>
                 {% for category, message in messages %}
-                    <li class="{{ category }}-message">
+                    <div class="{{ category }}-message message">
                         {{ message }}
                         <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-                    </li>
+                    </div>
                 {% endfor %}
-                </ul>
           {% endif %}
         {% endwith %}
     </div>

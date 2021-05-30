@@ -84,7 +84,6 @@ def learn_vocab():
     viet_words = cur.fetchall()
     cur.close()
     if not viet_words:
-        flash("No data")
         return {}
     data = {}
     for row in viet_words:
