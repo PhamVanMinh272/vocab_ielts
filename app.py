@@ -6,7 +6,7 @@ from forms import SaveWordsForm
 
 app = Flask(__name__)
 app.secret_key = 'why_do_we_need_this?'
-DATABASE = 'db/vocab.db'
+DATABASE = 'db/vocab_test.db'
 
 
 def get_db():
