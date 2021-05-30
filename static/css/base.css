@@ -31,6 +31,23 @@ body {
 .menu {
     height: 30px;
     background-color: var(--main-color);
+    display: flex;
+    color: white;
+    line-height: 30px;
+}
+
+.menu a {
+    color: inherit;
+    display: block;
+    width: 150px;
+    text-align: center;
+    transition: transform .2s; /* Animation */
+    text-decoration: none;
+}
+
+.menu a:hover {
+    background-color: lightseagreen;
+    transform: scale(1.05);
 }
 
 div.message {

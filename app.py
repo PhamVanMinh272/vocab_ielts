@@ -28,8 +28,13 @@ def get_db_connection():
 
 @app.route('/', methods=['GET'])
 def home_page():
+    return render_template('home.html')
+
+
+@app.route('/vocab_repository', methods=['GET'])
+def vocab_repository_page():
     form = SaveWordsForm()
-    return render_template('home.html', form=form)
+    return render_template('vocab_repository.html', form=form)
 
 
 @app.route('/save_words', methods=['POST'])
@@ -39,7 +44,7 @@ def save_words():
         engs_value = request.form['engs'].strip()
         if not viet_value or not engs_value:
             flash('Failed to save. The words are empty.', 'error')
-            return redirect('/')
+            return redirect('/vocab_repository')
         engs = engs_value.split(',')
         db = get_db_connection()
         cur = db.cursor()
@@ -62,7 +67,7 @@ def save_words():
                         cur.execute('insert into viet_eng("viet_id", "eng_id") values({}, {})'.format(viet_id, eng_id))
                     else:
                         flash('Already exists', 'success')
-                        return redirect('/')
+                        return redirect('/vocab_repository')
                 else:
                     cur.execute('insert into eng_words("eng_word") values("{}")'.format(eng))
                     eng_id = cur.lastrowid
@@ -70,10 +75,10 @@ def save_words():
         cur.close()
         db.commit()
         flash('The words {} - {} were saved successfully.'.format(viet_value, engs_value), 'success')
-        return redirect('/')
+        return redirect('/vocab_repository')
     except Exception:
         flash('Failed to save', 'error')
-        return redirect('/')
+        return redirect('/vocab_repository')
 
 
 @app.route('/learn_vocab', methods=['GET'])

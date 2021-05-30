@@ -14,7 +14,8 @@
         <img class="logo" src="{{ url_for('static', filename='public/logo.png') }}">
     </header>
     <div class="menu">
-
+        <a href="{{ url_for('home_page') }}">Home</a>
+        <a href="{{ url_for('vocab_repository_page') }}">Vocab Repository</a>
     </div>
     <div class="messages-container">
         {% with messages = get_flashed_messages(with_categories=true) %}

@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}Vocab{% endblock %}
+{% block head %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+{% endblock %}
+{% block content %}
+    <div class="form-container">
+        <form class="add-words" action="/save_words" method="POST">
+            {% for field in form %}
+                <div>
+                    {{ field.label }}
+                    {{ field }}
+                    {% for field, errors in form.errors.items() %}
+                        <small>
+                            {{ ', '.join(errors) }}
+                        </small>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+            <button type="submit">
+                Save
+            </button>
+        </form>
+    </div>
+{% endblock %}
