@@ -9,19 +9,19 @@ $(".start-lesson-btn").click(function(){
                   </div> '
       $('.messages-container').html(html);
     } else {
-      var no = 1;
-      localStorage.setItem("no", no);
-      $.each(result, function(i, field){
-        var data = [i, field];
-        localStorage.setItem(no, JSON.stringify(data));
-        no = no + 1;
+      var start_with = 1;
+      localStorage.setItem("no", start_with);
+      $.each(result, function(i, data){
+        localStorage.setItem(i, JSON.stringify(data));
       });
+      localStorage.setItem("length_viet_words", Object.keys(result).length);
+      // enable study area and set status for previous and next btn
       $(".lesson-area").removeClass("disabled");
-      localStorage.setItem("length_viet_words", no-1);
-      manage_previous_next_btn(1);
-      data = JSON.parse(localStorage.getItem(1));
-      $(".viet-word").html(data[1]);
-      $(".viet-word").attr('id', data[0]);
+      manage_previous_next_btn(start_with);
+      // set the first word
+      data = JSON.parse(localStorage.getItem(start_with));
+      $(".viet-word").html(data.viet_word);
+      $(".viet-word").attr('id', data.id);
     };
   });
 });
@@ -33,8 +33,8 @@ $(".next-word").click(function(){
   localStorage.setItem("no", no);
   manage_previous_next_btn(no);
   data = JSON.parse(localStorage.getItem(no))
-  $(".viet-word").html(data[1]);
-  $(".viet-word").attr('id', data[0])
+  $(".viet-word").html(data.viet_word);
+  $(".viet-word").attr('id', data.id);
 });
 
 $(".previous-word").click(function(){
@@ -44,8 +44,8 @@ $(".previous-word").click(function(){
   localStorage.setItem("no", no);
   manage_previous_next_btn(no);
   data = JSON.parse(localStorage.getItem(no))
-  $(".viet-word").html(data[1]);
-  $(".viet-word").attr('id', data[0])
+  $(".viet-word").html(data.viet_word);
+  $(".viet-word").attr('id', data.id);
 });
 
 function manage_previous_next_btn(no) {
@@ -67,7 +67,7 @@ function manage_previous_next_btn(no) {
 };
 
 $(".check-vocab-btn").click(function(){
-  $.getJSON("/check_vocab", { viet_id: localStorage.getItem("no"), })
+  $.getJSON("/check_vocab", { viet_id: $(".viet-word").attr('id'), })
   .done(function(result){
     var eng_word = $("#eng-words").val().trim();
     if (Object.values(result).indexOf(eng_word) > -1) {

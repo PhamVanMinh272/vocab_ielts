@@ -1,6 +1,7 @@
 from flask import (
     Flask, render_template, request, redirect, flash, g
 )
+import random
 import sqlite3
 from forms import SaveWordsForm
 
@@ -91,8 +92,11 @@ def learn_vocab():
     if not viet_words:
         return {}
     data = {}
-    for row in viet_words:
-        data.update({row["viet_id"]: row["viet_word"]})
+    random.shuffle(viet_words)
+    no = [i for i in range(1, len(viet_words)+1)]
+    random.shuffle(no)
+    for i, row in enumerate(viet_words):
+        data.update({no[i]: {"id": row["viet_id"], "viet_word": row["viet_word"]}})
     return data
 
 
