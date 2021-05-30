@@ -13,21 +13,14 @@
 }
 
 input[type="text"]:focus {
-  outline: none;
+    outline: none;
+    background-color: white;
 }
 
 .add-words div {
     margin-bottom: 20px;
     height: 30px;
     line-height: 30px;
-}
-
-.add-words button {
-    height: 30px;
-    width: 60px;
-    background-color: lightseagreen;
-    border: 1px solid var(--main-color);
-    border-radius: 10px;
 }
 
 .form-container {
@@ -44,6 +37,10 @@ input[type="text"]:focus {
     background-color: lightseagreen;
     border: none;
     border-radius: 10px;
+}
+
+.form-container button:hover {
+    background-color: var(--main-color);
 }
 
 .lesson-area {
@@ -70,11 +67,14 @@ input[type="text"]:focus {
     height: 30px;
 }
 
-.anwser {
-    margin-top: 20px;
+.answer {
+    margin: 20px 30%;
+    margin-bottom: 0;
     border: 1px solid var(--main-color);
     border-radius: 10px;
     height: 30px;
+    line-height: 30px;
+    width: 40%;
 }
 
 .disabled {

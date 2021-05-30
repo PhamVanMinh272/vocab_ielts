@@ -1,5 +1,6 @@
 from wtforms import Form, StringField, validators
 
+
 class SaveWordsForm(Form):
     viet = StringField('Vietnamese word', [
         validators.DataRequired(),

@@ -91,5 +91,25 @@ def learn_vocab():
     return data
 
 
+@app.route('/check_vocab', methods=['GET'])
+def check_vocab():
+    try:
+        viet_id = request.args["viet_id"]
+        db = get_db_connection()
+        cur = db.cursor()
+        cur.execute("""
+            select viet_eng.eng_id, eng_word 
+            from viet_eng, eng_words 
+            where viet_eng.eng_id=eng_words.eng_id and viet_id={}""".format(viet_id))
+        rows = cur.fetchall()
+        data = {}
+        if rows:
+            for row in rows:
+                data.update({row["eng_id"]: row["eng_word"]})
+        return data
+    except Exception:
+        return {}
+
+
 if __name__ == "__main__":
     app.run()
