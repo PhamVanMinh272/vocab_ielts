@@ -52,6 +52,7 @@ input[type="text"]:focus {
     border: 1px solid var(--main-color);
     border-radius: 10px;
     text-align: center;
+    
 }
 
 .lesson-area input[type="text"] {
@@ -74,4 +75,9 @@ input[type="text"]:focus {
     border: 1px solid var(--main-color);
     border-radius: 10px;
     height: 30px;
+}
+
+.disabled {
+    pointer-events: none;
+    opacity: 0.5;
 }
