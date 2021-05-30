@@ -1,6 +1,7 @@
 from flask import (
     Flask, render_template, request, redirect, flash, g
 )
+import random
 import sqlite3
 from forms import SaveWordsForm
 
@@ -28,13 +29,13 @@ def get_db_connection():
 
 @app.route('/', methods=['GET'])
 def home_page():
-    return render_template('home.html')
+    return render_template('home.html', page="home_page")
 
 
 @app.route('/vocab_repository', methods=['GET'])
 def vocab_repository_page():
     form = SaveWordsForm()
-    return render_template('vocab_repository.html', form=form)
+    return render_template('vocab_repository.html', form=form, page="vocab_repository_page")
 
 
 @app.route('/save_words', methods=['POST'])
@@ -91,8 +92,11 @@ def learn_vocab():
     if not viet_words:
         return {}
     data = {}
-    for row in viet_words:
-        data.update({row["viet_id"]: row["viet_word"]})
+    random.shuffle(viet_words)
+    no = [i for i in range(1, len(viet_words)+1)]
+    random.shuffle(no)
+    for i, row in enumerate(viet_words):
+        data.update({no[i]: {"id": row["viet_id"], "viet_word": row["viet_word"]}})
     return data
 
 
