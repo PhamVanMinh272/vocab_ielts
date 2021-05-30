@@ -16,13 +16,11 @@ def get_db():
     return db
 
 
-def get_db_connection(cursor=True):
+def get_db_connection():
     try:
         with app.app_context():
             db = get_db()
             db.row_factory = sqlite3.Row
-            if cursor:
-                return db.cursor()
             return db
     except Exception:
         return None
@@ -43,7 +41,7 @@ def save_words():
             flash('Failed to save. The words are empty.', 'error')
             return redirect('/')
         engs = engs_value.split(',')
-        db = get_db_connection(cursor=False)
+        db = get_db_connection()
         cur = db.cursor()
         cur.execute('select viet_id from viet_words where viet_word="{}"'.format(viet_value))
         rs = cur.fetchall()
@@ -76,6 +74,22 @@ def save_words():
     except Exception:
         flash('Failed to save', 'error')
         return redirect('/')
+
+
+@app.route('/learn_vocab', methods=['GET'])
+def learn_vocab():
+    db = get_db_connection()
+    cur = db.cursor()
+    cur.execute('select * from viet_words')
+    viet_words = cur.fetchall()
+    cur.close()
+    if not viet_words:
+        flash("No data")
+        return {}
+    data = {}
+    for row in viet_words:
+        data.update({row["viet_id"]: row["viet_word"]})
+    return data
 
 
 if __name__ == "__main__":

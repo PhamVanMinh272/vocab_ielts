@@ -1,22 +1,28 @@
-function onClickLearn(p1, p2) {
-    console.log("Hello");
-    console.log("Goodbye!");
-    change_words();
-}
-var i = 1;
-function change_words() {         //  create a loop function
-  setTimeout(function() {   //  call a 3s setTimeout when the loop is called
-    console.log('hello');   //  your code here
-    i++;                    //  increment the counter
-    if (i < 10) {           //  if the counter < 10, call the loop function
-      change_words();             //  ..  again which will trigger another
-    }                       //  ..  setTimeout()
-  }, 3000)
-}
+$(".start-lesson-btn").click(function(){
+  $.getJSON("/learn_vocab", function(result){
+    var num = 0;
+    localStorage.setItem("num", num+1);
+    $.each(result, function(i, field){
+      var data = [i, field];
+      localStorage.setItem(num, JSON.stringify(data));
+      console.log(num, field);
+      num = num + 1;
+    });
+    localStorage.setItem("length", num);
+    data = JSON.parse(localStorage.getItem(0))
+    $(".viet-word").html(data[1]);
+    $(".viet-word").attr('id', data[0])
+  });
+});
 
-function showMessage(message) {
-    alert(message);
-}
-
-
-
+$(".next-word").click(function(){
+  var num_str = localStorage.getItem("num");
+  // if (num == localStorage.getItem("length")) {
+    
+  // }
+  num = parseInt(num_str);
+  data = JSON.parse(localStorage.getItem(num))
+  $(".viet-word").html(data[1]);
+  $(".viet-word").attr('id', data[0])
+  localStorage.setItem("num", num+1);
+});

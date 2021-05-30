@@ -6,13 +6,13 @@
     float: right;
     width: 60%;
     height: calc(100% - 2px);
-    border: 1px solid darkcyan;
+    border: 1px solid var(--main-color);
     border-radius: 10px;
     padding: 0 5px;
     margin: 0;
 }
 
-.add-words input[type="text"]:focus {
+input[type="text"]:focus {
   outline: none;
 }
 
@@ -26,14 +26,14 @@
     height: 30px;
     width: 60px;
     background-color: lightseagreen;
-    border: 1px solid darkcyan;
+    border: 1px solid var(--main-color);
     border-radius: 10px;
 }
 
 .form-container {
     display: block;
-    padding: 50px 10%;
-    border: 1px solid darkcyan;
+    padding: 20px 10%;
+    border: 1px solid var(--main-color);
     border-radius: 15px;
     margin-top: 10px;
 }
@@ -42,6 +42,36 @@
     height: 30px;
     width: 100px;
     background-color: lightseagreen;
-    border: 1px solid darkcyan;
+    border: none;
     border-radius: 10px;
+}
+
+.lesson-area {
+    margin: 10px 0;
+    padding: 10px;
+    border: 1px solid var(--main-color);
+    border-radius: 10px;
+    text-align: center;
+}
+
+.lesson-area input[type="text"] {
+    width: 60%;
+    height: 30px;
+    border: 1px solid var(--main-color);
+    border-radius: 10px;
+    padding: 0 5px;
+    margin-bottom: 20px;
+}
+
+.viet-word {
+    margin: 20px;
+    font-size: 30px;
+    height: 30px;
+}
+
+.anwser {
+    margin-top: 20px;
+    border: 1px solid var(--main-color);
+    border-radius: 10px;
+    height: 30px;
 }
