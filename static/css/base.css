@@ -50,6 +50,10 @@ body {
     transform: scale(1.05);
 }
 
+.current_page {
+    background-color: lightseagreen;
+}
+
 div.message {
     padding: 10px;
     margin-top: 5px;

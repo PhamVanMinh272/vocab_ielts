@@ -29,13 +29,13 @@ def get_db_connection():
 
 @app.route('/', methods=['GET'])
 def home_page():
-    return render_template('home.html')
+    return render_template('home.html', page="home_page")
 
 
 @app.route('/vocab_repository', methods=['GET'])
 def vocab_repository_page():
     form = SaveWordsForm()
-    return render_template('vocab_repository.html', form=form)
+    return render_template('vocab_repository.html', form=form, page="vocab_repository_page")
 
 
 @app.route('/save_words', methods=['POST'])

@@ -14,8 +14,21 @@
         <img class="logo" src="{{ url_for('static', filename='public/logo.png') }}">
     </header>
     <div class="menu">
-        <a href="{{ url_for('home_page') }}">Home</a>
-        <a href="{{ url_for('vocab_repository_page') }}">Vocab Repository</a>
+        {% if page == "home_page" %}
+            <a class="disabled" href="{{ url_for('home_page') }}">Home</a>
+        {% else %}
+            <a href="{{ url_for('home_page') }}">Home</a>
+        {% endif %}
+        {% if page == "vocab_repository_page" %}
+            <a class="disabled" href="{{ url_for('vocab_repository_page') }}">Vocab Repository</a>
+        {% else %}
+            <a href="{{ url_for('vocab_repository_page') }}">Vocab Repository</a>
+        {% endif %}
+        {% if page == "about_us_page" %}
+            <a class="disabled" href="#">About Us</a>
+        {% else %}
+            <a href="#">About Us</a>
+        {% endif %}
     </div>
     <div class="messages-container">
         {% with messages = get_flashed_messages(with_categories=true) %}
