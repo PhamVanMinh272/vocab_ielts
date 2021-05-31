@@ -84,3 +84,29 @@ input[type="text"]:focus {
 .learning-progress {
     height: 30px;
 }
+
+.lesson-area button.add-more-user-answer-field {
+    background: url('../public/add.png');
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    -webkit-background-size: 100% 100%; /*  Safari  */
+    -khtml-background-size: 100% 100%; /*  Konqueror  */
+    -moz-background-size: 100% 100%; /*  Firefox  */
+    height: 30px;
+    width: 30px;
+    display: block;
+    margin-left: 30%;
+    transition: transform .2s; /* Animation */
+}
+
+.lesson-area button.add-more-user-answer-field:hover {
+    transform: scale(1.1);
+}
+
+.user-answer-container {
+    margin: 20px 30% 0 30%;
+}
+
+.user-answer-container input.user-eng-answer {
+    width: calc(100% - 12px);
+}
