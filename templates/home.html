@@ -12,9 +12,15 @@
             <button class="previous-word">Previous</button>
             <button class="next-word disable">Next</button>
             <div class="viet-word"></div>
-            <input id="eng-words" type="text" name="eng-words"/> <br>
+            <div class="user-answer-container">
+                <input id="user-eng-answer-1" class="user-eng-answer" type="text" name="eng-words"/><br>
+            </div>
+            <button class="add-more-user-answer-field"></button>
             <button class="check-vocab-btn">Check</button>
             <div class="answers"></div>
         </div>
     </div>
+{% endblock %}
+{% block script %}
+  <script type="text/javascript" src="{{ url_for('static', filename='js/home.js') }}"></script>
 {% endblock %}

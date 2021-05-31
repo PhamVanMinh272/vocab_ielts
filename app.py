@@ -2,6 +2,7 @@ from flask import (
     Flask, render_template, request, redirect, flash, g
 )
 import random
+import json
 import sqlite3
 from forms import SaveWordsForm
 
@@ -105,6 +106,7 @@ def check_vocab():
     try:
         viet_id = request.args["viet_id"]
         eng_words = request.args["eng_words"]
+        eng_words = json.loads(eng_words)
         db = get_db_connection()
         cur = db.cursor()
         cur.execute("""
@@ -116,8 +118,13 @@ def check_vocab():
         if rows:
             for row in rows:
                 data.update({row["eng_id"]: row["eng_word"]})
-        return data
-    except Exception:
+        for i, user_answer in enumerate(eng_words):
+            if user_answer["eng_word"] in data.values():
+                eng_words[i].update({"status": 1})
+            else:
+                eng_words[i].update({"status": 0})
+        return {"eng_data": data, "eng_words": eng_words}
+    except Exception as ex:
         return {}
 
 
