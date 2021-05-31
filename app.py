@@ -41,8 +41,8 @@ def vocab_repository_page():
 @app.route('/save_words', methods=['POST'])
 def save_words():
     try:
-        viet_value = request.form['viet'].strip()
-        engs_value = request.form['engs'].strip()
+        viet_value = request.form['viet']
+        engs_value = request.form['engs']
         if not viet_value or not engs_value:
             flash('Failed to save. The words are empty.', 'error')
             return redirect('/vocab_repository')
@@ -104,6 +104,7 @@ def learn_vocab():
 def check_vocab():
     try:
         viet_id = request.args["viet_id"]
+        eng_words = request.args["eng_words"]
         db = get_db_connection()
         cur = db.cursor()
         cur.execute("""
