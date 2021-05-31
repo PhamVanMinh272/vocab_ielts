@@ -67,7 +67,8 @@ function manage_previous_next_btn(no) {
 };
 
 $(".check-vocab-btn").click(function(){
-  $.getJSON("/check_vocab", { viet_id: $(".viet-word").attr('id'), })
+  rmInputRedundantSpaces("#eng-words");
+  $.getJSON("/check_vocab", { viet_id: $(".viet-word").attr('id'), eng_words: $("#eng-words").val() })
   .done(function(result){
     var eng_word = $("#eng-words").val().trim();
     if (Object.values(result).indexOf(eng_word) > -1) {
@@ -94,3 +95,13 @@ $(".previous-word, .next-word, .start-lesson-btn").click(function() {
   $("#eng-words").val("");
   $(".answers").html("");
 });
+
+$("#add-words-form").submit(function() {
+  rmInputRedundantSpaces("#viet");
+  rmInputRedundantSpaces("#engs");
+  return true
+});
+
+function rmInputRedundantSpaces(selector) {
+  $(selector).val($(selector).val().replace(/\s+/g, ' ').trim());
+}
