@@ -1,14 +1,24 @@
 localStorage.clear();
+var errorCategory = "error";
+var successCategory = "success";
 
 $(".start-lesson-btn").click(function(){
-  $.getJSON("/learn_vocab", function(result){
+  rmInputRedundantSpaces("#quantity-of-words-input-id");
+  var numOfWords = $("#quantity-of-words-input-id").val();
+  var regex=/^[0-9]+$/;
+  if (!numOfWords) {
+    numOfWords = 20;
+  } else if (!numOfWords.match(regex)) {
+    showMessage("The field number of words is not valid.", errorCategory);
+    return false;
+  } else if (numOfWords === 0) {
+    showMessage("The field number of words is not valid.", errorCategory);
+  }
+  $.getJSON("/learn_vocab", {number_of_words: numOfWords}, function(result){
     if (Object.keys(result).length == 0) {
-      var html = '<div class="error-message message"> \
-                    No words to learn. \
-                    <span class="closebtn" onclick="this.parentElement.style.display="none";">&times;</span> \
-                  </div> '
-      $('.messages-container').html(html);
+      showMessage("No words to learn.", errorCategory);
     } else {
+      clearMessages();
       var start_with = 1;
       localStorage.setItem("no", start_with);
       $.each(result, function(i, data){
@@ -17,7 +27,7 @@ $(".start-lesson-btn").click(function(){
       localStorage.setItem("length_viet_words", Object.keys(result).length);
       // enable study area and set status for previous and next btn
       $(".lesson-area").removeClass("disabled");
-      manage_previous_next_btn(start_with);
+      managePreviousNextBtn(start_with);
       // set the first word
       data = JSON.parse(localStorage.getItem(start_with));
       $(".viet-word").html(data.viet_word);
@@ -29,28 +39,28 @@ $(".start-lesson-btn").click(function(){
 });
 
 $(".next-word").click(function(){
-  var no_str = localStorage.getItem("no");
-  var no = parseInt(no_str);
+  var noStr = localStorage.getItem("no");
+  var no = parseInt(noStr);
   no = no + 1;
   localStorage.setItem("no", no);
-  manage_previous_next_btn(no);
+  managePreviousNextBtn(no);
   data = JSON.parse(localStorage.getItem(no))
   $(".viet-word").html(data.viet_word);
   $(".viet-word").attr('id', data.id);
 });
 
 $(".previous-word").click(function(){
-  var no_str = localStorage.getItem("no");
-  var no = parseInt(no_str);
+  var noStr = localStorage.getItem("no");
+  var no = parseInt(noStr);
   no = no - 1;
   localStorage.setItem("no", no);
-  manage_previous_next_btn(no);
+  managePreviousNextBtn(no);
   data = JSON.parse(localStorage.getItem(no))
   $(".viet-word").html(data.viet_word);
   $(".viet-word").attr('id', data.id);
 });
 
-function manage_previous_next_btn(no) {
+function managePreviousNextBtn(no) {
   var length_viet_words = parseInt(localStorage.getItem("length_viet_words"));
   $(".learning-progress").html("Progress: " +  no + "/" + length_viet_words);
   if (length_viet_words == 1) {

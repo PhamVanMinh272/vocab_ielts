@@ -85,20 +85,26 @@ def save_words():
 
 @app.route('/learn_vocab', methods=['GET'])
 def learn_vocab():
-    db = get_db_connection()
-    cur = db.cursor()
-    cur.execute('select * from viet_words')
-    viet_words = cur.fetchall()
-    cur.close()
-    if not viet_words:
-        return {}
-    data = {}
-    random.shuffle(viet_words)
-    no = [i for i in range(1, len(viet_words)+1)]
-    random.shuffle(no)
-    for i, row in enumerate(viet_words):
-        data.update({no[i]: {"id": row["viet_id"], "viet_word": row["viet_word"]}})
-    return data
+    try:
+        number_of_words = int(request.args['number_of_words'])
+        db = get_db_connection()
+        cur = db.cursor()
+        cur.execute('select * from viet_words')
+        viet_words = cur.fetchall()
+        cur.close()
+        if not viet_words:
+            return {}
+        if number_of_words < len(viet_words):
+            viet_words = viet_words[:number_of_words]
+        data = {}
+        random.shuffle(viet_words)
+        no = [i for i in range(1, len(viet_words)+1)]
+        random.shuffle(no)
+        for i, row in enumerate(viet_words):
+            data.update({no[i]: {"id": row["viet_id"], "viet_word": row["viet_word"]}})
+        return data
+    except Exception as ex:
+        return {"erMsg": "Failed to start a lesson."}
 
 
 @app.route('/check_vocab', methods=['GET'])

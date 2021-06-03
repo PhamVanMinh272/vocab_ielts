@@ -60,6 +60,10 @@ input[type="text"]:focus {
     margin-bottom: 20px;
 }
 
+.start-lesson-btn {
+    margin-right: 30px;
+}
+
 .viet-word {
     margin: 20px;
     font-size: 30px;
@@ -110,3 +114,16 @@ input[type="text"]:focus {
 .user-answer-container input.user-eng-answer {
     width: calc(100% - 12px);
 }
+
+.quantity-of-words {
+    border: 1px solid var(--main-color);
+    border-radius: 10px;
+    height: 30px;
+    width: 100px;
+    padding: 0 5px;
+}
+
+.quantity-of-words:focus {
+    outline: none;
+}
+
