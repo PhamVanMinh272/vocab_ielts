@@ -4,6 +4,7 @@ from flask import (
 import random
 import json
 import sqlite3
+import datetime
 from forms import SaveWordsForm
 
 app = Flask(__name__)
@@ -47,6 +48,7 @@ def save_words():
         if not viet_value or not engs_value:
             flash('Failed to save. The words are empty.', 'error')
             return redirect('/vocab_repository')
+        inserted_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         engs = engs_value.split(',')
         db = get_db_connection()
         cur = db.cursor()
@@ -55,7 +57,7 @@ def save_words():
         if rs:
             viet_id = rs[0]["viet_id"]
         else:
-            cur.execute('insert into viet_words("viet_word") values("{}")'.format(viet_value))
+            cur.execute('insert into viet_words("viet_word", "inserted_time") values("{}", "{}")'.format(viet_value, inserted_time))
             viet_id = cur.lastrowid
         for eng in engs:
             if eng:
@@ -71,14 +73,18 @@ def save_words():
                         flash('Already exists', 'success')
                         return redirect('/vocab_repository')
                 else:
-                    cur.execute('insert into eng_words("eng_word") values("{}")'.format(eng))
+                    cur.execute(
+                        'insert into eng_words("eng_word", "inserted_time") values("{}", "{}")'.format(
+                            eng, inserted_time
+                        )
+                    )
                     eng_id = cur.lastrowid
                     cur.execute('insert into viet_eng("viet_id", "eng_id") values({}, {})'.format(viet_id, eng_id))
         cur.close()
         db.commit()
         flash('The words {} - {} were saved successfully.'.format(viet_value, engs_value), 'success')
         return redirect('/vocab_repository')
-    except Exception:
+    except Exception as ex:
         flash('Failed to save', 'error')
         return redirect('/vocab_repository')
 
