@@ -1,11 +1,13 @@
 CREATE TABLE viet_words (
 	viet_id INTEGER PRIMARY KEY,
-	viet_word TEXT NOT NULL
+	viet_word TEXT NOT NULL,
+	inserted_time TEXT
 );
 
 CREATE TABLE eng_words(
     eng_id INTEGER PRIMARY KEY,
-	eng_word TEXT NOT NULL
+	eng_word TEXT NOT NULL,
+	inserted_time TEXT
 );
 
 CREATE TABLE viet_eng(
