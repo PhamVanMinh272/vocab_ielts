@@ -12,7 +12,7 @@
     margin: 0;
 }
 
-.add-form div {
+.field {
     margin-bottom: 20px;
     height: 30px;
     line-height: 30px;
@@ -25,4 +25,16 @@
     padding: 0 5px;
     width: 60%;
     margin-bottom: 20px;
+}
+
+.list-of-word-lists {
+    border: 1px solid var(--main-color);
+    border-radius: 10px;
+    height: 30px;
+    width: 200px;
+    padding: 0 5px;
+}
+
+.list-of-word-lists:focus {
+    outline: none;
 }

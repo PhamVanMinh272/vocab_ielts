@@ -5,7 +5,7 @@ import random
 import json
 import sqlite3
 import datetime
-from forms import SaveWordsForm, ListForm
+from forms import SaveWordsForm
 
 app = Flask(__name__)
 app.secret_key = 'why_do_we_need_this?'
@@ -39,33 +39,42 @@ def create_list():
     try:
         list_name = request.form['list_name'].strip()
         if not list_name:
-            flash("Failed to create your list. Your list's name is empty.", 'error')
-            return redirect('/vocab_repository')
+            return {"erMsg": "Failed to create your list. Your list's name is empty."}, 400
         db = get_db_connection()
         cur = db.cursor()
         cur.execute('select * from list where list_name="{}"'.format(list_name))
         rs = cur.fetchall()
         if rs:
             cur.close()
-            flash("Duplicate list name.", 'error')
-            return redirect('/vocab_repository')
+            return {"erMsg": "Duplicate list name."}, 400
         cur.execute('insert into list("list_name") values("{}") '.format(list_name))
+        list_id = cur.lastrowid
         cur.close()
         db.commit()
-        flash('The list {} was saved successfully.'.format(list_name), 'success')
-        return redirect('/vocab_repository')
+        return {'list_id': list_id, 'list_name': list_name}, 200
     except Exception as ex:
-        flash('Failed to create your list.', 'error')
-        return redirect('/vocab_repository')
+        return {"erMsg": "Failed to create your list."}, 500
+
 
 @app.route('/vocab_repository', methods=['GET'])
 def vocab_repository_page():
     form = SaveWordsForm()
-    list_creation_form = ListForm()
+    db = get_db_connection()
+    cur = db.cursor()
+    cur.execute('select * from list')
+    rs = cur.fetchall()
+    lists = []
+    for row in rs:
+        lists.append(
+            {
+                "list_id": row["list_id"],
+                "list_name": row["list_name"]
+            }
+        )
     return render_template(
         'vocab_repository.html',
         form=form,
-        list_creation_form=list_creation_form,
+        lists=lists,
         page="vocab_repository_page"
     )
 

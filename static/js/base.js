@@ -2,6 +2,10 @@ function rmInputRedundantSpaces(selector) {
   $(selector).val($(selector).val().replace(/\s+/g, ' ').trim());
 }
 
+function rmRedundantSpaces(value) {
+  return value.replace(/\s+/g, ' ').trim();
+}
+
 function showMessage(message, category) {
   var html = `<div class="${category}-message message"> \
                 ${message} \
