@@ -7,11 +7,25 @@
 {% block content %}
     <div class="form-container">
         <p>Create your list of words:</p>
-        <input id="list-name" class="list-name-input" type="text" name="list-name" placeholder="Enter your list's name here"/><br>
-        <button class="save-list-name-btn">Save</button>
+        <form id="list-creation-form" class="add-form" action="/create-list" method="POST">
+            {% for field in list_creation_form %}
+                <div>
+                    {{ field.label }}
+                    {{ field }}
+                    {% for field, errors in form.errors.items() %}
+                        <small>
+                            {{ ', '.join(errors) }}
+                        </small>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+            <button class="create-list-btn" type="submit">
+                Save
+            </button>
+        </form>
     </div>
     <div class="form-container">
-        <form id="add-words-form" class="add-words" action="/save_words" method="POST">
+        <form id="add-words-form" class="add-form" action="/save_words" method="POST">
             {% for field in form %}
                 <div>
                     {{ field.label }}

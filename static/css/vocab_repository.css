@@ -1,8 +1,8 @@
-.add-words label {
+.add-form label {
     width: 30%
 }
 
-.add-words input[type="text"] {
+.add-form input[type="text"] {
     float: right;
     width: 60%;
     height: calc(100% - 2px);
@@ -12,7 +12,7 @@
     margin: 0;
 }
 
-.add-words div {
+.add-form div {
     margin-bottom: 20px;
     height: 30px;
     line-height: 30px;
