@@ -5,7 +5,7 @@ import random
 import json
 import sqlite3
 import datetime
-from forms import SaveWordsForm
+from forms import SaveWordsForm, ListForm
 
 app = Flask(__name__)
 app.secret_key = 'why_do_we_need_this?'
@@ -34,10 +34,40 @@ def home_page():
     return render_template('home.html', page="home_page")
 
 
+@app.route('/create-list', methods=['POST'])
+def create_list():
+    try:
+        list_name = request.form['list_name'].strip()
+        if not list_name:
+            flash("Failed to create your list. Your list's name is empty.", 'error')
+            return redirect('/vocab_repository')
+        db = get_db_connection()
+        cur = db.cursor()
+        cur.execute('select * from list where list_name="{}"'.format(list_name))
+        rs = cur.fetchall()
+        if rs:
+            cur.close()
+            flash("Duplicate list name.", 'error')
+            return redirect('/vocab_repository')
+        cur.execute('insert into list("list_name") values("{}") '.format(list_name))
+        cur.close()
+        db.commit()
+        flash('The list {} was saved successfully.'.format(list_name), 'success')
+        return redirect('/vocab_repository')
+    except Exception as ex:
+        flash('Failed to create your list.', 'error')
+        return redirect('/vocab_repository')
+
 @app.route('/vocab_repository', methods=['GET'])
 def vocab_repository_page():
     form = SaveWordsForm()
-    return render_template('vocab_repository.html', form=form, page="vocab_repository_page")
+    list_creation_form = ListForm()
+    return render_template(
+        'vocab_repository.html',
+        form=form,
+        list_creation_form=list_creation_form,
+        page="vocab_repository_page"
+    )
 
 
 @app.route('/save_words', methods=['POST'])

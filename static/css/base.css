@@ -81,3 +81,32 @@ div.message {
 .closebtn:hover {
     color: black;
 }
+
+.form-container {
+    display: block;
+    padding: 20px 10%;
+    border: 1px solid var(--main-color);
+    border-radius: 15px;
+    margin-top: 10px;
+}
+
+.form-container button {
+    height: 30px;
+    width: 100px;
+    background-color: lightseagreen;
+    border: none;
+    border-radius: 10px;
+}
+
+.form-container button:hover {
+    background-color: var(--main-color);
+}
+
+input[type="text"]:focus {
+    outline: none;
+}
+
+.disabled {
+    pointer-events: none;
+    opacity: 0.5;
+}

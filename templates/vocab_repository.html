@@ -2,12 +2,30 @@
 {% block title %}Vocabulary Repository{% endblock %}
 {% block head %}
   {{ super() }}
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/vocab_repository.css') }}">
 {% endblock %}
 {% block content %}
     <div class="form-container">
-        <form id="add-words-form" class="add-words" action="/save_words" method="POST">
+        <p>Create your list of words:</p>
+        <form id="list-creation-form" class="add-form" action="/create-list" method="POST">
+            {% for field in list_creation_form %}
+                <div>
+                    {{ field.label }}
+                    {{ field }}
+                    {% for field, errors in form.errors.items() %}
+                        <small>
+                            {{ ', '.join(errors) }}
+                        </small>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+            <button class="create-list-btn" type="submit">
+                Save
+            </button>
+        </form>
+    </div>
+    <div class="form-container">
+        <form id="add-words-form" class="add-form" action="/save_words" method="POST">
             {% for field in form %}
                 <div>
                     {{ field.label }}
