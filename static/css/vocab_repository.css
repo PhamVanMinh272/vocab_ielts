@@ -1,0 +1,28 @@
+.add-words label {
+    width: 30%
+}
+
+.add-words input[type="text"] {
+    float: right;
+    width: 60%;
+    height: calc(100% - 2px);
+    border: 1px solid var(--main-color);
+    border-radius: 10px;
+    padding: 0 5px;
+    margin: 0;
+}
+
+.add-words div {
+    margin-bottom: 20px;
+    height: 30px;
+    line-height: 30px;
+}
+
+.list-name-input {
+    height: 30px;
+    border: 1px solid var(--main-color);
+    border-radius: 10px;
+    padding: 0 5px;
+    width: 60%;
+    margin-bottom: 20px;
+}

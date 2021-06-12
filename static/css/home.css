@@ -1,54 +1,9 @@
-.add-words label {
-    width: 30%
-}
-
-.add-words input[type="text"] {
-    float: right;
-    width: 60%;
-    height: calc(100% - 2px);
-    border: 1px solid var(--main-color);
-    border-radius: 10px;
-    padding: 0 5px;
-    margin: 0;
-}
-
-input[type="text"]:focus {
-    outline: none;
-}
-
-.add-words div {
-    margin-bottom: 20px;
-    height: 30px;
-    line-height: 30px;
-}
-
-.form-container {
-    display: block;
-    padding: 20px 10%;
-    border: 1px solid var(--main-color);
-    border-radius: 15px;
-    margin-top: 10px;
-}
-
-.form-container button {
-    height: 30px;
-    width: 100px;
-    background-color: lightseagreen;
-    border: none;
-    border-radius: 10px;
-}
-
-.form-container button:hover {
-    background-color: var(--main-color);
-}
-
 .lesson-area {
     margin: 10px 0;
     padding: 10px;
     border: 1px solid var(--main-color);
     border-radius: 10px;
     text-align: center;
-    
 }
 
 .lesson-area input[type="text"] {
@@ -78,11 +33,6 @@ input[type="text"]:focus {
     height: 30px;
     line-height: 30px;
     width: 40%;
-}
-
-.disabled {
-    pointer-events: none;
-    opacity: 0.5;
 }
 
 .learning-progress {
