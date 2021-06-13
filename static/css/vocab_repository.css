@@ -1,8 +1,8 @@
-.add-form label {
+.add-words-container label {
     width: 30%
 }
 
-.add-form input[type="text"] {
+.add-words-container input[type="text"] {
     float: right;
     width: 60%;
     height: calc(100% - 2px);
@@ -12,7 +12,7 @@
     margin: 0;
 }
 
-.add-form div {
+.field {
     margin-bottom: 20px;
     height: 30px;
     line-height: 30px;
@@ -25,4 +25,41 @@
     padding: 0 5px;
     width: 60%;
     margin-bottom: 20px;
+}
+
+.list-of-word-lists {
+    border: 1px solid var(--main-color);
+    border-radius: 10px;
+    height: 30px;
+    width: 200px;
+    padding: 0 5px;
+}
+
+.list-of-word-lists:focus {
+    outline: none;
+}
+
+.add-words-container button.add-more-eng-word-field {
+    background: url('../public/add.png');
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    -webkit-background-size: 100% 100%; /*  Safari  */
+    -khtml-background-size: 100% 100%; /*  Konqueror  */
+    -moz-background-size: 100% 100%; /*  Firefox  */
+    height: 30px;
+    width: 30px;
+    display: block;
+    transition: transform .2s; /* Animation */
+}
+
+.add-words-container button.add-more-eng-word-field:hover {
+    transform: scale(1.1);
+}
+
+.add-more-eng-word-field-container {
+    height: 30px;
+    padding: 0;
+    padding-left: calc(40% - 12px);
+    margin: 0;
+
 }

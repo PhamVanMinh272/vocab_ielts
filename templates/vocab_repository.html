@@ -6,41 +6,41 @@
 {% endblock %}
 {% block content %}
     <div class="form-container">
-        <p>Create your list of words:</p>
-        <form id="list-creation-form" class="add-form" action="/create-list" method="POST">
-            {% for field in list_creation_form %}
-                <div>
-                    {{ field.label }}
-                    {{ field }}
-                    {% for field, errors in form.errors.items() %}
-                        <small>
-                            {{ ', '.join(errors) }}
-                        </small>
-                    {% endfor %}
-                </div>
-            {% endfor %}
-            <button class="create-list-btn" type="submit">
-                Save
-            </button>
-        </form>
-    </div>
-    <div class="form-container">
-        <form id="add-words-form" class="add-form" action="/save_words" method="POST">
-            {% for field in form %}
-                <div>
-                    {{ field.label }}
-                    {{ field }}
-                    {% for field, errors in form.errors.items() %}
-                        <small>
-                            {{ ', '.join(errors) }}
-                        </small>
-                    {% endfor %}
-                </div>
-            {% endfor %}
-            <button type="submit">
-                Save
-            </button>
-        </form>
+        <h4>Add words to a list</h4>
+        <div class="field">
+            <label>List of words: </label>
+            <input
+                    id="list-of-word-lists"
+                    placeholder="Please select a list"
+                    list="list-of-lists"
+                    name="list-of-word-lists"
+                    class="list-of-word-lists"
+            >
+            <datalist id="list-of-lists" class="data-list-list-of-word-lists">
+                {% for list in lists %}
+                    <option value="{{ list.list_name }}">
+                {% endfor %}
+            </datalist>
+            <button class="create-a-list-btn disabled">Create a list</button>
+        </div>
+        <div class="add-words-container disabled">
+            <div class="field">
+                <label>Vietnamese word: </label>
+                <input id="viet-word" class="viet-word" type="text" name="viet-word"/><br>
+            </div>
+            <div class="field">
+                <label>English word: </label>
+                <input class="eng-word" type="text" name="eng-word"/><br>
+            </div>
+            <div class="more-eng-field">
+            </div>
+            <div class="field add-more-eng-word-field-container">
+                <button class="add-more-eng-word-field"></button>
+            </div>
+            <div>
+                <button class="create-words-btn">Save</button>
+            </div>
+        </div>
     </div>
 {% endblock %}
 {% block script %}

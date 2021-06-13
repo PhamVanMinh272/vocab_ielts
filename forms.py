@@ -10,10 +10,3 @@ class SaveWordsForm(Form):
         validators.DataRequired(),
         validators.Length(min=1, max=200)
     ])
-
-
-class ListForm(Form):
-    list_name = StringField("List's Name", [
-        validators.DataRequired(),
-        validators.Length(min=1, max=200)
-    ], render_kw={"placeholder": "Enter your list's name here"})
