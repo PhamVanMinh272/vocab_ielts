@@ -63,3 +63,46 @@
     margin: 0;
 
 }
+
+/* List data area */
+.lists-container {
+    border: 1px solid rgba(64,140,139, 0.25);
+    margin-top: 30px;
+    padding: 0;
+    text-align: center;
+}
+
+.content-of-lists-container {
+    display: flex;
+}
+
+.list-of-list-name {
+    background-color: var(--main-color);
+    color: white;
+    width: 20%;
+    border: 0.1px solid var(--main-color);
+    border-left: none;
+    border-bottom: none;
+    padding: 50px 20px;
+}
+
+h2 {
+    margin: 0;
+    margin-bottom: 50px;
+}
+
+.list-content {
+    width: 80%;
+}
+
+.a-list-value {
+    height: 40px;
+    text-align: left;
+    padding-left: 20px;
+    line-height: 40px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.a-list-value:hover {
+    background-color: var(--dark-main-color);
+}
