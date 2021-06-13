@@ -31,7 +31,19 @@ def get_db_connection():
 
 @app.route('/', methods=['GET'])
 def home_page():
-    return render_template('home.html', page="home_page")
+    db = get_db_connection()
+    cur = db.cursor()
+    cur.execute('select * from list')
+    rs = cur.fetchall()
+    lists = []
+    for row in rs:
+        lists.append(
+            {
+                "list_id": row["list_id"],
+                "list_name": row["list_name"]
+            }
+        ) 
+    return render_template('home.html', page="home_page", lists=lists)
 
 
 @app.route('/create-list', methods=['POST'])
@@ -136,9 +148,18 @@ def save_words():
 def learn_vocab():
     try:
         number_of_words = int(request.args['number_of_words'])
+        list_name = request.args['list_name']
         db = get_db_connection()
         cur = db.cursor()
-        cur.execute('select * from viet_words')
+        if list_name:
+            cur.execute('select list_id from list where list_name="{}"'.format(list_name))
+            list_id = cur.fetchone()["list_id"]
+            cur.execute("""
+                select viet_words.viet_id, viet_word 
+                from viet_words join list_and_viet on viet_words.viet_id = list_and_viet.viet_id
+                where list_id={}""".format(list_id))
+        else:
+            cur.execute('select * from viet_words')
         viet_words = cur.fetchall()
         cur.close()
         if not viet_words:

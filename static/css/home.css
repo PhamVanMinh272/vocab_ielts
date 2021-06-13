@@ -65,15 +65,14 @@
     width: calc(100% - 12px);
 }
 
-.quantity-of-words {
+.input-checkbox {
     border: 1px solid var(--main-color);
     border-radius: 10px;
     height: 30px;
-    width: 100px;
+    width: 50px;
     padding: 0 5px;
 }
 
-.quantity-of-words:focus {
-    outline: none;
+#list-of-word-lists {
+    width: 200px;
 }
-

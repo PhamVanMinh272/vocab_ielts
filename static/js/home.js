@@ -1,9 +1,10 @@
 localStorage.clear();
-var errorCategory = "error";
-var successCategory = "success";
 
 $(".start-lesson-btn").click(function(){
+  clearMessages();
   rmInputRedundantSpaces("#quantity-of-words-input-id");
+  rmInputRedundantSpaces("#list-of-word-lists");
+  // check quantity field
   var numOfWords = $("#quantity-of-words-input-id").val();
   var regex=/^[0-9]+$/;
   if (!numOfWords) {
@@ -13,12 +14,23 @@ $(".start-lesson-btn").click(function(){
     return false;
   } else if (numOfWords === 0) {
     showMessage("The field number of words is not valid.", errorCategory);
+    return false;
   }
-  $.getJSON("/learn_vocab", {number_of_words: numOfWords}, function(result){
+  // check lists field
+  var listName = $("#list-of-word-lists").val();
+  var validation_list_name = $("#list-of-lists").find("option[value='" + listName + "']");
+  if (!listName) {
+    listName = null;
+  } else if (!validation_list_name || !(validation_list_name.length > 0)) {
+    showMessage("The field lists is not valid.", errorCategory);
+    return false;
+  }
+  // send request
+  $.getJSON("/learn_vocab", {number_of_words: numOfWords, list_name: listName})
+  .done(function(result){
     if (Object.keys(result).length == 0) {
       showMessage("No words to learn.", errorCategory);
     } else {
-      clearMessages();
       var start_with = 1;
       localStorage.setItem("no", start_with);
       $.each(result, function(i, data){
@@ -35,6 +47,13 @@ $(".start-lesson-btn").click(function(){
       // number of user answer input
       localStorage.setItem("num_user_answer_input", 1);
     };
+  })
+  .fail(function(error) {
+    if (error.responseJSON) {
+      showMessage(error.responseJSON.erMsg, 'error');
+    } else {
+      showMessage("Cannot start a lesson.", 'error');
+    }
   });
 });
 
@@ -98,6 +117,11 @@ $(".check-vocab-btn").click(function(){
     });
   })
   .fail(function(error) {
+    if (error.responseJSON) {
+      showMessage(error.responseJSON.erMsg, 'error');
+    } else {
+      showMessage("Cannot check the answers.", 'error');
+    }
   });
 });
 

@@ -7,14 +7,28 @@
 {% block content %}
     <div class="form-container">
         <button class="start-lesson-btn">Start a lesson</button>
-        <label>The number of words: </label>
-        <input id="quantity-of-words-input-id" placeholder="20" list="quantity-of-words" name="quantity-of-words" class="quantity-of-words">
+        <label>Quantity: </label>
+        <input id="quantity-of-words-input-id" placeholder="20" list="quantity-of-words" name="quantity-of-words" class="input-checkbox">
         <datalist id="quantity-of-words" class="data-list-quantity-of-words">
             {% for num in range(1, 21) %}
                 {% set num = num*5 %}
                 <option value="{{ num }}">
             {% endfor %}
         </datalist>
+        &nbsp;&nbsp;
+        <label>Lists: </label>
+            <input
+                    id="list-of-word-lists"
+                    placeholder="All lists"
+                    list="list-of-lists"
+                    name="list-of-word-lists"
+                    class="input-checkbox"
+            >
+            <datalist id="list-of-lists" class="data-list-list-of-word-lists">
+                {% for list in lists %}
+                    <option value="{{ list.list_name }}">
+                {% endfor %}
+            </datalist>
         <div class="lesson-area disabled">
             <div class="learning-progress">Progress: 0/0</div>
             <button class="previous-word">Previous</button>
