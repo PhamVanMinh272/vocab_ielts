@@ -1,3 +1,6 @@
+var errorCategory = "error";
+var successCategory = "success";
+
 function rmInputRedundantSpaces(selector) {
   $(selector).val($(selector).val().replace(/\s+/g, ' ').trim());
 }
