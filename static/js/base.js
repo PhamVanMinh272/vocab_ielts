@@ -9,7 +9,7 @@ function rmRedundantSpaces(value) {
 function showMessage(message, category) {
   var html = `<div class="${category}-message message"> \
                 ${message} \
-                <span class="closebtn" onclick="this.parentElement.style.display="none";">&times;</span> \
+                <span class="closebtn" onclick='this.parentElement.style.display="none";'>&times;</span> \
               </div> `
   $('.messages-container').html(html);
 }

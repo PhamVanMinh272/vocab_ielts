@@ -23,24 +23,24 @@
             </datalist>
             <button class="create-a-list-btn disabled">Create a list</button>
         </div>
-        <form id="add-words-form" class="add-form" action="/save_words" method="POST">
-            <div class="add-word-area disabled">
-                {% for field in form %}
-                    <div class="field">
-                        {{ field.label }}
-                        {{ field }}
-                        {% for field, errors in form.errors.items() %}
-                            <small>
-                                {{ ', '.join(errors) }}
-                            </small>
-                        {% endfor %}
-                    </div>
-                {% endfor %}
-                <button type="submit">
-                    Save
-                </button>
+        <div class="add-words-container disabled">
+            <div class="field">
+                <label>Vietnamese word: </label>
+                <input id="viet-word" class="viet-word" type="text" name="viet-word"/><br>
             </div>
-        </form>
+            <div class="field">
+                <label>English word: </label>
+                <input class="eng-word" type="text" name="eng-word"/><br>
+            </div>
+            <div class="more-eng-field">
+            </div>
+            <div class="field add-more-eng-word-field-container">
+                <button class="add-more-eng-word-field"></button>
+            </div>
+            <div>
+                <button class="create-words-btn">Save</button>
+            </div>
+        </div>
     </div>
 {% endblock %}
 {% block script %}

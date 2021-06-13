@@ -79,16 +79,16 @@ def vocab_repository_page():
     )
 
 
-@app.route('/save_words', methods=['POST'])
+@app.route('/save-words', methods=['POST'])
 def save_words():
     try:
+        list_name_value = request.form['list_name']
         viet_value = request.form['viet']
         engs_value = request.form['engs']
-        if not viet_value or not engs_value:
-            flash('Failed to save. The words are empty.', 'error')
-            return redirect('/vocab_repository')
+        engs_value = json.loads(engs_value)
+        if not viet_value or not engs_value or not list_name_value:
+            return {'erMsg': 'Failed to save. The words are empty.'}, 400
         inserted_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        engs = engs_value.split(',')
         db = get_db_connection()
         cur = db.cursor()
         cur.execute('select viet_id from viet_words where viet_word="{}"'.format(viet_value))
@@ -98,7 +98,13 @@ def save_words():
         else:
             cur.execute('insert into viet_words("viet_word", "inserted_time") values("{}", "{}")'.format(viet_value, inserted_time))
             viet_id = cur.lastrowid
-        for eng in engs:
+        # check list and vietnamese words. Create the relationship if it does not exist
+        cur.execute('select list_id from list where list_name="{}"'.format(list_name_value))
+        list_id = cur.fetchone()["list_id"]
+        cur.execute('select * from list_and_viet where list_id={} and viet_id={}'.format(list_id, viet_id))
+        if not cur.fetchall():
+            cur.execute('insert into list_and_viet("list_id", "viet_id") values({}, {})'.format(list_id, viet_id))
+        for eng in engs_value:
             if eng:
                 cur.execute('select eng_id from eng_words where eng_word="{}"'.format(eng))
                 rs = cur.fetchall()
@@ -108,9 +114,6 @@ def save_words():
                     rows = cur.fetchall()
                     if not rows:
                         cur.execute('insert into viet_eng("viet_id", "eng_id") values({}, {})'.format(viet_id, eng_id))
-                    else:
-                        flash('Already exists', 'success')
-                        return redirect('/vocab_repository')
                 else:
                     cur.execute(
                         'insert into eng_words("eng_word", "inserted_time") values("{}", "{}")'.format(
@@ -121,11 +124,12 @@ def save_words():
                     cur.execute('insert into viet_eng("viet_id", "eng_id") values({}, {})'.format(viet_id, eng_id))
         cur.close()
         db.commit()
-        flash('The words {} - {} were saved successfully.'.format(viet_value, engs_value), 'success')
-        return redirect('/vocab_repository')
+        return {"message": 'The words {} - {} in list {} were saved successfully.'.format(
+            viet_value, " - ".join(engs_value), list_name_value
+        )}, 200
     except Exception as ex:
         flash('Failed to save', 'error')
-        return redirect('/vocab_repository')
+        return {'erMsg': 'Failed to save.'}, 500
 
 
 @app.route('/learn_vocab', methods=['GET'])
