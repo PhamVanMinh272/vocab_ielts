@@ -41,7 +41,14 @@ def create_list():
 def get_all_lists():
     try:
         all_lists = List.query.all()
-        return {"lists": ListSchema().dump(all_lists, many=True)}, 200
+        all_lists_with_num_viet = []
+        for list_entity in all_lists:
+            item = list_entity.to_json()
+            item.update({
+                "num_viets": len(list_entity.list_and_viet)
+            })
+            all_lists_with_num_viet.append(item)
+        return {"lists": all_lists_with_num_viet}, 200
     except Exception as ex:
         return {'erMsg': 'Failed to get all lists.'}, 500
 

@@ -17,6 +17,11 @@ $("#list-of-word-lists").keyup(function() {
 
 $(".create-a-list-btn").click(function() {
   rmInputRedundantSpaces("#list-of-word-lists");
+  var listName = $("#list-of-word-lists").val();
+  if (listName.length > 50 ) {
+    showMessage("The list's name must less than 50 characters.", 'error');
+    return false
+  }
   $.post("/create-list", { list_name: $("#list-of-word-lists").val() })
   .done(function(result){
     $("#list-of-lists").append(`<option value="${result.list_name}">`)
@@ -74,7 +79,14 @@ $(document).ready(function() {
     $.each(result.lists, function(index, list_info) {
       $(".list-of-list-name").append(`
       <div class="a-list-value">
-        ${list_info["list_name"]}
+        <div class="list-name-value text-overflow-dot">
+          ${list_info["list_name"]}
+        </div>
+        <div class="viet-quanity-value text-overflow-dot">
+          <p>${list_info.num_viets} words</p>
+        </div>
+
+        
       </div>
       `);
     });
