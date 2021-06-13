@@ -1,15 +1,11 @@
 :root {
     --element-header-size: 100px;
-    --main-color: darkcyan;
+    --main-color: #124040;
+    --dark-main-color: #0c2828;
     --error-color: #EB6057;
     --success-color: #59B987;
 }
 
-header {
-    height: var(--element-header-size);
-    background-color: #F2F1DF;
-    color: white
-}
 body {
     margin: 0;
     font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
@@ -29,11 +25,12 @@ body {
 }
 
 .menu {
-    height: 30px;
+    height: 70px;
     background-color: var(--main-color);
     display: flex;
     color: white;
-    line-height: 30px;
+    line-height: 70px;
+    font-size: 13px;
 }
 
 .menu a {
@@ -46,8 +43,8 @@ body {
 }
 
 .menu a:hover {
-    background-color: lightseagreen;
-    transform: scale(1.05);
+    background-color: var(--dark-main-color);
+    transform: scale(1.02);
 }
 
 div.message {

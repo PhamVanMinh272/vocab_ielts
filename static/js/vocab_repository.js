@@ -67,3 +67,24 @@ $(".create-words-btn").click(function() {
     }
   });
 });
+
+$(document).ready(function() {
+  $.getJSON("/get-all-lists")
+  .done(function(result) {
+    $.each(result.lists, function(index, list_info) {
+      $(".list-of-list-name").append(`
+      <div class="a-list-value">
+        ${list_info["list_name"]}
+      </div>
+      `);
+    });
+    
+  })
+  .fail(function(error) {
+    if (error.responseJSON) {
+      showMessage(error.responseJSON.erMsg, 'error');
+    } else {
+      showMessage("Cannot get all lists.", 'error');
+    }
+  });
+});

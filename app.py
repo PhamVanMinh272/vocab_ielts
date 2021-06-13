@@ -1,48 +1,17 @@
 from flask import (
-    Flask, render_template, request, redirect, flash, g
+    render_template, request, flash
 )
 import random
 import json
-import sqlite3
 import datetime
-from forms import SaveWordsForm
-
-app = Flask(__name__)
-app.secret_key = 'why_do_we_need_this?'
-DATABASE = 'db/vocab_test.db'
-
-
-def get_db():
-    db = getattr(g, '_database', None)
-    if db is None:
-        db = g._database = sqlite3.connect(DATABASE)
-    return db
-
-
-def get_db_connection():
-    try:
-        with app.app_context():
-            db = get_db()
-            db.row_factory = sqlite3.Row
-            return db
-    except Exception:
-        return None
+from main import app, get_db_connection
+from model.list import List, ListSchema
 
 
 @app.route('/', methods=['GET'])
 def home_page():
-    db = get_db_connection()
-    cur = db.cursor()
-    cur.execute('select * from list')
-    rs = cur.fetchall()
-    lists = []
-    for row in rs:
-        lists.append(
-            {
-                "list_id": row["list_id"],
-                "list_name": row["list_name"]
-            }
-        ) 
+    all_lists = List.query.all()
+    lists = ListSchema().dump(all_lists, many=True)
     return render_template('home.html', page="home_page", lists=lists)
 
 
@@ -68,25 +37,21 @@ def create_list():
         return {"erMsg": "Failed to create your list."}, 500
 
 
+@app.route('/get-all-lists', methods=['GET'])
+def get_all_lists():
+    try:
+        all_lists = List.query.all()
+        return {"lists": ListSchema().dump(all_lists, many=True)}, 200
+    except Exception as ex:
+        return {'erMsg': 'Failed to get all lists.'}, 500
+
+
 @app.route('/vocab_repository', methods=['GET'])
 def vocab_repository_page():
-    form = SaveWordsForm()
-    db = get_db_connection()
-    cur = db.cursor()
-    cur.execute('select * from list')
-    rs = cur.fetchall()
-    lists = []
-    for row in rs:
-        lists.append(
-            {
-                "list_id": row["list_id"],
-                "list_name": row["list_name"]
-            }
-        )
+    all_lists = List.query.all()
     return render_template(
         'vocab_repository.html',
-        form=form,
-        lists=lists,
+        lists=all_lists,
         page="vocab_repository_page"
     )
 
