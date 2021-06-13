@@ -31,7 +31,19 @@ def get_db_connection():
 
 @app.route('/', methods=['GET'])
 def home_page():
-    return render_template('home.html', page="home_page")
+    db = get_db_connection()
+    cur = db.cursor()
+    cur.execute('select * from list')
+    rs = cur.fetchall()
+    lists = []
+    for row in rs:
+        lists.append(
+            {
+                "list_id": row["list_id"],
+                "list_name": row["list_name"]
+            }
+        ) 
+    return render_template('home.html', page="home_page", lists=lists)
 
 
 @app.route('/create-list', methods=['POST'])
