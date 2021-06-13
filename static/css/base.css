@@ -2,8 +2,11 @@
     --element-header-size: 100px;
     --main-color: #124040;
     --dark-main-color: #0c2828;
+    --rgba-dark-main-color-25: rgba(26,64,64,0.25);
+    --rgba-dark-main-color-50: rgba(26,64,64,0.5);
     --error-color: #EB6057;
     --success-color: #59B987;
+    --font-size-small: 13px;
 }
 
 body {
@@ -24,13 +27,23 @@ body {
     margin: 0 10%;
 }
 
+footer {
+    font-size: var(--font-size-small);
+    height: 100px;
+    text-align: center;
+    line-height: 100px;
+    margin: 30px 30% 0 30%;
+    border-top: 1px solid var(--rgba-dark-main-color-25);
+    color:rgba(0, 0, 0, 0.5)
+}
+
 .menu {
     height: 70px;
     background-color: var(--main-color);
     display: flex;
     color: white;
     line-height: 70px;
-    font-size: 13px;
+    font-size: var(--font-size-small);
 }
 
 .menu a {
@@ -79,15 +92,15 @@ div.message {
     color: black;
 }
 
-.form-container {
+.action-container {
     display: block;
     padding: 20px 10%;
-    border: 1px solid var(--main-color);
+    border: 1px solid var(--rgba-dark-main-color-25);
     border-radius: 15px;
     margin-top: 10px;
 }
 
-.form-container button {
+.action-container button {
     height: 30px;
     width: 100px;
     background-color: lightseagreen;
@@ -95,7 +108,7 @@ div.message {
     border-radius: 10px;
 }
 
-.form-container button:hover {
+.action-container button:hover {
     background-color: var(--main-color);
 }
 
@@ -110,4 +123,14 @@ input[type="text"]:focus {
 
 input:focus {
     outline: none;
+}
+
+p {
+    margin: 0;
+}
+
+.text-overflow-dot {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis
 }
