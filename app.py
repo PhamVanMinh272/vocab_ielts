@@ -6,6 +6,7 @@ import json
 import datetime
 from main import app, get_db_connection
 from model.list import List, ListSchema
+from model.viet import Viet, VietSchema
 
 
 @app.route('/', methods=['GET'])
@@ -49,6 +50,21 @@ def get_all_lists():
             })
             all_lists_with_num_viet.append(item)
         return {"lists": all_lists_with_num_viet}, 200
+    except Exception as ex:
+        return {'erMsg': 'Failed to get all lists.'}, 500
+
+
+@app.route('/get-all-words-in-a-list', methods=['GET'])
+def get_all_words_in_a_list():
+    try:
+        list_name = request.args["list_name"].strip()
+        if not list_name:
+            return {'erMsg': "List's name is required."}, 400
+        list = List.query.filter_by(list_name=list_name).first()
+        if not list:
+            return {'erMsg': "The list does not exist."}, 404
+        viets = VietSchema(many=True).dump(list.list_and_viet)
+        return {"viets": viets}, 200
     except Exception as ex:
         return {'erMsg': 'Failed to get all lists.'}, 500
 
