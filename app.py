@@ -6,6 +6,8 @@ import json
 import datetime
 from main import app, get_db_connection
 from model.list import List, ListSchema
+from model.viet import Viet, VietSchema
+from model.eng import EngSchema
 
 
 @app.route('/', methods=['GET'])
@@ -53,12 +55,41 @@ def get_all_lists():
         return {'erMsg': 'Failed to get all lists.'}, 500
 
 
+@app.route('/get-all-words-in-a-list', methods=['GET'])
+def get_all_words_in_a_list():
+    try:
+        list_name = request.args["list_name"].strip()
+        if not list_name:
+            return {'erMsg': "List's name is required."}, 400
+        list = List.query.filter_by(list_name=list_name).first()
+        if not list:
+            return {'erMsg': "The list does not exist."}, 404
+        viets = list.list_and_viet
+        viets_with_engs = []
+        for viet in viets:
+            item = viet.to_json()
+            item.update({
+                'eng_words':  EngSchema(many=True).dump(viet.english_words)
+            })
+            viets_with_engs.append(item)
+        return {"viets": viets_with_engs}, 200
+    except Exception as ex:
+        return {'erMsg': 'Failed to get all lists.'}, 500
+
+
 @app.route('/vocab_repository', methods=['GET'])
 def vocab_repository_page():
     all_lists = List.query.all()
+    all_lists_with_num_viet = []
+    for list_entity in all_lists:
+        item = list_entity.to_json()
+        item.update({
+            "num_viets": len(list_entity.list_and_viet)
+        })
+        all_lists_with_num_viet.append(item)
     return render_template(
         'vocab_repository.html',
-        lists=all_lists,
+        lists=all_lists_with_num_viet,
         page="vocab_repository_page"
     )
 

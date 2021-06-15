@@ -44,10 +44,31 @@
     </div>
     <div class="lists-container">
         <div class="content-of-lists-container">
-            <div class="list-of-list-name list-item">
+            <div class="list-of-list-name">
                 <h2>ALL YOUR LISTS</h2>
+                {% for list in lists %}
+                    <div class="a-list-value">
+                        <div class="list-name-value text-overflow-dot">
+                            {{ list.list_name }}
+                        </div>
+                        <div class="viet-quanity-value text-overflow-dot">
+                            {{ list.num_viets }} words
+                        </div> 
+                    </div>
+                {% endfor %}
             </div>
-            <div class="list-content list-item"></div>
+            <div class="list-content">
+                <div class="header-content-of-a-list">
+                    <h2>Please select a list</h2>
+                </div>
+                <table class="list-content-table" style="width:100%">
+                    <tr>
+                        <th>No</th>
+                        <th>Vietnamese</th>
+                        <th>English</th>
+                    </tr>
+                </table>
+            </div>
         </div>
     </div>
 {% endblock %}

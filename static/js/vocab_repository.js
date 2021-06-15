@@ -73,30 +73,37 @@ $(".create-words-btn").click(function() {
   });
 });
 
-$(document).ready(function() {
-  $.getJSON("/get-all-lists")
-  .done(function(result) {
-    $.each(result.lists, function(index, list_info) {
-      $(".list-of-list-name").append(`
-      <div class="a-list-value">
-        <div class="list-name-value text-overflow-dot">
-          ${list_info["list_name"]}
-        </div>
-        <div class="viet-quanity-value text-overflow-dot">
-          <p>${list_info.num_viets} words</p>
-        </div>
-
-        
-      </div>
+$(".a-list-value").click(function() {
+  var listName = rmRedundantSpaces($(this).children(".list-name-value").text());
+  $.getJSON("/get-all-words-in-a-list", { list_name: listName })
+  .done(function(result){
+    $(".header-content-of-a-list").html(`<h2>${listName}</h2>`);
+    $(".list-content-table").html(`
+      <tr>
+        <th>No</th>
+        <th>Vietnamese</th>
+        <th>English</th>
+      </tr>
+    `);
+    $.each(result.viets, function(index, word) {
+      var tdEng = [];
+      $.each(word.eng_words, function(index, eng) {
+        tdEng.push(eng.eng_word);
+      });
+      $(".list-content-table").append(`
+        <tr>
+          <td>${index+1}</td>
+          <td>${word.viet_word}</td>
+          <td>${tdEng.join(", ")}</td>
+        </tr>
       `);
     });
-    
   })
   .fail(function(error) {
     if (error.responseJSON) {
       showMessage(error.responseJSON.erMsg, 'error');
     } else {
-      showMessage("Cannot get all lists.", 'error');
+      showMessage("Cannot get the words.", 'error');
     }
   });
 });
