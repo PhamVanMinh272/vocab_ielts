@@ -111,6 +111,7 @@ div.message {
 
 .action-container button:hover {
     background-color: var(--main-color);
+    color: white;
 }
 
 input[type="text"]:focus {

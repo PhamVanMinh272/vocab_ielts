@@ -74,6 +74,7 @@ $(".create-words-btn").click(function() {
 });
 
 $(".a-list-value").click(function() {
+  clearDetailViet();
   var listName = rmRedundantSpaces($(this).children(".list-name-value").text());
   $.getJSON("/get-all-words-in-a-list", { list_name: listName })
   .done(function(result){
@@ -91,7 +92,7 @@ $(".a-list-value").click(function() {
         tdEng.push(eng.eng_word);
       });
       $(".list-content-table").append(`
-        <tr>
+        <tr class="words-table-item" value="${word.viet_id}">
           <td>${index+1}</td>
           <td>${word.viet_word}</td>
           <td>${tdEng.join(", ")}</td>
@@ -104,6 +105,41 @@ $(".a-list-value").click(function() {
       showMessage(error.responseJSON.erMsg, 'error');
     } else {
       showMessage("Cannot get the words.", 'error');
+    }
+  });
+});
+
+function clearDetailViet() {
+  $("input#viet-word").val('');
+  $("input.eng-word").val('');
+  $(".more-eng-field").html('');
+  $("#list-of-word-lists").val('');
+  $("#list-of-word-lists").trigger("keyup");
+}
+
+$(".list-content-table").on("click", "tr.words-table-item", function() {
+  clearDetailViet();
+  $.getJSON("/get-viet-word-in-a-list", {"viet_id": $(this).attr("value")})
+  .done(function(result) {
+    $("input#viet-word").val(result.viet_word);
+    $("input.eng-word").val(result.eng_words[0].eng_word);
+    if (result.eng_words.length>1) {
+      $.each(result.eng_words.slice(1), function(index, eng) {
+        $(".more-eng-field").append(`
+          <div class="field">
+            <input class="eng-word" type="text" name="eng-word" value="${eng.eng_word}"/><br>
+          </div>
+        `);
+      });
+    }
+    $("#list-of-word-lists").val($(".header-content-of-a-list").text());
+    $("#list-of-word-lists").trigger("keyup");
+  })
+  .fail(function(error) {
+    if (error.responseJSON) {
+      showMessage(error.responseJSON.erMsg, 'error');
+    } else {
+      showMessage("Cannot get the Vietnamese word.", 'error');
     }
   });
 });

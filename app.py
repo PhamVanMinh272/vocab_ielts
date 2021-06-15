@@ -77,6 +77,22 @@ def get_all_words_in_a_list():
         return {'erMsg': 'Failed to get all lists.'}, 500
 
 
+@app.route('/get-viet-word-in-a-list', methods=['GET'])
+def get_viet_word_in_a_list():
+    try:
+        viet_id = request.args["viet_id"].strip()
+        viet = Viet.query.filter_by(viet_id=viet_id).first()
+        if viet:
+            viet_with_engs = viet.to_json()
+            viet_with_engs.update({
+                'eng_words':  EngSchema(many=True).dump(viet.english_words)
+            })
+            return viet_with_engs, 200
+        return {'erMsg': 'Cannot find the Vietnamese word.'}, 404
+    except Exception as ex:
+        return {'erMsg': 'Failed to get Vietnamese word.'}, 500
+
+
 @app.route('/vocab_repository', methods=['GET'])
 def vocab_repository_page():
     all_lists = List.query.all()
