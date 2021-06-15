@@ -98,6 +98,7 @@ div.message {
     border: 1px solid var(--rgba-dark-main-color-25);
     border-radius: 15px;
     margin-top: 10px;
+    font-size: var(--font-size-small);
 }
 
 .action-container button {

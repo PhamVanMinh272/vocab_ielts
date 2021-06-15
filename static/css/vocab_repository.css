@@ -66,7 +66,7 @@
 
 /* List data area */
 .lists-container {
-    border: 1px solid rgba(64,140,139, 0.25);
+    /* border: 1px solid rgba(64,140,139, 0.25); */
     margin-top: 30px;
     padding: 0;
     text-align: center;
@@ -86,19 +86,19 @@
     padding: 50px 20px;
 }
 
-h2 {
+.list-of-list-name h2 {
     margin: 0;
     margin-bottom: 50px;
 }
 
 .list-content {
     width: 75%;
+    padding-left: 30px;
 }
 
 .a-list-value {
     height: 40px;
     text-align: left;
-    padding-left: 20px;
     line-height: 40px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.25);
     font-size: var(--font-size-small);
@@ -109,14 +109,40 @@ h2 {
     background-color: var(--dark-main-color);
 }
 
-.a-list-value p {
-    float: right;
-}
-
 .list-name-value {
-    width: 80%;
+    width: 75%;
 }
 
 .viet-quanity-value {
-    width: 20%;
+    width: 25%;
+    text-align: right;
 }
+
+.header-content-of-a-list {
+    padding: 20px 20px;
+    background-color: var(--main-color);
+    color: white;
+    margin-bottom: 30px;
+}
+
+.list-content-table {
+    text-align: left;
+    font-size: var(--font-size-small);
+}
+
+.list-content-table th {
+    border-bottom: 1px solid rgba(6, 19, 8, 0.25);
+  
+}
+
+.list-content-table td {
+    height: 30px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis
+  }
+
+  .list-content-table tr:hover {
+    background-color: var(--dark-main-color);
+    color: white;
+  }
