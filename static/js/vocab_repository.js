@@ -78,7 +78,8 @@ $(".a-list-value").click(function() {
   var listName = rmRedundantSpaces($(this).children(".list-name-value").text());
   $.getJSON("/get-all-words-in-a-list", { list_name: listName })
   .done(function(result){
-    $(".header-content-of-a-list").html(`<h2>${listName}</h2>`);
+    $(".header-content-of-a-list").children("h2").html(listName);
+    $(".management-list-btn-container").removeClass("disabled");
     $(".list-content-table").html(`
       <tr>
         <th>No</th>
@@ -142,4 +143,30 @@ $(".list-content-table").on("click", "tr.words-table-item", function() {
       showMessage("Cannot get the Vietnamese word.", 'error');
     }
   });
+});
+
+$(".delete-list-btn").click(function() {
+  var listName = $(".header-content-of-a-list").children("h2").text().trim();
+  if (confirm(`Are you sure you want to delete all words in ${listName}?`)) {
+    $.ajax({
+      url: `/list/${listName}`,
+      type: 'DELETE',
+      success: function(result) {
+        if (result.message) {
+          showMessage(result.message, 'success');
+        } else {
+          showMessage("The list deleted.", 'success');
+        }
+        location.reload();
+      },
+      error: function(error) {
+        if (error.responseJSON) {
+          showMessage(error.responseJSON.erMsg, 'error');
+        } else {
+          showMessage("Delete list failed.", 'error');
+        }
+      }
+  });
+  }
+  return false;
 });

@@ -4,10 +4,15 @@ from flask import (
 import random
 import json
 import datetime
-from main import app, get_db_connection
+import logging
+from main import app, get_db_connection, db
 from model.list import List, ListSchema
 from model.viet import Viet, VietSchema
 from model.eng import EngSchema
+from action.list import ListAction
+from exceptions import NotExistException
+
+logging.basicConfig(filename='log/vocab.log', level=logging.DEBUG)
 
 
 @app.route('/', methods=['GET'])
@@ -53,6 +58,19 @@ def get_all_lists():
         return {"lists": all_lists_with_num_viet}, 200
     except Exception as ex:
         return {'erMsg': 'Failed to get all lists.'}, 500
+
+
+@app.route('/list/<list_name>', methods=['DELETE'])
+def delete_list(list_name):
+    try:
+        ListAction.delete(list_name=list_name)
+        return {"message": "The list {} was deleted".format(list_name)}, 200
+    except NotExistException as ex:
+        logging.exception(ex)
+        return {'erMsg': 'Failed to delete the list. The list was not found.'}, 400
+    except Exception as ex:
+        logging.exception(ex)
+        return {'erMsg': 'Failed to delete the list.'}, 500
 
 
 @app.route('/get-all-words-in-a-list', methods=['GET'])

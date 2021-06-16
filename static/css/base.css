@@ -101,7 +101,7 @@ div.message {
     font-size: var(--font-size-small);
 }
 
-.action-container button {
+button {
     height: 30px;
     width: 100px;
     background-color: lightseagreen;
@@ -109,7 +109,7 @@ div.message {
     border-radius: 10px;
 }
 
-.action-container button:hover {
+button:hover {
     background-color: var(--main-color);
     color: white;
 }
@@ -135,4 +135,10 @@ p {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis
+}
+
+button {
+    height: 30px;
+    border: none;
+    border-radius: 10px;
 }

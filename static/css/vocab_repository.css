@@ -141,7 +141,25 @@
     text-overflow: ellipsis
   }
 
-  .list-content-table tr:hover {
+.list-content-table tr.words-table-item:hover {
     background-color: var(--dark-main-color);
     color: white;
-  }
+}
+
+.management-list-btn-container {
+    text-align: right;
+}
+
+button.delete-list-btn {
+    background-color: rgb(241, 88, 88);
+}
+
+button.delete-list-btn:hover {
+    background-color: rgb(153, 17, 17);
+    color: white;
+}
+
+button.add-words-btn:hover {
+    background-color: #65e0e0;
+    color: white;
+}
