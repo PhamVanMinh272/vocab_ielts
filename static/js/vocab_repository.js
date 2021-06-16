@@ -170,3 +170,12 @@ $(".delete-list-btn").click(function() {
   }
   return false;
 });
+
+$(".add-words-btn").click(function() {
+  clearDetailViet();
+  $("#list-of-word-lists").val($(".header-content-of-a-list").children("h2").text().trim());
+  $("#list-of-word-lists").trigger("keyup");
+  $([document.documentElement, document.body]).animate({
+      scrollTop: $(".action-container").offset().top
+  }, 100);
+});
