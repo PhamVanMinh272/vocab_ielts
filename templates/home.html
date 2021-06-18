@@ -8,7 +8,14 @@
     <div class="action-container">
         <button class="start-lesson-btn">Start a lesson</button>
         <label>Quantity: </label>
-        <input id="quantity-of-words-input-id" placeholder="20" list="quantity-of-words" name="quantity-of-words" class="input-checkbox">
+        <input
+                id="quantity-of-words-input-id"
+                placeholder="20"
+                list="quantity-of-words"
+                name="quantity-of-words"
+                class="input-checkbox"
+                autocomplete="off"
+        >
         <datalist id="quantity-of-words" class="data-list-quantity-of-words">
             {% for num in range(1, 21) %}
                 {% set num = num*5 %}
@@ -23,6 +30,7 @@
                     list="list-of-lists"
                     name="list-of-word-lists"
                     class="input-checkbox"
+                    autocomplete="off"
             >
             <datalist id="list-of-lists" class="data-list-list-of-word-lists">
                 {% for list in lists %}
@@ -35,7 +43,7 @@
             <button class="next-word disable">Next</button>
             <div class="viet-word"></div>
             <div class="user-answer-container">
-                <input id="user-eng-answer-1" class="user-eng-answer" type="text" name="eng-words"/><br>
+                <input id="user-eng-answer-1" class="user-eng-answer" type="text" name="eng-words" autocomplete="off"/><br>
             </div>
             <button class="add-more-user-answer-field"></button>
             <button class="check-vocab-btn">Check</button>
