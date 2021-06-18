@@ -5,6 +5,13 @@ class NotExistException(Exception):
     pass
 
 
+class AlreadyExistException(Exception):
+    """
+    Objects already exist in DB.
+    """
+    pass
+
+
 class InvalidValueException(Exception):
     """
     Receive unexpected values.

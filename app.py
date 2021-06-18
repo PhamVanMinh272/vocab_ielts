@@ -5,42 +5,38 @@ import random
 import json
 import datetime
 import logging
-from main import app, get_db_connection, db
-from model.list import List, ListSchema
-from model.viet import Viet, VietSchema
+from main import app, get_db_connection
+from model.list import List
+from model.viet import Viet
 from model.eng import EngSchema
 from action.list import ListAction
-from exceptions import NotExistException
+from utils.exceptions import (
+    NotExistException, AlreadyExistException
+)
+from utils import utils
 
 logging.basicConfig(filename='log/vocab.log', level=logging.DEBUG)
 
 
 @app.route('/', methods=['GET'])
 def home_page():
-    all_lists = List.query.all()
-    lists = ListSchema().dump(all_lists, many=True)
+    lists = ListAction.get_all_lists()
     return render_template('home.html', page="home_page", lists=lists)
 
 
-@app.route('/create-list', methods=['POST'])
+@app.route('/list', methods=['POST'])
 def create_list():
     try:
-        list_name = request.form['list_name'].strip()
+        list_name = utils.rm_redundant_space(request.form['list_name'])
         if not list_name:
             return {"erMsg": "Failed to create your list. Your list's name is empty."}, 400
-        db = get_db_connection()
-        cur = db.cursor()
-        cur.execute('select * from list where list_name="{}"'.format(list_name))
-        rs = cur.fetchall()
-        if rs:
-            cur.close()
-            return {"erMsg": "Duplicate list name."}, 400
-        cur.execute('insert into list("list_name") values("{}") '.format(list_name))
-        list_id = cur.lastrowid
-        cur.close()
-        db.commit()
-        return {'list_id': list_id, 'list_name': list_name}, 200
+        new_list = ListAction.create(list_name)
+        return new_list, 200
+    except AlreadyExistException as ex:
+        logging.exception(ex)
+        return {"erMsg": "Duplicate list name."}, 400
     except Exception as ex:
+        logging.exception(ex)
         return {"erMsg": "Failed to create your list."}, 500
 
 

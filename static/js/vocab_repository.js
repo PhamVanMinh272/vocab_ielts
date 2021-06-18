@@ -22,7 +22,7 @@ $(".create-a-list-btn").click(function() {
     showMessage("The list's name must less than 50 characters.", 'error');
     return false
   }
-  $.post("/create-list", { list_name: $("#list-of-word-lists").val() })
+  $.post("/list", { list_name: $("#list-of-word-lists").val() })
   .done(function(result){
     $("#list-of-lists").append(`<option value="${result.list_name}">`)
     showMessage(`The list ${result.list_name} was saved successfully.`, 'success');
