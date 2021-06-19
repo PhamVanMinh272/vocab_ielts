@@ -48,7 +48,7 @@
             <div class="list-of-list-name">
                 <h2>ALL YOUR LISTS</h2>
                 {% for list in lists %}
-                    <div class="a-list-value">
+                    <div class="a-list-value" list-id={{ list.list_id }} list-name={{ list.list_name }}>
                         <div class="list-name-value text-overflow-dot">
                             {{ list.list_name }}
                         </div>

@@ -10,10 +10,11 @@ from model.list import List
 from model.viet import Viet
 from model.eng import EngSchema
 from action.list import ListAction
+from action.viet import VietAction
 from utils.exceptions import (
     NotExistException, AlreadyExistException
 )
-from utils import utils
+from utils.utils import rm_redundant_space
 
 logging.basicConfig(filename='log/vocab.log', level=logging.DEBUG)
 
@@ -24,10 +25,10 @@ def home_page():
     return render_template('home.html', page="home_page", lists=lists)
 
 
-@app.route('/list', methods=['POST'])
+@app.route('/lists', methods=['POST'])
 def create_list():
     try:
-        list_name = utils.rm_redundant_space(request.form['list_name'])
+        list_name = rm_redundant_space(request.form['list_name'])
         if not list_name:
             return {"erMsg": "Failed to create your list. Your list's name is empty."}, 400
         new_list = ListAction.create(list_name)
@@ -40,7 +41,7 @@ def create_list():
         return {"erMsg": "Failed to create your list."}, 500
 
 
-@app.route('/list/<list_name>', methods=['DELETE'])
+@app.route('/lists/<list_name>', methods=['DELETE'])
 def delete_list(list_name):
     try:
         ListAction.delete(list_name=list_name)
@@ -53,25 +54,16 @@ def delete_list(list_name):
         return {'erMsg': 'Failed to delete the list.'}, 500
 
 
-@app.route('/get-all-words-in-a-list', methods=['GET'])
-def get_all_words_in_a_list():
+@app.route('/lists/<list_id>/words', methods=['GET'])
+def get_all_words_in_a_list(list_id):
     try:
-        list_name = request.args["list_name"].strip()
-        if not list_name:
-            return {'erMsg': "List's name is required."}, 400
-        list = List.query.filter_by(list_name=list_name).first()
-        if not list:
-            return {'erMsg': "The list does not exist."}, 404
-        viets = list.list_and_viet
-        viets_with_engs = []
-        for viet in viets:
-            item = viet.to_json()
-            item.update({
-                'eng_words':  EngSchema(many=True).dump(viet.english_words)
-            })
-            viets_with_engs.append(item)
+        viets_with_engs = VietAction.get_words_by_list_id(list_id)
         return {"viets": viets_with_engs}, 200
+    except NotExistException as ex:
+        logging.exception(ex)
+        return {'erMsg': 'The list does not exist.'}, 404
     except Exception as ex:
+        logging.exception(ex)
         return {'erMsg': 'Failed to get all lists.'}, 500
 
 

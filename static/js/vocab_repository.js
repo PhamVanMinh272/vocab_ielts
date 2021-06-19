@@ -22,7 +22,7 @@ $(".create-a-list-btn").click(function() {
     showMessage("The list's name must less than 50 characters.", 'error');
     return false
   }
-  $.post("/list", { list_name: $("#list-of-word-lists").val() })
+  $.post("/lists", { list_name: $("#list-of-word-lists").val() })
   .done(function(result){
     $("#list-of-lists").append(`<option value="${result.list_name}">`)
     showMessage(`The list ${result.list_name} was saved successfully.`, 'success');
@@ -75,10 +75,13 @@ $(".create-words-btn").click(function() {
 
 $(".a-list-value").click(function() {
   clearDetailViet();
-  var listName = rmRedundantSpaces($(this).children(".list-name-value").text());
-  $.getJSON("/get-all-words-in-a-list", { list_name: listName })
+  var listId = $(this).attr("list-id");
+  var listName = $(this).attr("list-name");
+  $.getJSON(`/lists/${listId}/words`)
   .done(function(result){
     $(".header-content-of-a-list").children("h2").html(listName);
+    $(".header-content-of-a-list").attr("list-id", listId);
+    $(".header-content-of-a-list").attr("list-name", listName);
     $(".management-list-btn-container").removeClass("disabled");
     $(".list-content-table").html(`
       <tr>
@@ -133,7 +136,7 @@ $(".list-content-table").on("click", "tr.words-table-item", function() {
         `);
       });
     }
-    $("#list-of-word-lists").val($(".header-content-of-a-list").text());
+    $("#list-of-word-lists").val($(".header-content-of-a-list").attr("list-name"));
     $("#list-of-word-lists").trigger("keyup");
   })
   .fail(function(error) {
@@ -149,7 +152,7 @@ $(".delete-list-btn").click(function() {
   var listName = $(".header-content-of-a-list").children("h2").text().trim();
   if (confirm(`Are you sure you want to delete all words in ${listName}?`)) {
     $.ajax({
-      url: `/list/${listName}`,
+      url: `/lists/${listName}`,
       type: 'DELETE',
       success: function(result) {
         if (result.message) {
