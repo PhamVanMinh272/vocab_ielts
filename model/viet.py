@@ -1,5 +1,5 @@
 from main import db, ma
-from .eng import Eng
+from model.eng import Eng
 
 
 english_words = db.Table('viet_eng',
@@ -12,6 +12,7 @@ class Viet(db.Model):
     __tablename__ = "viet_words"
     viet_id = db.Column(db.Integer, primary_key=True)
     viet_word = db.Column(db.String(200), unique=True, nullable=False)
+    inserted_time = db.Column(db.String(100), nullable=False)
     english_words = db.relationship('Eng', secondary=english_words, lazy='subquery')
 
     def __repr__(self):

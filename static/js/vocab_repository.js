@@ -48,15 +48,17 @@ $(".add-more-eng-word-field").click(function() {
 
 $(".create-words-btn").click(function() {
   rmInputRedundantSpaces("#list-of-word-lists");
+  var listName = $("#list-of-word-lists").val();
+  var selected_option = $("#list-of-lists").find("option[value='" + listName + "']");
+  var listId = selected_option.attr("list-id");
   rmInputRedundantSpaces(".viet-word");
   var data = $('.eng-word').map(function() {
     rmInputRedundantSpaces(this);
     return this.value;
   }).get();
-  $.post("/save-words", { 
+  $.post(`/lists/${listId}/words`, { 
     viet: $(".viet-word").val(),
-    engs: JSON.stringify(data),
-    list_name: $("#list-of-word-lists").val()
+    engs: JSON.stringify(data)
   })
   .done(function(result){
     $(".more-eng-field").html('');

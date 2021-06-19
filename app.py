@@ -3,26 +3,34 @@ from flask import (
 )
 import random
 import json
-import datetime
-import logging
 from main import app, get_db_connection
-from model.list import List
-from model.viet import Viet
-from model.eng import EngSchema
 from action.list import ListAction
 from action.viet import VietAction
 from utils.exceptions import (
     NotExistException, AlreadyExistException
 )
 from utils.utils import rm_redundant_space
-
-logging.basicConfig(filename='log/vocab.log', level=logging.DEBUG)
+from utils.log_config import logging
 
 
 @app.route('/', methods=['GET'])
 def home_page():
     lists = ListAction.get_all_lists()
     return render_template('home.html', page="home_page", lists=lists)
+
+
+@app.route('/vocab-repository', methods=['GET'])
+def vocab_repository_page():
+    try:
+        all_lists_with_num_viet = ListAction.get_all_lists_and_viet_words_quantity()
+        return render_template(
+            'vocab_repository.html',
+            lists=all_lists_with_num_viet,
+            page="vocab_repository_page"
+        )
+    except Exception as ex:
+        logging.exception(ex)
+        return {"erMsg": "Cannot render the page."}, 500
 
 
 @app.route('/lists', methods=['POST'])
@@ -80,69 +88,20 @@ def get_vietnamese_word(word_id):
         return {'erMsg': 'Failed to get Vietnamese word.'}, 500
 
 
-@app.route('/vocab_repository', methods=['GET'])
-def vocab_repository_page():
+@app.route('/lists/<list_id>/words', methods=['POST'])
+def save_words(list_id):
     try:
-        all_lists_with_num_viet = ListAction.get_all_lists_and_viet_words_quantity()
-        return render_template(
-            'vocab_repository.html',
-            lists=all_lists_with_num_viet,
-            page="vocab_repository_page"
-        )
-    except Exception as ex:
-        logging.exception(ex)
-        return {"erMsg": "Cannot render the page."}, 500
-
-
-@app.route('/save-words', methods=['POST'])
-def save_words():
-    try:
-        list_name_value = request.form['list_name']
         viet_value = request.form['viet']
         engs_value = request.form['engs']
         engs_value = json.loads(engs_value)
-        if not viet_value or not engs_value or not list_name_value:
-            return {'erMsg': 'Failed to save. The words are empty.'}, 400
-        inserted_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        db = get_db_connection()
-        cur = db.cursor()
-        cur.execute('select viet_id from viet_words where viet_word="{}"'.format(viet_value))
-        rs = cur.fetchall()
-        if rs:
-            viet_id = rs[0]["viet_id"]
-        else:
-            cur.execute('insert into viet_words("viet_word", "inserted_time") values("{}", "{}")'.format(viet_value, inserted_time))
-            viet_id = cur.lastrowid
-        # check list and vietnamese words. Create the relationship if it does not exist
-        cur.execute('select list_id from list where list_name="{}"'.format(list_name_value))
-        list_id = cur.fetchone()["list_id"]
-        cur.execute('select * from list_and_viet where list_id={} and viet_id={}'.format(list_id, viet_id))
-        if not cur.fetchall():
-            cur.execute('insert into list_and_viet("list_id", "viet_id") values({}, {})'.format(list_id, viet_id))
-        for eng in engs_value:
-            if eng:
-                cur.execute('select eng_id from eng_words where eng_word="{}"'.format(eng))
-                rs = cur.fetchall()
-                if rs:
-                    eng_id = rs[0]["eng_id"]
-                    cur.execute('select viet_id from viet_eng where eng_id={} and viet_id={}'.format(eng_id, viet_id))
-                    rows = cur.fetchall()
-                    if not rows:
-                        cur.execute('insert into viet_eng("viet_id", "eng_id") values({}, {})'.format(viet_id, eng_id))
-                else:
-                    cur.execute(
-                        'insert into eng_words("eng_word", "inserted_time") values("{}", "{}")'.format(
-                            eng, inserted_time
-                        )
-                    )
-                    eng_id = cur.lastrowid
-                    cur.execute('insert into viet_eng("viet_id", "eng_id") values({}, {})'.format(viet_id, eng_id))
-        cur.close()
-        db.commit()
-        return {"message": 'The words {} - {} in list {} were saved successfully.'.format(
-            viet_value, " - ".join(engs_value), list_name_value
+        if not viet_value or not engs_value:
+            return {'erMsg': 'Failed to save. The words are empty.'}, 404
+        VietAction.create(list_id=list_id, viet_word=viet_value, eng_words=engs_value)
+        return {"message": 'The words {} - {} were saved successfully.'.format(
+            viet_value, " - ".join(engs_value)
         )}, 200
     except Exception as ex:
+        logging.exception(ex)
         flash('Failed to save', 'error')
         return {'erMsg': 'Failed to save.'}, 500
 

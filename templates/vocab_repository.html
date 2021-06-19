@@ -19,7 +19,7 @@
             >
             <datalist id="list-of-lists" class="data-list-list-of-word-lists">
                 {% for list in lists %}
-                    <option value="{{ list.list_name }}">
+                    <option list-id={{ list.list_id }} value="{{ list.list_name }}">
                 {% endfor %}
             </datalist>
             <button class="create-a-list-btn disabled">Create a list</button>

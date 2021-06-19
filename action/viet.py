@@ -1,7 +1,12 @@
+import datetime
 from model.viet import Viet, VietSchema
 from model.list import List, ListSchema
 from model.eng import Eng, EngSchema
-from utils.exceptions import NotExistException
+from action.eng import EngAction
+from utils.utils import rm_redundant_space
+from utils.exceptions import NotExistException, AlreadyExistException
+from constants.action_constants import DICTIONARY_TYPE, OBJECT_TYPE
+from main import db
 
 
 class VietAction:
@@ -30,3 +35,27 @@ class VietAction:
             })
             return viet_with_engs
         raise NotExistException("The word does not exist.")
+
+    @staticmethod
+    def create(list_id: str, viet_word: str, eng_words: list, return_type=DICTIONARY_TYPE):
+        inserted_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        vietnamese_word = Viet.query.filter_by(viet_word=viet_word).first()
+        list_obj = List.query.filter_by(list_id=list_id).first()
+        if not vietnamese_word:
+            vietnamese_word = Viet(viet_word=viet_word, inserted_time=inserted_time)
+            db.session.add(vietnamese_word)
+        list_obj.list_and_viet.append(vietnamese_word)
+        eng_words = [rm_redundant_space(i) for i in eng_words]
+        # remove duplicate eng_words
+        eng_words = set(eng_words)
+        for eng in eng_words:
+            eng_obj = Eng.query.filter_by(eng_word=eng).first()
+            if not eng_obj:
+                eng_obj = EngAction.create(eng_word=eng, return_type=OBJECT_TYPE)
+                vietnamese_word.english_words.append(eng_obj)
+            else:
+                vietnamese_word.english_words.append(eng_obj)
+        db.session.commit()
+        if return_type == DICTIONARY_TYPE:
+            vietnamese_word = vietnamese_word.to_json()
+        return vietnamese_word
