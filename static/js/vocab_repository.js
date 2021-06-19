@@ -123,7 +123,7 @@ function clearDetailViet() {
 
 $(".list-content-table").on("click", "tr.words-table-item", function() {
   clearDetailViet();
-  $.getJSON("/get-viet-word-in-a-list", {"viet_id": $(this).attr("value")})
+  $.getJSON(`/words/${$(this).attr("value")}`)
   .done(function(result) {
     $("input#viet-word").val(result.viet_word);
     $("input.eng-word").val(result.eng_words[0].eng_word);

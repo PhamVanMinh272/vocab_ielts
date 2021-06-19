@@ -19,3 +19,14 @@ class VietAction:
             })
             viets_with_engs.append(item)
         return viets_with_engs
+
+    @staticmethod
+    def get_word_by_word_id(word_id):
+        vietnamese_word = Viet.query.filter_by(viet_id=word_id).first()
+        if vietnamese_word:
+            viet_with_engs = vietnamese_word.to_json()
+            viet_with_engs.update({
+                'eng_words': EngSchema(many=True).dump(vietnamese_word.english_words)
+            })
+            return viet_with_engs
+        raise NotExistException("The word does not exist.")

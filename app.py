@@ -55,7 +55,7 @@ def delete_list(list_name):
 
 
 @app.route('/lists/<list_id>/words', methods=['GET'])
-def get_all_words_in_a_list(list_id):
+def get_words(list_id):
     try:
         viets_with_engs = VietAction.get_words_by_list_id(list_id)
         return {"viets": viets_with_engs}, 200
@@ -67,19 +67,16 @@ def get_all_words_in_a_list(list_id):
         return {'erMsg': 'Failed to get all lists.'}, 500
 
 
-@app.route('/get-viet-word-in-a-list', methods=['GET'])
-def get_viet_word_in_a_list():
+@app.route('/words/<word_id>', methods=['GET'])
+def get_vietnamese_word(word_id):
     try:
-        viet_id = request.args["viet_id"].strip()
-        viet = Viet.query.filter_by(viet_id=viet_id).first()
-        if viet:
-            viet_with_engs = viet.to_json()
-            viet_with_engs.update({
-                'eng_words':  EngSchema(many=True).dump(viet.english_words)
-            })
-            return viet_with_engs, 200
+        viet_with_engs = VietAction.get_word_by_word_id(word_id=word_id)
+        return viet_with_engs, 200
+    except NotExistException as ex:
+        logging.exception(ex)
         return {'erMsg': 'Cannot find the Vietnamese word.'}, 404
     except Exception as ex:
+        logging.exception(ex)
         return {'erMsg': 'Failed to get Vietnamese word.'}, 500
 
 
