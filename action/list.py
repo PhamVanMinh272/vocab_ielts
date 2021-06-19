@@ -13,6 +13,18 @@ class ListAction:
         return all_list_dicts
 
     @staticmethod
+    def get_all_lists_and_viet_words_quantity():
+        all_lists = List.query.all()
+        all_lists_with_num_viet = []
+        for list_entity in all_lists:
+            item = list_entity.to_json()
+            item.update({
+                "num_viets": len(list_entity.list_and_viet)
+            })
+            all_lists_with_num_viet.append(item)
+        return all_lists_with_num_viet
+
+    @staticmethod
     def create(list_name):
         list_obj = List.query.filter_by(list_name=list_name).first()
         if list_obj:

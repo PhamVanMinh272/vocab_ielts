@@ -40,22 +40,6 @@ def create_list():
         return {"erMsg": "Failed to create your list."}, 500
 
 
-@app.route('/get-all-lists', methods=['GET'])
-def get_all_lists():
-    try:
-        all_lists = List.query.all()
-        all_lists_with_num_viet = []
-        for list_entity in all_lists:
-            item = list_entity.to_json()
-            item.update({
-                "num_viets": len(list_entity.list_and_viet)
-            })
-            all_lists_with_num_viet.append(item)
-        return {"lists": all_lists_with_num_viet}, 200
-    except Exception as ex:
-        return {'erMsg': 'Failed to get all lists.'}, 500
-
-
 @app.route('/list/<list_name>', methods=['DELETE'])
 def delete_list(list_name):
     try:
@@ -109,19 +93,16 @@ def get_viet_word_in_a_list():
 
 @app.route('/vocab_repository', methods=['GET'])
 def vocab_repository_page():
-    all_lists = List.query.all()
-    all_lists_with_num_viet = []
-    for list_entity in all_lists:
-        item = list_entity.to_json()
-        item.update({
-            "num_viets": len(list_entity.list_and_viet)
-        })
-        all_lists_with_num_viet.append(item)
-    return render_template(
-        'vocab_repository.html',
-        lists=all_lists_with_num_viet,
-        page="vocab_repository_page"
-    )
+    try:
+        all_lists_with_num_viet = ListAction.get_all_lists_and_viet_words_quantity()
+        return render_template(
+            'vocab_repository.html',
+            lists=all_lists_with_num_viet,
+            page="vocab_repository_page"
+        )
+    except Exception as ex:
+        logging.exception(ex)
+        return {"erMsg": "Cannot render the page."}, 500
 
 
 @app.route('/save-words', methods=['POST'])
