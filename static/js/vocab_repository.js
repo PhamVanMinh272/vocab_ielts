@@ -22,7 +22,7 @@ $(".create-a-list-btn").click(function() {
     showMessage("The list's name must less than 50 characters.", 'error');
     return false
   }
-  $.post("/create-list", { list_name: $("#list-of-word-lists").val() })
+  $.post("/lists", { list_name: $("#list-of-word-lists").val() })
   .done(function(result){
     $("#list-of-lists").append(`<option value="${result.list_name}">`)
     showMessage(`The list ${result.list_name} was saved successfully.`, 'success');
@@ -48,15 +48,17 @@ $(".add-more-eng-word-field").click(function() {
 
 $(".create-words-btn").click(function() {
   rmInputRedundantSpaces("#list-of-word-lists");
+  var listName = $("#list-of-word-lists").val();
+  var selected_option = $("#list-of-lists").find("option[value='" + listName + "']");
+  var listId = selected_option.attr("list-id");
   rmInputRedundantSpaces(".viet-word");
   var data = $('.eng-word').map(function() {
     rmInputRedundantSpaces(this);
     return this.value;
   }).get();
-  $.post("/save-words", { 
+  $.post(`/lists/${listId}/words`, { 
     viet: $(".viet-word").val(),
-    engs: JSON.stringify(data),
-    list_name: $("#list-of-word-lists").val()
+    engs: JSON.stringify(data)
   })
   .done(function(result){
     $(".more-eng-field").html('');
@@ -75,10 +77,13 @@ $(".create-words-btn").click(function() {
 
 $(".a-list-value").click(function() {
   clearDetailViet();
-  var listName = rmRedundantSpaces($(this).children(".list-name-value").text());
-  $.getJSON("/get-all-words-in-a-list", { list_name: listName })
+  var listId = $(this).attr("list-id");
+  var listName = $(this).attr("list-name");
+  $.getJSON(`/lists/${listId}/words`)
   .done(function(result){
     $(".header-content-of-a-list").children("h2").html(listName);
+    $(".header-content-of-a-list").attr("list-id", listId);
+    $(".header-content-of-a-list").attr("list-name", listName);
     $(".management-list-btn-container").removeClass("disabled");
     $(".list-content-table").html(`
       <tr>
@@ -120,7 +125,7 @@ function clearDetailViet() {
 
 $(".list-content-table").on("click", "tr.words-table-item", function() {
   clearDetailViet();
-  $.getJSON("/get-viet-word-in-a-list", {"viet_id": $(this).attr("value")})
+  $.getJSON(`/words/${$(this).attr("value")}`)
   .done(function(result) {
     $("input#viet-word").val(result.viet_word);
     $("input.eng-word").val(result.eng_words[0].eng_word);
@@ -133,7 +138,7 @@ $(".list-content-table").on("click", "tr.words-table-item", function() {
         `);
       });
     }
-    $("#list-of-word-lists").val($(".header-content-of-a-list").text());
+    $("#list-of-word-lists").val($(".header-content-of-a-list").attr("list-name"));
     $("#list-of-word-lists").trigger("keyup");
   })
   .fail(function(error) {
@@ -149,7 +154,7 @@ $(".delete-list-btn").click(function() {
   var listName = $(".header-content-of-a-list").children("h2").text().trim();
   if (confirm(`Are you sure you want to delete all words in ${listName}?`)) {
     $.ajax({
-      url: `/list/${listName}`,
+      url: `/lists/${listName}`,
       type: 'DELETE',
       success: function(result) {
         if (result.message) {
