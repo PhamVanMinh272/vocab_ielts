@@ -65,8 +65,17 @@ def delete_list(list_name):
 @app.route('/lists/<list_id>/words', methods=['GET'])
 def get_words(list_id):
     try:
-        viets_with_engs = VietAction.get_words_by_list_id(list_id)
-        return {"viets": viets_with_engs}, 200
+        lesson = request.args.get("lesson")
+        if lesson:
+            try:
+                number_of_words = int(request.args['number_of_words'])
+            except Exception as ex:
+                logging.exception(ex)
+                return {'erMsg': 'The number of words is invalid.'}, 400
+            data = VietAction.get_words_for_a_lesson(list_id=list_id, quantity=number_of_words)
+        else:
+            data = VietAction.get_words_by_list_id(list_id)
+        return {"viets": data}, 200
     except NotExistException as ex:
         logging.exception(ex)
         return {'erMsg': 'The list does not exist.'}, 404
@@ -76,7 +85,7 @@ def get_words(list_id):
 
 
 @app.route('/words/<word_id>', methods=['GET'])
-def get_vietnamese_word(word_id):
+def get_a_vietnamese_word(word_id):
     try:
         viet_with_engs = VietAction.get_word_by_word_id(word_id=word_id)
         return viet_with_engs, 200
@@ -91,8 +100,8 @@ def get_vietnamese_word(word_id):
 @app.route('/lists/<list_id>/words', methods=['POST'])
 def save_words(list_id):
     try:
-        viet_value = request.form['viet']
-        engs_value = request.form['engs']
+        viet_value = rm_redundant_space(request.form['viet'])
+        engs_value = rm_redundant_space(request.form['engs'])
         engs_value = json.loads(engs_value)
         if not viet_value or not engs_value:
             return {'erMsg': 'Failed to save. The words are empty.'}, 404
@@ -104,39 +113,6 @@ def save_words(list_id):
         logging.exception(ex)
         flash('Failed to save', 'error')
         return {'erMsg': 'Failed to save.'}, 500
-
-
-@app.route('/learn_vocab', methods=['GET'])
-def learn_vocab():
-    try:
-        number_of_words = int(request.args['number_of_words'])
-        list_name = request.args['list_name']
-        db = get_db_connection()
-        cur = db.cursor()
-        if list_name:
-            cur.execute('select list_id from list where list_name="{}"'.format(list_name))
-            list_id = cur.fetchone()["list_id"]
-            cur.execute("""
-                select viet_words.viet_id, viet_word 
-                from viet_words join list_and_viet on viet_words.viet_id = list_and_viet.viet_id
-                where list_id={}""".format(list_id))
-        else:
-            cur.execute('select * from viet_words')
-        viet_words = cur.fetchall()
-        cur.close()
-        if not viet_words:
-            return {}
-        if number_of_words < len(viet_words):
-            viet_words = viet_words[:number_of_words]
-        data = {}
-        random.shuffle(viet_words)
-        no = [i for i in range(1, len(viet_words)+1)]
-        random.shuffle(no)
-        for i, row in enumerate(viet_words):
-            data.update({no[i]: {"id": row["viet_id"], "viet_word": row["viet_word"]}})
-        return data
-    except Exception as ex:
-        return {"erMsg": "Failed to start a lesson."}
 
 
 @app.route('/check_vocab', methods=['GET'])

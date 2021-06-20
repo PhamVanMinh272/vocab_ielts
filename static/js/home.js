@@ -18,25 +18,27 @@ $(".start-lesson-btn").click(function(){
   }
   // check lists field
   var listName = $("#list-of-word-lists").val();
-  var validation_list_name = $("#list-of-lists").find("option[value='" + listName + "']");
+  var validationListName = $("#list-of-lists").find("option[value='" + listName + "']");
   if (!listName) {
-    listName = null;
-  } else if (!validation_list_name || !(validation_list_name.length > 0)) {
+    var listId = 0;
+  } else if (!validationListName || !(validationListName.length > 0)) {
     showMessage("The field lists is not valid.", errorCategory);
     return false;
+  } else {
+    var listId = validationListName.attr("list-id");
   }
   // send request
-  $.getJSON("/learn_vocab", {number_of_words: numOfWords, list_name: listName})
+  $.getJSON(`/lists/${listId}/words`, {number_of_words: numOfWords, lesson: 1})
   .done(function(result){
-    if (Object.keys(result).length == 0) {
+    if (result.viets.length == 0) {
       showMessage("No words to learn.", errorCategory);
     } else {
       var start_with = 1;
       localStorage.setItem("no", start_with);
-      $.each(result, function(i, data){
-        localStorage.setItem(i, JSON.stringify(data));
+      $.each(result.viets, function(i, data){
+        localStorage.setItem(data.no, JSON.stringify(data));
       });
-      localStorage.setItem("length_viet_words", Object.keys(result).length);
+      localStorage.setItem("length_viet_words", result.viets.length);
       // enable study area and set status for previous and next btn
       $(".lesson-area").removeClass("disabled");
       managePreviousNextBtn(start_with);

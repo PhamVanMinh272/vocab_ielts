@@ -1,4 +1,7 @@
 import datetime
+import logging
+import random
+
 from model.viet import Viet, VietSchema
 from model.list import List, ListSchema
 from model.eng import Eng, EngSchema
@@ -10,6 +13,36 @@ from main import db
 
 
 class VietAction:
+    @staticmethod
+    def get_words_for_a_lesson(list_id=None, quantity=20) -> list:
+        """
+        Get Vietnamese words for a lesson.
+        :param list_id: list_id=0 means get words in all lists.
+        :param quantity: quantity of words will be returned.
+        :return: a list of Vietnamese words. The words have the order randomly and have a number order to show in UI.
+        """
+        if list_id and list_id != '0':
+            viet_words = VietAction.get_words_by_list_id(list_id=list_id)
+        else:
+            viet_words = VietAction.get_all_words()
+        if not viet_words:
+            logging.info("No words for a lesson.")
+            return []
+        random.shuffle(viet_words)
+        if quantity < len(viet_words):
+            viet_words = viet_words[:quantity]
+        data = []
+        no = [i for i in range(1, len(viet_words) + 1)]
+        random.shuffle(no)
+        for i, row in enumerate(viet_words):
+            data.append({"id": row["viet_id"], "viet_word": row["viet_word"], 'no': no[i]})
+        return data
+
+    @staticmethod
+    def get_all_words():
+        vietnamese_words = Viet.query.all()
+        return VietSchema(many=True).dump(vietnamese_words)
+
     @staticmethod
     def get_words_by_list_id(list_id):
         list_obj = List.query.filter_by(list_id=list_id).first()
