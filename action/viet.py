@@ -92,3 +92,25 @@ class VietAction:
         if return_type == DICTIONARY_TYPE:
             vietnamese_word = vietnamese_word.to_json()
         return vietnamese_word
+
+    @staticmethod
+    def check_english_words(viet_id, eng_words: list) -> dict:
+        """
+        Check English answers of users.
+        :param viet_id: id of Viet Object
+        :param eng_words: list English answers of users
+        :return: English words in DB and a list of user's checked English words
+        """
+        vietnamese_word = Viet.query.filter_by(viet_id=viet_id).first()
+        if not vietnamese_word:
+            raise NotExistException("The Vietnamese word does not exist.")
+        data = {}
+        if vietnamese_word.english_words:
+            for row in vietnamese_word.english_words:
+                data.update({row.eng_id: row.eng_word})
+        for i, user_answer in enumerate(eng_words):
+            if user_answer["eng_word"] in data.values():
+                eng_words[i].update({"status": 1})
+            else:
+                eng_words[i].update({"status": 0})
+        return {"eng_data": data, "eng_words": eng_words}

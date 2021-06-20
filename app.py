@@ -115,30 +115,15 @@ def save_words(list_id):
         return {'erMsg': 'Failed to save.'}, 500
 
 
-@app.route('/check_vocab', methods=['GET'])
-def check_vocab():
+@app.route('/words/<viet_id>/check-vocab', methods=['GET'])
+def check_vocab(viet_id):
     try:
-        viet_id = request.args["viet_id"]
         eng_words = request.args["eng_words"]
         eng_words = json.loads(eng_words)
-        db = get_db_connection()
-        cur = db.cursor()
-        cur.execute("""
-            select viet_eng.eng_id, eng_word 
-            from viet_eng, eng_words 
-            where viet_eng.eng_id=eng_words.eng_id and viet_id={}""".format(viet_id))
-        rows = cur.fetchall()
-        data = {}
-        if rows:
-            for row in rows:
-                data.update({row["eng_id"]: row["eng_word"]})
-        for i, user_answer in enumerate(eng_words):
-            if user_answer["eng_word"] in data.values():
-                eng_words[i].update({"status": 1})
-            else:
-                eng_words[i].update({"status": 0})
+        data = VietAction.check_english_words(viet_id=viet_id, eng_words=eng_words)
         return {"eng_data": data, "eng_words": eng_words}
     except Exception as ex:
+        logging.exception(ex)
         return {}
 
 

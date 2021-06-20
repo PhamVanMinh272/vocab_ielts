@@ -104,7 +104,7 @@ $(".check-vocab-btn").click(function(){
     rmInputRedundantSpaces(this);
     return {id_input: this.id, eng_word: this.value};
   }).get();
-  $.getJSON("/check_vocab", { viet_id: $(".viet-word").attr('id'), eng_words: JSON.stringify(data) })
+  $.getJSON(`/words/${$(".viet-word").attr('id')}/check-vocab`, { eng_words: JSON.stringify(data) })
   .done(function(result){
     $.each(result.eng_words, function(i, field){
       if (field.status === 1) {
