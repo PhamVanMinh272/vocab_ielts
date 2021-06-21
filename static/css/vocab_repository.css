@@ -12,12 +12,6 @@
     margin: 0;
 }
 
-.field {
-    margin-bottom: 20px;
-    height: 30px;
-    line-height: 30px;
-}
-
 .list-name-input {
     height: 30px;
     border: 1px solid var(--main-color);

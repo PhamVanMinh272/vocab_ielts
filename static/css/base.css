@@ -144,3 +144,9 @@ p {
     overflow: hidden;
     text-overflow: ellipsis
 }
+
+.field {
+    margin-bottom: 20px;
+    height: 30px;
+    line-height: 30px;
+}
