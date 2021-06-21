@@ -1,3 +1,10 @@
+CREATE TABLE user (
+	user_id INTEGER PRIMARY KEY,
+	username TEXT NOT NULL,
+	password TEXT NOT NULL,
+	inserted_time TEXT
+);
+
 CREATE TABLE list (
 	list_id INTEGER PRIMARY KEY,
 	list_name TEXT NOT NULL,

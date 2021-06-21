@@ -20,3 +20,35 @@ function showMessage(message, category) {
 function clearMessages() {
     $('.messages-container').html("");
 }
+
+$("#register-btn").click(function() {
+  let username = $("input#register-username").val();
+  let password = $("input#register-password").val();
+  let confirmPassword = $("input#register-confirm-password").val();
+  if (!username || !password || !confirmPassword) {
+    $("#message-register-dialog").html("Please fill out all fields.");
+    return false;
+  } else if (username.indexOf(" ") !== -1 || password.indexOf(" ") !== -1 || confirmPassword.indexOf(" ") !== -1) {
+    $("#message-register-dialog").html("Space characters do not allow.");
+    return false;
+  } else if (password !== confirmPassword) {
+    $("#message-register-dialog").html("The confirm-password does not match the password.");
+    return false;
+  }
+  $.post("/register", { 
+    "username": $("#register-username").val(),
+    "password": $("#register-password").val(),
+    "confirm_password": $("#register-confirm-password").val()
+  })
+  .done(function() {
+    $(".modal").css("display", "none");
+    showMessage("Create an account successfully.", "success");
+  })
+  .fail(function(error) {
+    if (error.responseJSON) {
+      $("#message-register-dialog").html(error.responseJSON.erMsg);
+    } else {
+      $("#message-register-dialog").html("Failed to create an account.");
+    }
+  });
+});

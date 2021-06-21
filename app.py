@@ -3,9 +3,10 @@ from flask import (
 )
 import random
 import json
-from main import app, get_db_connection
+from main import app
 from action.list import ListAction
 from action.viet import VietAction
+from action.user import UserAction
 from utils.exceptions import (
     NotExistException, AlreadyExistException
 )
@@ -125,6 +126,26 @@ def check_vocab(viet_id):
     except Exception as ex:
         logging.exception(ex)
         return {}
+
+
+@app.route("/register", methods=["POST"])
+def register():
+    try:
+        username = request.form.get("username")
+        password = request.form.get("password")
+        confirm_password = request.form.get("confirm_password")
+        if not username or not password or not confirm_password:
+            return {'erMsg': 'The input data are not valid.'}, 400
+        if password != confirm_password:
+            return {'erMsg': 'The confirm-password does not match the password.'}, 400
+        UserAction.create(username=username, password=password)
+        return {}
+    except AlreadyExistException as ex:
+        logging.exception(ex)
+        return {'erMsg': 'The username has already existed.'}, 400
+    except Exception as ex:
+        logging.exception(ex)
+        return {'erMsg': 'Failed to register.'}, 500
 
 
 if __name__ == "__main__":
