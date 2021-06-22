@@ -8,7 +8,12 @@ CREATE TABLE user (
 CREATE TABLE list (
 	list_id INTEGER PRIMARY KEY,
 	list_name TEXT NOT NULL,
-	inserted_time TEXT
+	inserted_time TEXT,
+    user_id INTEGER,
+    FOREIGN KEY (user_id)
+        REFERENCES user (user_id)
+            ON DELETE CASCADE
+            ON UPDATE NO ACTION
 );
 
 CREATE TABLE class (
