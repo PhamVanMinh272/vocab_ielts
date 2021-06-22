@@ -74,3 +74,7 @@ CREATE TABLE viet_eng(
             ON DELETE CASCADE 
             ON UPDATE NO ACTION
 );
+
+--data
+INSERT INTO user(`user_id`, `username`, `password`, `inserted_time`) values(1, "general_user", '1', datetime());
+INSERT INTO list(`list_name`, `inserted_time`, `user_id`) values('3000 common words', datetime(), 1);

@@ -3,7 +3,7 @@ from flask import (
 )
 import json
 from flask_login import login_user, login_required, logout_user, current_user
-from main import app, login_manager
+from main import app
 from action.list import ListAction
 from action.viet import VietAction
 from action.user import UserAction
@@ -54,8 +54,14 @@ def profile_page():
 
 @app.route('/', methods=['GET'])
 def home_page():
-    lists = ListAction.get_all_lists()
-    return render_template('home.html', page="home_page", lists=lists)
+    try:
+        user_id = current_user.user_id if current_user.is_authenticated else None
+        lists = ListAction.get_lists_by_user_id(user_id=user_id)
+        return render_template('home.html', page="home_page", lists=lists)
+    except Exception as ex:
+        logging.exception(ex)
+        flash("Failed to load the page", ERROR_FLASH_MESSAGE_TYPE)
+        return render_template('home.html', page="home_page", lists=[])
 
 
 @app.route('/vocab-repository', methods=['GET'])

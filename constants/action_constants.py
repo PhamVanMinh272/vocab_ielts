@@ -1,2 +1,3 @@
 DICTIONARY_TYPE = 'dictionary'
 OBJECT_TYPE = 'object'
+GENERAL_USER_ID = 1
