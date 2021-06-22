@@ -1,9 +1,9 @@
 from flask import (
-    render_template, request, flash
+    render_template, request, flash, redirect, url_for
 )
-import random
 import json
-from main import app
+from flask_login import login_user, login_required, logout_user, current_user
+from main import app, login_manager
 from action.list import ListAction
 from action.viet import VietAction
 from action.user import UserAction
@@ -12,6 +12,41 @@ from utils.exceptions import (
 )
 from utils.utils import rm_redundant_space
 from utils.log_config import logging
+
+
+@app.route('/login', methods=['POST'])
+def login():
+    try:
+        username = request.form.get("username")
+        password = request.form.get("password")
+        user = UserAction.login(username, password)
+        if user:
+            login_user(user)
+            flash("Login successfully", "success")
+            return redirect(url_for("home_page"))
+        flash("The password is wrong")
+        return redirect(url_for("home_page"))
+    except NotExistException as ex:
+        logging.exception(ex)
+        flash("The user does not exist")
+        return redirect(url_for("home_page"))
+    except Exception as ex:
+        logging.exception(ex)
+        flash("Login failed")
+        return redirect(url_for("home_page"))
+
+
+@app.route('/logout', methods=['POST'])
+@login_required
+def logout():
+    logout_user()
+    return {"message": "Logout successfully"}
+
+
+@app.route('/profile', methods=['GET'])
+@login_required
+def profile_page():
+    return render_template('profile.html', page="profile_page")
 
 
 @app.route('/', methods=['GET'])

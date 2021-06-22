@@ -52,3 +52,26 @@ $("#register-btn").click(function() {
     }
   });
 });
+
+$("#login-btn").submit(function() {
+  let username = $("input#login-username").val();
+  let password = $("input#login-password").val();
+  if (!username || !password) {
+    $("#message-register-dialog").html("Please fill out all fields.");
+    return false;
+  }
+});
+
+$(".user-action").on("click", "#logout-btn", function() {
+  $.post("/logout")
+  .done(function() {
+    location.reload();
+  })
+  .fail(function(error) {
+    if (error.responseJSON) {
+      showMessage(error.responseJSON.erMsg);
+    } else {
+      showMessage("Failed to logout.");
+    }
+  });
+});
