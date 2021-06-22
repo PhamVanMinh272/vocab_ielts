@@ -12,6 +12,9 @@ from utils.exceptions import (
 )
 from utils.utils import rm_redundant_space
 from utils.log_config import logging
+from constants.route_constants import (
+    SUCCESS_FLASH_MESSAGE_TYPE, ERROR_FLASH_MESSAGE_TYPE
+)
 
 
 @app.route('/login', methods=['POST'])
@@ -22,17 +25,17 @@ def login():
         user = UserAction.login(username, password)
         if user:
             login_user(user)
-            flash("Login successfully", "success")
+            flash("Login successfully", SUCCESS_FLASH_MESSAGE_TYPE)
             return redirect(url_for("home_page"))
-        flash("The password is wrong")
+        flash("The password is wrong", ERROR_FLASH_MESSAGE_TYPE)
         return redirect(url_for("home_page"))
     except NotExistException as ex:
         logging.exception(ex)
-        flash("The user does not exist")
+        flash("The user does not exist", ERROR_FLASH_MESSAGE_TYPE)
         return redirect(url_for("home_page"))
     except Exception as ex:
         logging.exception(ex)
-        flash("Login failed")
+        flash("Login failed", ERROR_FLASH_MESSAGE_TYPE)
         return redirect(url_for("home_page"))
 
 
@@ -56,6 +59,7 @@ def home_page():
 
 
 @app.route('/vocab-repository', methods=['GET'])
+@login_required
 def vocab_repository_page():
     try:
         all_lists_with_num_viet = ListAction.get_all_lists_and_viet_words_quantity()
@@ -70,12 +74,13 @@ def vocab_repository_page():
 
 
 @app.route('/lists', methods=['POST'])
+@login_required
 def create_list():
     try:
         list_name = rm_redundant_space(request.form['list_name'])
         if not list_name:
             return {"erMsg": "Failed to create your list. Your list's name is empty."}, 400
-        new_list = ListAction.create(list_name)
+        new_list = ListAction.create(list_name=list_name, user_id=current_user.user_id)
         return new_list, 200
     except AlreadyExistException as ex:
         logging.exception(ex)
@@ -157,7 +162,7 @@ def check_vocab(viet_id):
         eng_words = request.args["eng_words"]
         eng_words = json.loads(eng_words)
         data = VietAction.check_english_words(viet_id=viet_id, eng_words=eng_words)
-        return {"eng_data": data, "eng_words": eng_words}
+        return data, 200
     except Exception as ex:
         logging.exception(ex)
         return {}
