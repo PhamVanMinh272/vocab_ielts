@@ -74,6 +74,8 @@ class VietAction:
         inserted_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         vietnamese_word = Viet.query.filter_by(viet_word=viet_word).first()
         list_obj = List.query.filter_by(list_id=list_id).first()
+        if not list_obj:
+            raise NotExistException("The list does not exist.")
         if not vietnamese_word:
             vietnamese_word = Viet(viet_word=viet_word, inserted_time=inserted_time)
             db.session.add(vietnamese_word)

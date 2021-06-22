@@ -68,7 +68,9 @@ def home_page():
 @login_required
 def vocab_repository_page():
     try:
-        all_lists_with_num_viet = ListAction.get_all_lists_and_viet_words_quantity()
+        all_lists_with_num_viet = ListAction.get_all_lists_and_viet_words_quantity(
+            user_id=current_user.user_id
+        )
         return render_template(
             'vocab_repository.html',
             lists=all_lists_with_num_viet,
@@ -76,7 +78,12 @@ def vocab_repository_page():
         )
     except Exception as ex:
         logging.exception(ex)
-        return {"erMsg": "Cannot render the page."}, 500
+        flash("Cannot render the page.", ERROR_FLASH_MESSAGE_TYPE)
+        return render_template(
+            'vocab_repository.html',
+            lists=[],
+            page="vocab_repository_page"
+        )
 
 
 @app.route('/lists', methods=['POST'])
@@ -156,9 +163,11 @@ def save_words(list_id):
         return {"message": 'The words {} - {} were saved successfully.'.format(
             viet_value, " - ".join(engs_value)
         )}, 200
+    except NotExistException as ex:
+        logging.exception(ex)
+        return {'erMsg': "The list does not exist"}, 500
     except Exception as ex:
         logging.exception(ex)
-        flash('Failed to save', 'error')
         return {'erMsg': 'Failed to save.'}, 500
 
 
