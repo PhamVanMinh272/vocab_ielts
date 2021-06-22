@@ -17,8 +17,9 @@ class ListAction:
         return all_list_dicts
 
     @staticmethod
-    def get_all_lists_and_viet_words_quantity() -> list:
-        all_lists = List.query.all()
+    def get_all_lists_and_viet_words_quantity(user_id) -> list:
+        all_lists = List.query.filter_by(user_id=GENERAL_USER_ID).all()
+        all_lists.extend(List.query.filter_by(user_id=user_id).all())
         all_lists_with_num_viet = []
         for list_entity in all_lists:
             item = list_entity.to_json()
@@ -30,9 +31,9 @@ class ListAction:
 
     @staticmethod
     def create(list_name, user_id) -> dict:
-        list_obj = List.query.filter_by(list_name=list_name, user_id=GENERAL_USER_ID).all()
-        list_obj.extend(List.query.filter_by(list_name=list_name, user_id=user_id).all())
-        if list_obj:
+        list_objs = List.query.filter_by(list_name=list_name, user_id=GENERAL_USER_ID).all()
+        list_objs.extend(List.query.filter_by(list_name=list_name, user_id=user_id).all())
+        if list_objs:
             raise AlreadyExistException("The list {} already exists")
         inserted_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         new_list_obj = List(list_name=list_name, inserted_time=inserted_time, user_id=user_id)

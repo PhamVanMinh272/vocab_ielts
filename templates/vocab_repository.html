@@ -19,7 +19,7 @@
             >
             <datalist id="list-of-lists" class="data-list-list-of-word-lists">
                 {% for list in lists %}
-                    <option list-id={{ list.list_id }} value="{{ list.list_name }}">
+                    <option list-id="{{ list.list_id }}" value="{{ list.list_name }}">
                 {% endfor %}
             </datalist>
             <button class="create-a-list-btn disabled">Create a list</button>
@@ -48,7 +48,7 @@
             <div class="list-of-list-name">
                 <h2>ALL YOUR LISTS</h2>
                 {% for list in lists %}
-                    <div class="a-list-value" list-id={{ list.list_id }} list-name={{ list.list_name }}>
+                    <div class="a-list-value" list-id="{{ list.list_id }}" list-name="{{ list.list_name }}">
                         <div class="list-name-value text-overflow-dot">
                             {{ list.list_name }}
                         </div>
