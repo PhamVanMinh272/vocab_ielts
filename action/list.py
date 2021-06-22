@@ -1,3 +1,4 @@
+from datetime import datetime
 from model.list import List, ListSchema
 from utils.exceptions import (
     NotExistException, AlreadyExistException, InvalidValueException
@@ -25,11 +26,12 @@ class ListAction:
         return all_lists_with_num_viet
 
     @staticmethod
-    def create(list_name):
-        list_obj = List.query.filter_by(list_name=list_name).first()
+    def create(list_name, user_id):
+        list_obj = List.query.filter_by(list_name=list_name, user_id=user_id).first()
         if list_obj:
-            raise AlreadyExistException("The list {} already exists.")
-        new_list_obj = List(list_name=list_name)
+            raise AlreadyExistException("The list {} already exists")
+        inserted_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        new_list_obj = List(list_name=list_name, inserted_time=inserted_time, user_id=user_id)
         db.session.add(new_list_obj)
         db.session.commit()
         return ListSchema().dump(new_list_obj)

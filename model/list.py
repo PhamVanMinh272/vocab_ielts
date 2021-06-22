@@ -11,7 +11,9 @@ list_and_viet = db.Table('list_and_viet',
 class List(db.Model):
     __tablename__ = "list"
     list_id = db.Column(db.Integer, primary_key=True)
-    list_name = db.Column(db.String(200), unique=True, nullable=False)
+    list_name = db.Column(db.String(200), nullable=False)
+    inserted_time = db.Column(db.String(100), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
     list_and_viet = db.relationship('Viet', secondary=list_and_viet, lazy='subquery')
 
     def __repr__(self):
