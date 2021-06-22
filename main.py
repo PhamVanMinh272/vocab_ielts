@@ -1,6 +1,4 @@
-from flask import (
-    Flask, g
-)
+from flask import Flask
 import secrets
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
