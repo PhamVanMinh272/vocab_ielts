@@ -7,6 +7,7 @@
     <title>{% block title %}{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/dialog.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/menu.css') }}">
     {% block head %}{% endblock %}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
@@ -107,12 +108,12 @@
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
-                    <div class="{{ category }}-message message">
+                    <div class="message-dialog show-message">
+                        <img class="icon-message" src="/static/public/{{ category }}.png">&nbsp;
                         {{ message }}
-                        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
                     </div>
                 {% endfor %}
-          {% endif %}
+            {% endif %}
         {% endwith %}
     </div>
     <div class="content">
