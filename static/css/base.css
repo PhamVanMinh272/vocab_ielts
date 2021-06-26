@@ -6,7 +6,7 @@
     --rgba-dark-main-color-50: rgba(26,64,64,0.5);
     --error-color: #EB6057;
     --success-color: #59B987;
-    --font-size-small: 13px;
+    --font-size-small: 12px;
 }
 
 body {
@@ -26,6 +26,7 @@ body {
 
 .content {
     margin: 0 10%;
+    margin-top: 90px;
 }
 
 footer {
@@ -40,32 +41,96 @@ footer {
 
 .menu {
     height: 70px;
-    background-color: var(--main-color);
+    width: 100%;
+    border-radius: 2px;
     display: flex;
-    color: white;
+    color: rgba(35, 37, 36, 0.75);
     line-height: 70px;
     font-size: var(--font-size-small);
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 1px 5px;
+    position: fixed;
+    top: 0;
+    background-color: white;
 }
 
 .menu a {
     color: inherit;
     display: block;
-    width: 150px;
+    width: 80px;
     text-align: center;
-    transition: transform .2s; /* Animation */
     text-decoration: none;
+}
+
+.menu a:hover {
+    color: black;
+    cursor: pointer;
+    border-bottom: 1px solid var(--rgba-dark-main-color-25);
 }
 
 .menu div.user-action {
     display: flex;
-    flex-grow: 2;
     justify-content: flex-end;
+    padding: 0 10%;
 }
 
-.menu a:hover {
-    background-color: var(--dark-main-color);
-    transform: scale(1.02);
-    cursor: pointer;
+.menu .logo-container {
+    display: flex;
+    flex-grow: 6;
+    padding-left: 10%;
+}
+
+.menu .logo {
+    width: 130px;
+    margin: 15px 0;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    color: rgba(241, 234, 241, 0.75);
+    border-radius: 5px;
+    background: linear-gradient(125deg, rgba(160,102,164,1) 0%, rgba(107,179,196,1) 100%);
+    box-shadow: 1px 1px 5px rgba(160,102,164,1);
+}
+
+.menu .current-page {
+    border-bottom: 1px solid var(--rgba-dark-main-color-25);
+}
+
+.img-account {
+    height: 30px;
+    width: 30px;
+    margin: 20px 0;
+}
+
+.menu .img-account-link {
+    width: 30px;
+}
+
+.dropdown a {
+    text-align: left;
+    text-transform:capitalize;
+    padding-left: 5px;
+}
+
+.dropdown-content {
+    display: none;
+    overflow: auto;
+}
+  
+.dropdown-content a {
+    height: 40px;
+    line-height: 40px;
+    background-color: white;
+    border-radius: 4px;
+}
+
+.dropdown-content a:hover {
+    background: linear-gradient(125deg, rgba(160,102,164,1) 0%, rgba(107,179,196,1) 100%);
+    border: none;
+    color: rgba(241, 234, 241, 0.75);
+}
+
+.show {
+    display: block;
 }
 
 div.message {
@@ -127,8 +192,7 @@ input[type="text"]:focus {
 }
 
 .disabled {
-    pointer-events: none;
-    opacity: 0.5;
+    display: none;
 }
 
 input:focus {
@@ -149,9 +213,4 @@ p {
     margin-bottom: 20px;
     height: 30px;
     line-height: 30px;
-}
-
-.img-account {
-    height: 30px;
-    width: 30px;
 }
