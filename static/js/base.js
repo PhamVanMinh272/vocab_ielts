@@ -1,5 +1,6 @@
 var errorCategory = "error";
 var successCategory = "success";
+var showMessageTime = 3000;
 
 function rmInputRedundantSpaces(selector) {
   $(selector).val($(selector).val().replace(/\s+/g, ' ').trim());
@@ -10,11 +11,16 @@ function rmRedundantSpaces(value) {
 }
 
 function showMessage(message, category) {
-  var html = `<div class="${category}-message message"> \
+  let messageId = Date.now();
+  var html = `<div id="${messageId}" class="message-dialog show-message"> \
+                <img class="icon-message" src="/static/public/${category}.png">&nbsp; \
                 ${message} \
-                <span class="closebtn" onclick='this.parentElement.style.display="none";'>&times;</span> \
               </div> `
-  $('.messages-container').html(html);
+  
+  $('.messages-container').append(html);
+  setTimeout(function(){
+    $(`#${messageId}`).removeClass("show-message");
+ }, showMessageTime);
 }
 
 function clearMessages() {
@@ -88,4 +94,15 @@ $(".account-dropbtn").click(function(e) {
 // close dropdown btn
 $("body").click(function() {
   $("#account-dropdown").removeClass("show");
+});
+
+// Execute something when DOM is ready:
+$(document).ready(function(){
+
+  let messageId = Date.now();
+  $(".message-dialog").attr("id", messageId);
+  // Delay the action
+  setTimeout(function(){
+     $(`#${messageId}`).removeClass("show-message");
+  }, showMessageTime);
 });
