@@ -75,3 +75,17 @@ $(".user-action").on("click", "#logout-btn", function() {
     }
   });
 });
+
+$(".account-dropbtn").click(function(e) {
+  e.stopPropagation();
+  if ($("#account-dropdown").hasClass("show")) {
+    $("#account-dropdown").removeClass("show");
+  } else {
+    $("#account-dropdown").addClass("show");
+  }
+});
+
+// close dropdown btn
+$("body").click(function() {
+  $("#account-dropdown").removeClass("show");
+});
