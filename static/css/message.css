@@ -1,0 +1,36 @@
+.messages-container {
+    display: flex;
+    justify-content: center;
+}
+
+.message-dialog {
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 1px 5px;
+    padding: 10px 10px;
+    height: 15px;
+    line-height: 15px;
+    position: fixed;
+    margin-top: 50px;
+    text-align: center;
+    font-size: var(--font-size-small);
+    background-color: white;
+    display: none;
+    animation-name: showing-message;
+    animation-duration: 0.5s;
+    color: rgba(0, 0, 0, 0.9);
+    z-index: 20;
+}
+
+@keyframes showing-message {
+    from {opacity: 0; margin-top: 30px;}
+    to {opacity: 1; margin-top: 50px;;}
+  }
+
+.message-dialog .icon-message {
+    height: 15px;
+    width: 15px;
+}
+
+.show-message {
+    display: flex;
+}

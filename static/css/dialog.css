@@ -18,9 +18,14 @@
     background-color: #fefefe;
     margin: auto;
     padding: 20px;
-    border: 1px solid #888;
-    width: 30%;
-    min-width: 400px;
+    border-radius: 5px;
+    width: 300px;
+}
+
+.modal-content h2 {
+    text-align: center;
+    margin-bottom: 50px;
+    color: black;
 }
   
 /* The Close Button */
@@ -28,7 +33,7 @@
     color: #aaaaaa;
     float: right;
     font-size: 28px;
-    font-weight: bold;
+    font-weight: lighter;
 }
   
 .close:hover, .close:focus {
@@ -38,13 +43,12 @@
 }
 
 .modal input {
-    width: 60%;
+    width: calc(100% - 12px);
     height: 28px;
-    border: 1px solid var(--main-color);
-    border-radius: 10px;
+    border: none;
+    border-bottom: 1px solid var(--border-color);
     padding: 0 5px;
-    margin-bottom: 20px;
-    float: right;
+    margin-bottom: 30px;
 }
 
 .modal .dialog-footer {
@@ -52,11 +56,12 @@
 }
 
 .modal b:hover {
-    color: var(--main-color);
+    color: black;
     cursor: pointer;
 }
 
 .modal .message-in-dialog {
     color: red;
     font-size: 10px;
+    margin: 0 30px;
 }

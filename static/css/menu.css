@@ -46,7 +46,7 @@
     height: 40px;
     line-height: 40px;
     text-align: center;
-    color: rgba(241, 234, 241, 0.75);
+    color: var(--color-white-purple);
     border-radius: 5px;
     background: linear-gradient(125deg, rgba(160,102,164,1) 0%, rgba(107,179,196,1) 100%);
     box-shadow: 1px 1px 5px rgba(160,102,164,1);

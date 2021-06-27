@@ -50,7 +50,7 @@
     width: 30px;
     display: block;
     margin-left: 30%;
-    transition: transform .2s; /* Animation */
+    transition: transform var(--scale-time); /* Animation */
 }
 
 .lesson-area button.add-more-user-answer-field:hover {
