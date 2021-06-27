@@ -56,8 +56,25 @@ def profile_page():
 def home_page():
     try:
         user_id = current_user.user_id if current_user.is_authenticated else None
-        lists = ListAction.get_lists_by_user_id(user_id=user_id)
+        lists = ListAction.get_all_lists_and_viet_words_quantity(
+            user_id=user_id
+        )
         return render_template('home.html', page="home_page", lists=lists)
+    except Exception as ex:
+        logging.exception(ex)
+        flash("Failed to load the page", ERROR_FLASH_MESSAGE_TYPE)
+        return render_template('home.html', page="home_page", lists=[])
+
+
+@app.route('/lesson', methods=['GET'])
+def lesson_page():
+    try:
+        user_id = current_user.user_id if current_user.is_authenticated else None
+        lists = ListAction.get_lists_by_user_id(
+            user_id=user_id
+        )
+        # use home_page to show lesson
+        return render_template('lesson.html', page="home_page", lists=lists)
     except Exception as ex:
         logging.exception(ex)
         flash("Failed to load the page", ERROR_FLASH_MESSAGE_TYPE)
