@@ -1,6 +1,7 @@
 .menu {
     height: 70px;
     width: 100%;
+    min-width: 600px;
     border-radius: 2px;
     display: flex;
     color: rgba(35, 37, 36, 0.75);
@@ -8,8 +9,8 @@
     font-size: var(--font-size-small);
     box-shadow: rgba(0, 0, 0, 0.24) 0px 1px 5px;
     position: fixed;
-    top: 0;
     background-color: white;
+    z-index: 10;
 }
 
 .menu a {

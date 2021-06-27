@@ -7,12 +7,14 @@
     --error-color: #EB6057;
     --success-color: #59B987;
     --font-size-small: 12px;
+    --color-black: rgba(35, 37, 36, 0.75);
 }
 
 body {
     margin: 0;
     font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
     min-width: 600px;
+    font-size: var(--font-size-small);
 }
 
 .logo {
@@ -55,6 +57,7 @@ footer {
     animation-name: showing-message;
     animation-duration: 0.5s;
     color: rgba(0, 0, 0, 0.9);
+    z-index: 20;
 }
 
 @keyframes showing-message {
@@ -119,4 +122,8 @@ p {
     margin-bottom: 20px;
     height: 30px;
     line-height: 30px;
+}
+
+a {
+    text-decoration: none;
 }

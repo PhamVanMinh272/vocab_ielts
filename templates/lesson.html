@@ -1,34 +1,10 @@
 {% extends 'base.html' %}
-{% block title %}Vocab{% endblock %}
+{% block title %}Lesson{% endblock %}
 {% block head %}
   {{ super() }}
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/card.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/lesson.css') }}">
 {% endblock %}
 {% block content %}
-    <div class="lists-cards-container">
-        {% for list in lists %}
-            <div class="card-of-list">
-                <div class="card-title">
-                    <img class="img-title" src="/static/public/bird.png">
-                </div>
-                <div class="card-content">
-                    <div class="name-of-list text-overflow-dot">{{ list.list_name }}</div>
-                    <div class="property-of-list">
-                        {{ list.num_viets }} words
-                    </div>
-                </div>
-                <div class="card-footer">
-                    <a class="quiz-list-btn" href="{{ url_for('lesson_page') }}">Quiz</a>
-                    <a class="edit-list-btn" href="{{ url_for('vocab_repository_page') }}">Edit</a>
-                </div>
-            </div>
-        {% endfor %}
-        
-        
-    </div>
-{% endblock %}
-{% block abc %}
     <div class="action-container">
         <button class="start-lesson-btn">Start a lesson</button>
         <label>Quantity: </label>
