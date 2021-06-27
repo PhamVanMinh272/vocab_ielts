@@ -44,7 +44,7 @@
 
 .modal input {
     width: calc(100% - 12px);
-    height: 28px;
+    height: 30px;
     border: none;
     border-bottom: 1px solid var(--border-color);
     padding: 0 5px;

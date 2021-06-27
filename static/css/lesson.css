@@ -1,18 +1,19 @@
 .lesson-area {
     margin: 10px 0;
     padding: 10px;
-    border: 1px solid var(--main-color);
-    border-radius: 10px;
+    border-radius: 5px;
+    box-shadow: 0 3px 6px rgb(0 0 0 / 16%), 0 3px 6px rgb(0 0 0 / 23%);
     text-align: center;
 }
 
 .lesson-area input[type="text"] {
     width: 60%;
     height: 30px;
-    border: 1px solid var(--main-color);
-    border-radius: 10px;
+    border: none;
+    border-bottom: 1px solid var(--border-color);
     padding: 0 5px;
     margin-bottom: 20px;
+    font-size: var(--font-size-small);
 }
 
 .start-lesson-btn {
@@ -28,8 +29,7 @@
 .answer {
     margin: 20px 30%;
     margin-bottom: 0;
-    border: 1px solid var(--main-color);
-    border-radius: 10px;
+    border-bottom: 1px solid var(--border-color);
     height: 30px;
     line-height: 30px;
     width: 40%;
@@ -66,8 +66,9 @@
 }
 
 .input-checkbox {
-    border: 1px solid var(--main-color);
-    border-radius: 10px;
+    border: none;
+    border-bottom: 1px solid var(--border-color);
+    font-size: var(--font-size-small);
     height: 30px;
     width: 50px;
     padding: 0 5px;
@@ -75,4 +76,11 @@
 
 #list-of-word-lists {
     width: 200px;
+}
+
+.list-name-title {
+    font-weight: 100;
+    font-size: 30px;
+    text-transform: uppercase;
+    text-align: center;
 }

@@ -9,6 +9,17 @@ from constants.action_constants import GENERAL_USER_ID
 
 class ListAction:
     @staticmethod
+    def get_list_by_id(user_id, list_id):
+        if not list_id:
+            raise InvalidValueException("The list id is required.")
+        list_entity = List.query.filter_by(user_id=GENERAL_USER_ID, list_id=list_id).first()
+        if not list_entity:
+            list_entity = List.query.filter_by(user_id=user_id, list_id=list_id).first()
+        if not list_entity:
+            raise NotExistException("The list (list_id={}) does not exist.".format(list_id))
+        return list_entity.to_json()
+
+    @staticmethod
     def get_lists_by_user_id(user_id) -> list:
         all_list_objects = List.query.filter_by(user_id=GENERAL_USER_ID).all()
         if user_id:
