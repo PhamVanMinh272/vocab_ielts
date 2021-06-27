@@ -6,6 +6,25 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/card.css') }}">
 {% endblock %}
 {% block content %}
+    <div class="search-container">
+        <input
+            id="list-of-word-lists"
+            placeholder="Search by name of the lists"
+            list="list-of-lists"
+            name="list-of-word-lists"
+            class="input-checkbox"
+            autocomplete="off"
+        >
+        <datalist id="list-of-lists" class="data-list-list-of-word-lists">
+            {% for list in lists %}
+                <option list-id="{{ list.list_id }}" value="{{ list.list_name }}">
+            {% endfor %}
+        </datalist>
+        <button class="search-btn">
+            <img src="/static/public/search.svg">
+        </button>
+    </div>
+    <div class="no-data">NO DATA!</div>
     <div class="lists-cards-container">
         {% for list in lists %}
             <div class="card-of-list">
@@ -26,53 +45,6 @@
         {% endfor %}
         
         
-    </div>
-{% endblock %}
-{% block abc %}
-    <div class="action-container">
-        <button class="start-lesson-btn">Start a lesson</button>
-        <label>Quantity: </label>
-        <input
-                id="quantity-of-words-input-id"
-                placeholder="20"
-                list="quantity-of-words"
-                name="quantity-of-words"
-                class="input-checkbox"
-                autocomplete="off"
-        >
-        <datalist id="quantity-of-words" class="data-list-quantity-of-words">
-            {% for num in range(1, 21) %}
-                {% set num = num*5 %}
-                <option value="{{ num }}">
-            {% endfor %}
-        </datalist>
-        &nbsp;&nbsp;
-        <label>Lists: </label>
-            <input
-                    id="list-of-word-lists"
-                    placeholder="All lists"
-                    list="list-of-lists"
-                    name="list-of-word-lists"
-                    class="input-checkbox"
-                    autocomplete="off"
-            >
-            <datalist id="list-of-lists" class="data-list-list-of-word-lists">
-                {% for list in lists %}
-                    <option list-id="{{ list.list_id }}" value="{{ list.list_name }}">
-                {% endfor %}
-            </datalist>
-        <div class="lesson-area disabled">
-            <div class="learning-progress">Progress: 0/0</div>
-            <button class="previous-word">Previous</button>
-            <button class="next-word disable">Next</button>
-            <div class="viet-word"></div>
-            <div class="user-answer-container">
-                <input id="user-eng-answer-1" class="user-eng-answer" type="text" name="eng-words" autocomplete="off"/><br>
-            </div>
-            <button class="add-more-user-answer-field"></button>
-            <button class="check-vocab-btn">Check</button>
-            <div class="answers"></div>
-        </div>
     </div>
 {% endblock %}
 {% block script %}
