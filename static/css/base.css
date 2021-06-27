@@ -25,6 +25,7 @@ body {
 .content {
     margin: 0 10%;
     margin-top: 90px;
+    min-height: 600px;
 }
 
 footer {

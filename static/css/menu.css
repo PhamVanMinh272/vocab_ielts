@@ -29,13 +29,14 @@
 
 .menu div.user-action {
     display: flex;
+    flex-grow: 2;
     justify-content: flex-end;
-    padding: 0 10%;
+    padding-right: 10%;
 }
 
 .menu .logo-container {
     display: flex;
-    flex-grow: 6;
+    flex-grow: 2;
     padding-left: 10%;
 }
 

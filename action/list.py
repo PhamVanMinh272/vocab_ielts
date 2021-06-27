@@ -30,6 +30,22 @@ class ListAction:
         return all_lists_with_num_viet
 
     @staticmethod
+    def search_lists_by_name(user_id, list_name: str = ''):
+        if not list_name.strip():
+            raise InvalidValueException("List name is required")
+        all_lists = List.query.filter_by(user_id=GENERAL_USER_ID).all()
+        all_lists.extend(List.query.filter_by(user_id=user_id).all())
+        data = []
+        for list_entity in all_lists:
+            if list_name in list_entity.list_name:
+                item = list_entity.to_json()
+                item.update({
+                    "num_viets": len(list_entity.list_and_viet)
+                })
+                data.append(item)
+        return data
+
+    @staticmethod
     def create(list_name, user_id) -> dict:
         list_objs = List.query.filter_by(list_name=list_name, user_id=GENERAL_USER_ID).all()
         list_objs.extend(List.query.filter_by(list_name=list_name, user_id=user_id).all())

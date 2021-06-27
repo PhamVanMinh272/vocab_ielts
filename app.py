@@ -103,6 +103,20 @@ def vocab_repository_page():
         )
 
 
+@app.route('/search/lists', methods=['GET'])
+def search_lists():
+    try:
+        list_name = rm_redundant_space(request.args.get("list_name"))
+        user_id = current_user.user_id if current_user.is_authenticated else None
+        lists = ListAction.search_lists_by_name(
+            user_id=user_id, list_name=list_name
+        )
+        return {"lists": lists}
+    except Exception as ex:
+        logging.exception(ex)
+        return {"erMsg": "Failed to search the lists"}, 500
+
+
 @app.route('/lists', methods=['POST'])
 @login_required
 def create_list():
