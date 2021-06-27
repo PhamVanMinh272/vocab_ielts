@@ -59,11 +59,11 @@ $("#register-btn").click(function() {
   });
 });
 
-$("#login-btn").submit(function() {
+$("#login-form").submit(function() {
   let username = $("input#login-username").val();
   let password = $("input#login-password").val();
   if (!username || !password) {
-    $("#message-register-dialog").html("Please fill out all fields.");
+    $("#message-login-dialog").html("Please fill out all fields.");
     return false;
   }
 });

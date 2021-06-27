@@ -12,16 +12,17 @@ $(".login-action").click(function(e) {
   $("#login-dialog").css("display", "block")
 });
 
-$("body").click(function() {
+$("body").mousedown(function() {
   closeDialog();
 });
 
-// Prevent stopping modal when click body
-$(".modal-content").click(function(e){
+// Prevent stopping modal when mousedown body
+$(".modal-content, .register-action, .login-action").mousedown(function(e){
   e.stopPropagation();
 });
 
 function closeDialog() {
   $(".message-in-dialog").html("");
   $(".modal").css("display", "none");
+  $(".modal input").val("");
 }
