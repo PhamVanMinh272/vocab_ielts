@@ -3,7 +3,6 @@ localStorage.clear();
 $(".start-lesson-btn").click(function(){
   clearMessages();
   rmInputRedundantSpaces("#quantity-of-words-input-id");
-  rmInputRedundantSpaces("#list-of-word-lists");
   // check quantity field
   var numOfWords = $("#quantity-of-words-input-id").val();
   var regex=/^[0-9]+$/;
@@ -17,16 +16,7 @@ $(".start-lesson-btn").click(function(){
     return false;
   }
   // check lists field
-  var listName = $("#list-of-word-lists").val();
-  var validationListName = $("#list-of-lists").find("option[value='" + listName + "']");
-  if (!listName) {
-    var listId = 0;
-  } else if (!validationListName || !(validationListName.length > 0)) {
-    showMessage("The field lists is not valid.", errorCategory);
-    return false;
-  } else {
-    var listId = validationListName.attr("list-id");
-  }
+  var listId = $(".list-name-title").attr("list-id");
   // send request
   $.getJSON(`/lists/${listId}/words`, {number_of_words: numOfWords, lesson: 1})
   .done(function(result){
@@ -133,13 +123,15 @@ $(".user-answer-container").click(function() {
 
 // clear the answwer area when click previous btn, next btn, start lesson btn
 $(".previous-word, .next-word, .start-lesson-btn").click(function() {
-  $(".user-answer-container").html('<input id="user-eng-answer-1" class="user-eng-answer" type="text" name="eng-words"/> <br>');
+  $(".user-answer-container").html('<input id="user-eng-answer-1" placeholder="Type your answer" class="user-eng-answer" type="text" name="eng-words"/> <br>');
   $(".answers").html("");
 });
 
 $(".add-more-user-answer-field").click(function() {
   var num = parseInt(localStorage.getItem("num_user_answer_input")) + 1;
   localStorage.setItem("num_user_answer_input", num)
-  $(".user-answer-container").append('<input id="user-eng-answer-' + num + '" class="user-eng-answer" type="text" name="eng-words"/> <br>');
+  $(".user-answer-container").append(
+      '<input id="user-eng-answer-' + num + '" class="user-eng-answer" type="text" name="eng-words" placeholder="Type your answer"/> <br>'
+    );
   $(".user-eng-answer").css("background-color", "white");
 });

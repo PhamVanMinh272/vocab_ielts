@@ -27,7 +27,7 @@
     <div class="no-data">NO DATA!</div>
     <div class="lists-cards-container">
         {% for list in lists %}
-            <div class="card-of-list">
+            <div class="card-of-list" list-id="{{ list.list_id }}" list-name="{{ list.list_name }}">
                 <div class="card-title">
                     <img class="img-title" src="/static/public/bird.png">
                 </div>
@@ -38,13 +38,11 @@
                     </div>
                 </div>
                 <div class="card-footer">
-                    <a class="quiz-list-btn" href="{{ url_for('lesson_page') }}">Quiz</a>
+                    <a class="quiz-list-btn" href="/lesson/{{ list.list_id }}">Quiz</a>
                     <a class="edit-list-btn" href="{{ url_for('vocab_repository_page') }}">Edit</a>
                 </div>
             </div>
         {% endfor %}
-        
-        
     </div>
 {% endblock %}
 {% block script %}

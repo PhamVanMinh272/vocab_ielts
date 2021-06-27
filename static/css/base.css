@@ -46,8 +46,6 @@ footer {
 .action-container {
     display: block;
     padding: 20px 10%;
-    /* border: 1px solid var(--rgba-dark-main-color-25); */
-    /* border-radius: 15px; */
     margin-top: 10px;
     font-size: var(--font-size-small);
 }
@@ -57,13 +55,11 @@ button {
     width: 100px;
     background: linear-gradient(125deg, rgb(218, 198, 219) 0%, rgb(201, 219, 223) 100%);
     border: none;
-    border-radius: 10px;
+    border-radius: 5px;
     color: var(--color-black);
-    transition: transform var(--scale-time); /* Animation time */
 }
 
 button:hover {
-    transform: var(--scale-proportion);
     box-shadow: 0 3px 6px rgb(0 0 0 / 16%), 0 3px 6px rgb(0 0 0 / 23%);
 }
 

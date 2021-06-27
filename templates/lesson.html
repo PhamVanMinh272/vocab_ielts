@@ -5,51 +5,35 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/lesson.css') }}">
 {% endblock %}
 {% block content %}
+    <div class="list-name-title" list-id="{{ list.list_id }}">{{ list.list_name }}</div>
     <div class="action-container">
-        <button class="start-lesson-btn">Start a lesson</button>
-        <label>Quantity: </label>
-        <input
-                id="quantity-of-words-input-id"
-                placeholder="20"
-                list="quantity-of-words"
-                name="quantity-of-words"
-                class="input-checkbox"
-                autocomplete="off"
-        >
-        <datalist id="quantity-of-words" class="data-list-quantity-of-words">
-            {% for num in range(1, 21) %}
-                {% set num = num*5 %}
-                <option value="{{ num }}">
-            {% endfor %}
-        </datalist>
-        &nbsp;&nbsp;
-        <label>Lists: </label>
+            <button class="start-lesson-btn">Start a lesson</button>
+            <label>Quantity: </label>
             <input
-                    id="list-of-word-lists"
-                    placeholder="All lists"
-                    list="list-of-lists"
-                    name="list-of-word-lists"
+                    id="quantity-of-words-input-id"
+                    placeholder="20"
+                    list="quantity-of-words"
+                    name="quantity-of-words"
                     class="input-checkbox"
                     autocomplete="off"
             >
-            <datalist id="list-of-lists" class="data-list-list-of-word-lists">
-                {% for list in lists %}
-                    <option list-id="{{ list.list_id }}" value="{{ list.list_name }}">
+            <datalist id="quantity-of-words" class="data-list-quantity-of-words">
+                {% for num in range(1, 21) %}
+                    {% set num = num*5 %}
+                    <option value="{{ num }}">
                 {% endfor %}
             </datalist>
-        <div class="lesson-area disabled">
-            <div class="learning-progress">Progress: 0/0</div>
-            <button class="previous-word">Previous</button>
-            <button class="next-word disable">Next</button>
-            <div class="viet-word"></div>
-            <div class="user-answer-container">
-                <input id="user-eng-answer-1" class="user-eng-answer" type="text" name="eng-words" autocomplete="off"/><br>
+            <div class="lesson-area disabled">
+                <div class="learning-progress">Progress: 0/0</div>
+                <button class="previous-word">Previous</button>
+                <button class="next-word disable">Next</button>
+                <div class="viet-word"></div>
+                <div class="user-answer-container"></div>
+                <button class="add-more-user-answer-field"></button>
+                <button class="check-vocab-btn">Check</button>
+                <div class="answers"></div>
             </div>
-            <button class="add-more-user-answer-field"></button>
-            <button class="check-vocab-btn">Check</button>
-            <div class="answers"></div>
         </div>
-    </div>
 {% endblock %}
 {% block script %}
   <script type="text/javascript" src="{{ url_for('static', filename='js/lesson.js') }}"></script>

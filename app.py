@@ -66,15 +66,15 @@ def home_page():
         return render_template('home.html', page="home_page", lists=[])
 
 
-@app.route('/lesson', methods=['GET'])
-def lesson_page():
+@app.route('/lesson/<list_id>', methods=['GET'])
+def lesson_page(list_id):
     try:
         user_id = current_user.user_id if current_user.is_authenticated else None
-        lists = ListAction.get_lists_by_user_id(
-            user_id=user_id
+        list_dict = ListAction.get_list_by_id(
+            user_id=user_id, list_id=list_id
         )
         # use home_page to show lesson
-        return render_template('lesson.html', page="home_page", lists=lists)
+        return render_template('lesson.html', page="home_page", list=list_dict)
     except Exception as ex:
         logging.exception(ex)
         flash("Failed to load the page", ERROR_FLASH_MESSAGE_TYPE)
