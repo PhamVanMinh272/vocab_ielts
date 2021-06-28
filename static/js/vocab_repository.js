@@ -152,30 +152,37 @@ $(".list-content-table").on("click", "tr.words-table-item", function() {
 });
 
 $(".delete-list-btn").click(function() {
-  var listName = $(".header-content-of-a-list").children("h2").text().trim();
-  if (confirm(`Are you sure you want to delete all words in ${listName}?`)) {
-    $.ajax({
-      url: `/lists/${listName}`,
-      type: 'DELETE',
-      success: function(result) {
-        if (result.message) {
-          showMessage(result.message, 'success');
-        } else {
-          showMessage("The list deleted.", 'success');
-        }
-        location.reload();
-      },
-      error: function(error) {
-        if (error.responseJSON) {
-          showMessage(error.responseJSON.erMsg, 'error');
-        } else {
-          showMessage("Delete list failed.", 'error');
-        }
-      }
+  let listId = $(".header-content-of-a-list").attr("list-id");
+  let listName = $(".header-content-of-a-list").attr("list-name");
+  $(".item-delete").html(`Are you sure to delete ${listName}?`);
+  $(".item-delete").attr("list-id", listId);
+  $("#sure-delete").click(function() {
+    deleteList(listId);
   });
-  }
-  return false;
+  $("#confirm-delete-dialog").css("display", "block");
 });
+
+function deleteList(listId) {
+  $.ajax({
+    url: `/lists/${listId}`,
+    type: 'DELETE',
+    success: function(result) {
+      if (result.message) {
+        showMessage(result.message, 'success');
+      } else {
+        showMessage("The list deleted.", 'success');
+      }
+      location.reload();
+    },
+    error: function(error) {
+      if (error.responseJSON) {
+        showMessage(error.responseJSON.erMsg, 'error');
+      } else {
+        showMessage("Delete list failed.", 'error');
+      }
+    }
+  });
+}
 
 $(".add-words-btn").click(function() {
   clearDetailViet();

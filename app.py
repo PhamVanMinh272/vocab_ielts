@@ -134,10 +134,11 @@ def create_list():
         return {"erMsg": "Failed to create your list."}, 500
 
 
-@app.route('/lists/<list_name>', methods=['DELETE'])
-def delete_list(list_name):
+@app.route('/lists/<list_id>', methods=['DELETE'])
+@login_required
+def delete_list(list_id):
     try:
-        ListAction.delete(list_name=list_name)
+        list_name = ListAction.delete(user_id=current_user.user_id, list_id=list_id)
         return {"message": "The list {} was deleted".format(list_name)}, 200
     except NotExistException as ex:
         logging.exception(ex)

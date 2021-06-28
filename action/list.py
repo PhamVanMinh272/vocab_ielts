@@ -69,15 +69,15 @@ class ListAction:
         return ListSchema().dump(new_list_obj)
 
     @staticmethod
-    def delete(list_id=None, list_name=None):
+    def delete(user_id, list_id):
         if list_id:
-            list_obj = List.query.filter_by(list_id=list_id).first()
-        elif list_name:
-            list_obj = List.query.filter_by(list_name=list_name).first()
+            list_obj = List.query.filter_by(user_id=user_id, list_id=list_id).first()
         else:
-            raise InvalidValueException("Either list_id or list_name is required")
+            raise InvalidValueException("list_id is required")
         if list_obj:
+            list_name = list_obj.list_name
             db.session.delete(list_obj)
             db.session.commit()
+            return list_name
         else:
             raise NotExistException("The list not found")
