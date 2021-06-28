@@ -21,8 +21,16 @@ $(".modal-content, .register-action, .login-action").mousedown(function(e){
   e.stopPropagation();
 });
 
+// cancel delete
+$("#cancel-delete").click(function() {
+  closeDialog();
+});
+
 function closeDialog() {
+  // register and login
   $(".message-in-dialog").html("");
   $(".modal").css("display", "none");
   $(".modal input").val("");
+  // confirm delete
+  $("#sure-delete").off("click");
 }

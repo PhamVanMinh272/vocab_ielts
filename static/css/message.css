@@ -23,8 +23,8 @@
 
 @keyframes showing-message {
     from {opacity: 0; margin-top: 30px;}
-    to {opacity: 1; margin-top: 50px;;}
-  }
+    to {opacity: 1; margin-top: 50px;}
+}
 
 .message-dialog .icon-message {
     height: 15px;
