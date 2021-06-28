@@ -81,6 +81,7 @@ $(".a-list-value").click(function() {
   var listName = $(this).attr("list-name");
   $.getJSON(`/lists/${listId}/words`)
   .done(function(result){
+    $(".list-content").css("display", "block");
     $(".header-content-of-a-list").children("h2").html(listName);
     $(".header-content-of-a-list").attr("list-id", listId);
     $(".header-content-of-a-list").attr("list-name", listName);

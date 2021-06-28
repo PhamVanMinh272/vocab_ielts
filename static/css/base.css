@@ -57,6 +57,7 @@ button {
     border: none;
     border-radius: 5px;
     color: var(--color-black);
+    font-size: 12px;
 }
 
 button:hover {

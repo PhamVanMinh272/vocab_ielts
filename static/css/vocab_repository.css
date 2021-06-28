@@ -70,36 +70,36 @@
 }
 
 .list-of-list-name {
-    background-color: var(--main-color);
-    color: white;
+    color: var(--color-black);
     width: 25%;
-    border: 0.1px solid var(--main-color);
-    border-left: none;
-    border-bottom: none;
+    border-radius: 3px;
     padding: 50px 20px;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 }
 
 .list-of-list-name h2 {
     margin: 0;
     margin-bottom: 50px;
+    font-weight: lighter;
+    color: black;
 }
 
 .list-content {
     width: 75%;
     padding-left: 30px;
+    display: none;
 }
 
 .a-list-value {
     height: 40px;
     text-align: left;
     line-height: 40px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.25);
     font-size: var(--font-size-small);
     display: flex;
 }
 
 .a-list-value:hover {
-    background-color: var(--dark-main-color);
+    color: black;
 }
 
 .list-name-value {
@@ -113,9 +113,13 @@
 
 .header-content-of-a-list {
     padding: 20px 20px;
-    background-color: var(--main-color);
-    color: white;
+    color: var(--color-black);
     margin-bottom: 30px;
+    text-transform: uppercase;
+}
+
+.header-content-of-a-list h2 {
+    font-weight: lighter;
 }
 
 .list-content-table {
@@ -124,8 +128,7 @@
 }
 
 .list-content-table th {
-    border-bottom: 1px solid rgba(6, 19, 8, 0.25);
-  
+    color: black;
 }
 
 .list-content-table td {
@@ -136,24 +139,10 @@
   }
 
 .list-content-table tr.words-table-item:hover {
-    background-color: var(--dark-main-color);
-    color: white;
+    color: black;
+    cursor: pointer;
 }
 
 .management-list-btn-container {
-    text-align: right;
-}
-
-button.delete-list-btn {
-    background-color: rgb(241, 88, 88);
-}
-
-button.delete-list-btn:hover {
-    background-color: rgb(153, 17, 17);
-    color: white;
-}
-
-button.add-words-btn:hover {
-    background-color: #65e0e0;
-    color: white;
+    text-align: center;
 }
