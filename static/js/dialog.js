@@ -33,4 +33,8 @@ function closeDialog() {
   $(".modal input").val("");
   // confirm delete
   $("#sure-delete").off("click");
+  // list detail
+  $("input#viet-word").val('');
+  $("input.eng-word").val('');
+  $(".more-eng-field").html('');
 }

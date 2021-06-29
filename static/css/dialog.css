@@ -21,6 +21,8 @@
     padding: 20px;
     border-radius: 5px;
     width: 300px;
+    max-height: 400px;
+    overflow-y: auto;
 }
 
 @keyframes showing-modal {
@@ -75,3 +77,88 @@
     font-size: 10px;
     margin: 0 30px;
 }
+
+/* list detail dialog */
+.manage-list-content {
+    min-width: 600px;
+}
+
+.header-content-of-a-list {
+    padding: 20px 20px;
+    color: var(--color-black);
+    text-transform: uppercase;
+}
+
+.header-content-of-a-list h2 {
+    font-weight: lighter;
+}
+
+/* add word area */
+.add-words-container {
+    padding: 10px 100px 30px 100px;
+}
+
+.add-words-container button.add-more-eng-word-field {
+    background: url('../public/add.png');
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    -webkit-background-size: 100% 100%; /*  Safari  */
+    -khtml-background-size: 100% 100%; /*  Konqueror  */
+    -moz-background-size: 100% 100%; /*  Firefox  */
+    height: 30px;
+    width: 30px;
+    display: block;
+    transition: transform var(--scale-time); /* Animation */
+}
+
+.add-words-container button.add-more-eng-word-field:hover {
+    transform: var(--scale-proportion);
+}
+
+.add-more-eng-word-field-container {
+    height: 30px;
+    padding: 0;
+    margin: 0;
+    margin-bottom: 10px;
+}
+
+.create-words-btn {
+    float: right;
+}
+
+/* table words */
+.list-content-table {
+    text-align: left;
+    font-size: var(--font-size-small);
+}
+
+.list-content-table th {
+    color: black;
+}
+
+.list-content-table td {
+    height: 30px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis
+  }
+
+.list-content-table tr.words-table-item:hover {
+    color: black;
+    cursor: pointer;
+}
+
+.img-word-actions {
+    width: 20px;
+    height: 20px;
+    transition: transform var(--scale-time); /* Animation */
+}
+
+.img-word-actions:hover {
+    transform: scale(1.25);
+}
+
+.management-list-btn-container {
+    text-align: center;
+}
+
