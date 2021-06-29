@@ -49,7 +49,7 @@
                     </div>
                     <div class="card-footer">
                         <a class="quiz-list-btn" href="/lesson/{{ list.list_id }}">Quiz</a>
-                        <a class="edit-list-btn" href="{{ url_for('vocab_repository_page') }}">Edit</a>
+                        <a class="edit-list-btn" list-id="{{ list.list_id }}" list-name="{{ list.list_name }}">Edit</a>
                     </div>
                 </div>
             {% endfor %}
