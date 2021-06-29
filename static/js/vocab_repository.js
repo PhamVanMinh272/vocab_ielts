@@ -15,28 +15,28 @@ $("#list-of-word-lists").keyup(function() {
   }
 });
 
-$(".create-a-list-btn").click(function() {
-  rmInputRedundantSpaces("#list-of-word-lists");
-  var listName = $("#list-of-word-lists").val();
-  if (listName.length > 50 ) {
-    showMessage("The list's name must less than 50 characters.", 'error');
-    return false
-  }
-  $.post("/lists", { list_name: $("#list-of-word-lists").val() })
-  .done(function(result){
-    $("#list-of-lists").append(`<option list-id="${result.list_id}" value="${result.list_name}">`)
-    showMessage(`The list ${result.list_name} was saved successfully.`, 'success');
-    $(".create-a-list-btn").addClass("disabled");
-    $(".add-words-container").removeClass("disabled");
-  })
-  .fail(function(error) {
-    if (error.responseJSON) {
-      showMessage(error.responseJSON.erMsg, 'error');
-    } else {
-      showMessage("Cannot create the list.", 'error');
-    }
-  });
-});
+// $(".create-a-list-btn").click(function() {
+//   rmInputRedundantSpaces("#list-of-word-lists");
+//   var listName = $("#list-of-word-lists").val();
+//   if (listName.length > 50 ) {
+//     showMessage("The list's name must less than 50 characters.", 'error');
+//     return false
+//   }
+//   $.post("/lists", { list_name: $("#list-of-word-lists").val() })
+//   .done(function(result){
+//     $("#list-of-lists").append(`<option list-id="${result.list_id}" value="${result.list_name}">`)
+//     showMessage(`The list ${result.list_name} was saved successfully.`, 'success');
+//     $(".create-a-list-btn").addClass("disabled");
+//     $(".add-words-container").removeClass("disabled");
+//   })
+//   .fail(function(error) {
+//     if (error.responseJSON) {
+//       showMessage(error.responseJSON.erMsg, 'error');
+//     } else {
+//       showMessage("Cannot create the list.", 'error');
+//     }
+//   });
+// });
 
 $(".add-more-eng-word-field").click(function() {
   $(".more-eng-field").append(`

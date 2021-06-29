@@ -118,9 +118,10 @@ def search_lists():
 
 
 @app.route('/lists', methods=['POST'])
-@login_required
 def create_list():
     try:
+        if not current_user.is_authenticated:
+            return {"erMsg": "Please login to create your own list"}, 400
         list_name = rm_redundant_space(request.form['list_name'])
         if not list_name:
             return {"erMsg": "Failed to create your list. Your list's name is empty."}, 400
