@@ -1,19 +1,13 @@
-.lists-cards-container {
-    display: flex;
-    flex-wrap: wrap;
-    padding: 35px;
-    padding-top: 0;
-}
-
 .card-of-list {
     width: 240px;
     height: 350px;
     color: var(--color-black);
     border-radius: 5px;
     margin: auto;
-    margin-top: 30px;
-    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    margin-bottom: 30px;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
     transition: transform var(--scale-time); /* Animation time */
+    background: white;
 }
 
 .card-of-list:hover {
