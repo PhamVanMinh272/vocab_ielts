@@ -38,3 +38,8 @@ function closeDialog() {
   $("input.eng-word").val('');
   $(".more-eng-field").html('');
 }
+
+$("#confirm-delete-dialog").mousedown(function(e) {
+  e.stopPropagation();
+  $(this).css("display", "none");
+});

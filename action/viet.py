@@ -7,7 +7,7 @@ from model.list import List, ListSchema
 from model.eng import Eng, EngSchema
 from action.eng import EngAction
 from utils.utils import rm_redundant_space
-from utils.exceptions import NotExistException, AlreadyExistException
+from utils.exceptions import NotExistException, AlreadyExistException, InvalidValueException
 from constants.action_constants import DICTIONARY_TYPE, OBJECT_TYPE
 from main import db
 
@@ -94,6 +94,41 @@ class VietAction:
         if return_type == DICTIONARY_TYPE:
             vietnamese_word = vietnamese_word.to_json()
         return vietnamese_word
+
+    @staticmethod
+    def update(user_id, viet_id, viet_word, list_engs: dict, list_new_engs: list):
+        viet_obj = Viet.query.filter_by(viet_id=viet_id).first()
+        viet_obj.viet_word = viet_word
+        for eng_id, eng_word in list_engs.items():
+            try:
+                if eng_word:
+                    EngAction.update(eng_id, eng_word)
+                else:
+                    EngAction.delete(eng_id)
+            except Exception as ex:
+                logging.exception(ex)
+        # remove duplicate eng_words
+        eng_words = set(list_new_engs)
+        for eng in eng_words:
+            eng_obj = Eng.query.filter_by(eng_word=eng).first()
+            if not eng_obj:
+                eng_obj = EngAction.create(eng_word=eng, return_type=OBJECT_TYPE)
+                viet_obj.english_words.append(eng_obj)
+            else:
+                viet_obj.english_words.append(eng_obj)
+        db.session.commit()
+
+    @staticmethod
+    def delete(user_id, viet_id) -> dict:
+        if not viet_id:
+            raise InvalidValueException("The viet_id is required")
+        viet_obj = Viet.query.filter_by(viet_id=viet_id).first()
+        if not viet_obj:
+            raise NotExistException("The Vietnamese word (viet_id={}) does not exist".format(viet_id))
+        viet_info = viet_obj.to_json()
+        db.session.delete(viet_obj)
+        db.session.commit()
+        return viet_info
 
     @staticmethod
     def check_english_words(viet_id, eng_words: list) -> dict:

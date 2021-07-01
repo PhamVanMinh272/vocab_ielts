@@ -204,6 +204,49 @@ def save_words(list_id):
         return {'erMsg': 'Failed to save.'}, 500
 
 
+@app.route('/words/<word_id>', methods=['PUT'])
+def update_word(word_id):
+    try:
+        if not current_user.is_authenticated:
+            return {"erMsg": "Please login to update your word"}, 400
+        if not word_id:
+            return {'erMsg': "Failed to save. Please provide a word"}, 404
+        viet_word = request.form.get("viet_word")
+        eng_words = request.form.get("eng_words")
+        eng_words = json.loads(eng_words)
+        new_eng_words = request.form.get("new_eng_words")
+        new_eng_words = json.loads(new_eng_words)
+        VietAction.update(user_id=current_user.user_id,
+                          viet_id=word_id,
+                          viet_word=viet_word,
+                          list_engs=eng_words,
+                          list_new_engs=new_eng_words)
+        return {"message": 'The words were updated'}, 200
+    except NotExistException as ex:
+        logging.exception(ex)
+        return {'erMsg': "The word does not exist"}, 500
+    except Exception as ex:
+        logging.exception(ex)
+        return {'erMsg': 'Failed to update the word.'}, 500
+
+
+@app.route('/words/<word_id>', methods=['DELETE'])
+def delete_word(word_id):
+    try:
+        if not current_user.is_authenticated:
+            return {"erMsg": "Please login to delete your word"}, 400
+        if not word_id:
+            return {'erMsg': "Failed to save. Please provide a word"}, 404
+        deleted_word = VietAction.delete(user_id=current_user.user_id, viet_id=word_id)
+        return {"message": 'The words {} were deleted'.format(deleted_word.get("viet_word"))}, 200
+    except NotExistException as ex:
+        logging.exception(ex)
+        return {'erMsg': "The word does not exist"}, 500
+    except Exception as ex:
+        logging.exception(ex)
+        return {'erMsg': 'Failed to delete.'}, 500
+
+
 @app.route('/words/<viet_id>/check-vocab', methods=['GET'])
 def check_vocab(viet_id):
     try:
