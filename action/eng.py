@@ -18,3 +18,23 @@ class EngAction:
         db.session.add(eng)
         db.session.commit()
         return eng.to_json() if return_type == DICTIONARY_TYPE else eng
+
+    @staticmethod
+    def update(eng_id, eng_word):
+        eng_obj = Eng.query.filter_by(eng_id=eng_id).first()
+        if not eng_obj:
+            raise NotExistException("The English word (eng_id={}) does not exist".format(eng_id))
+        eng_obj.eng_word = eng_word
+        db.session.commit()
+        return eng_obj.to_json()
+
+    @staticmethod
+    def delete(eng_id):
+        eng_obj = Eng.query.filter_by(eng_id=eng_id).first()
+        if not eng_obj:
+            raise NotExistException("The English word (eng_id={}) does not exist".format(eng_id))
+        eng_info = eng_obj.to_json()
+        db.session.delete(eng_obj)
+        db.session.commit()
+        return eng_info
+

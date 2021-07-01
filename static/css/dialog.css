@@ -78,6 +78,11 @@
     margin: 0 30px;
 }
 
+/* deletion confirmation */
+#confirm-delete-dialog {
+    z-index: 1000;
+}
+
 /* list detail dialog */
 .manage-list-content {
     min-width: 600px;
@@ -122,7 +127,7 @@
     margin-bottom: 10px;
 }
 
-.create-words-btn {
+#add-update-btn-container {
     float: right;
 }
 
