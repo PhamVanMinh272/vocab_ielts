@@ -266,17 +266,17 @@ def register():
         password = request.form.get("password")
         confirm_password = request.form.get("confirm_password")
         if not username or not password or not confirm_password:
-            return {'erMsg': 'The input data are not valid.'}, 400
+            return {'erMsg': 'The input data are not valid'}, 400
         if password != confirm_password:
-            return {'erMsg': 'The confirm-password does not match the password.'}, 400
+            return {'erMsg': 'The confirm-password does not match the password'}, 400
         UserAction.create(username=username, password=password)
-        return {}
+        return {'message': 'Create your account successfully'}, 200
     except AlreadyExistException as ex:
         logging.exception(ex)
-        return {'erMsg': 'The username has already existed.'}, 400
+        return {'erMsg': 'The username has already existed'}, 400
     except Exception as ex:
         logging.exception(ex)
-        return {'erMsg': 'Failed to register.'}, 500
+        return {'erMsg': 'Failed to register'}, 500
 
 
 if __name__ == "__main__":

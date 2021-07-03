@@ -1,20 +1,16 @@
 from main import db, ma
-from .viet import Viet
-
-
-list_and_viet = db.Table('list_and_viet',
-    db.Column('list_id', db.Integer, db.ForeignKey('list.list_id'), primary_key=True),
-    db.Column('viet_id', db.Integer, db.ForeignKey('viet_words.viet_id'), primary_key=True)
-)
+from .word import Word
 
 
 class List(db.Model):
     __tablename__ = "list"
     list_id = db.Column(db.Integer, primary_key=True)
     list_name = db.Column(db.String(200), nullable=False)
+    decription = db.Column(db.String(1000))
     inserted_time = db.Column(db.String(100), nullable=False)
+    type = db.Column(db.Integer)
     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
-    list_and_viet = db.relationship('Viet', secondary=list_and_viet, lazy='subquery')
+    words = db.relationship('Word', backref='list', lazy=True)
 
     def __repr__(self):
         return self.list_name
@@ -26,4 +22,3 @@ class List(db.Model):
 class ListSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = List
-        include_fk = True

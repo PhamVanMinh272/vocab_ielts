@@ -35,7 +35,7 @@ class ListAction:
         for list_entity in all_lists:
             item = list_entity.to_json()
             item.update({
-                "num_viets": len(list_entity.list_and_viet)
+                "num_viets": len(list_entity.words)
             })
             all_lists_with_num_viet.append(item)
         return all_lists_with_num_viet
@@ -51,7 +51,7 @@ class ListAction:
             if list_name in list_entity.list_name:
                 item = list_entity.to_json()
                 item.update({
-                    "num_viets": len(list_entity.list_and_viet)
+                    "num_viets": len(list_entity.words)
                 })
                 data.append(item)
         return data

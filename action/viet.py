@@ -2,7 +2,7 @@ import datetime
 import logging
 import random
 
-from model.viet import Viet, VietSchema
+from model.word import Word, VietSchema
 from model.list import List, ListSchema
 from model.eng import Eng, EngSchema
 from action.eng import EngAction
@@ -40,7 +40,7 @@ class VietAction:
 
     @staticmethod
     def get_all_words():
-        vietnamese_words = Viet.query.all()
+        vietnamese_words = Word.query.all()
         return VietSchema(many=True).dump(vietnamese_words)
 
     @staticmethod
@@ -60,7 +60,7 @@ class VietAction:
 
     @staticmethod
     def get_word_by_word_id(word_id):
-        vietnamese_word = Viet.query.filter_by(viet_id=word_id).first()
+        vietnamese_word = Word.query.filter_by(viet_id=word_id).first()
         if vietnamese_word:
             viet_with_engs = vietnamese_word.to_json()
             viet_with_engs.update({
@@ -72,12 +72,12 @@ class VietAction:
     @staticmethod
     def create(list_id: str, viet_word: str, eng_words: list, return_type=DICTIONARY_TYPE):
         inserted_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        vietnamese_word = Viet.query.filter_by(viet_word=viet_word).first()
+        vietnamese_word = Word.query.filter_by(viet_word=viet_word).first()
         list_obj = List.query.filter_by(list_id=list_id).first()
         if not list_obj:
             raise NotExistException("The list does not exist.")
         if not vietnamese_word:
-            vietnamese_word = Viet(viet_word=viet_word, inserted_time=inserted_time)
+            vietnamese_word = Word(viet_word=viet_word, inserted_time=inserted_time)
             db.session.add(vietnamese_word)
         list_obj.list_and_viet.append(vietnamese_word)
         eng_words = [rm_redundant_space(i) for i in eng_words]
@@ -97,7 +97,7 @@ class VietAction:
 
     @staticmethod
     def update(user_id, viet_id, viet_word, list_engs: dict, list_new_engs: list):
-        viet_obj = Viet.query.filter_by(viet_id=viet_id).first()
+        viet_obj = Word.query.filter_by(viet_id=viet_id).first()
         viet_obj.viet_word = viet_word
         for eng_id, eng_word in list_engs.items():
             try:
@@ -122,7 +122,7 @@ class VietAction:
     def delete(user_id, viet_id) -> dict:
         if not viet_id:
             raise InvalidValueException("The viet_id is required")
-        viet_obj = Viet.query.filter_by(viet_id=viet_id).first()
+        viet_obj = Word.query.filter_by(viet_id=viet_id).first()
         if not viet_obj:
             raise NotExistException("The Vietnamese word (viet_id={}) does not exist".format(viet_id))
         viet_info = viet_obj.to_json()
@@ -138,7 +138,7 @@ class VietAction:
         :param eng_words: list English answers of users
         :return: English words in DB and a list of user's checked English words
         """
-        vietnamese_word = Viet.query.filter_by(viet_id=viet_id).first()
+        vietnamese_word = Word.query.filter_by(viet_id=viet_id).first()
         if not vietnamese_word:
             raise NotExistException("The Vietnamese word does not exist.")
         data = {}

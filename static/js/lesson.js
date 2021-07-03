@@ -1,7 +1,7 @@
 localStorage.clear();
 
 $(".start-lesson-btn").click(function(){
-  clearMessages();
+  toastMessage.clearMessages();
   rmInputRedundantSpaces("#quantity-of-words-input-id");
   // check quantity field
   var numOfWords = $("#quantity-of-words-input-id").val();

@@ -11,6 +11,9 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/message.css') }}">
     {% block head %}{% endblock %}
     <!-- <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script> -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cutive+Mono&family=Fira+Code&family=Source+Code+Pro:ital,wght@0,200;0,300;0,400;0,500;1,200;1,300;1,400;1,500&display=swap');
+    </style>
 </head>
 <body>
     <div class="menu">
@@ -64,9 +67,9 @@
             <h2>Register</h2>
             <div id="message-register-dialog" class="message-in-dialog"></div>
             <div class="action-container">
-                <input id="register-username" class="username" type="text" name="username" placeholder="Username"/><br>
-                <input id="register-password" type="password" name="password" placeholder="Password"/><br>
-                <input id="register-confirm-password" type="password" name="password" placeholder="Confirm-Password"/><br>
+                <input id="register-username" class="username" type="text" name="username" spellcheck="false" placeholder="Username"/><br>
+                <input id="register-password" type="password" name="password" spellcheck="false" placeholder="Password"/><br>
+                <input id="register-confirm-password" type="password" name="password" spellcheck="false" placeholder="Confirm-Password"/><br>
                 <button id="register-btn">Register</button>
                 <div class="dialog-footer">Have already an account? <b class="login-action">Login here</b></div>
             </div>
@@ -157,6 +160,8 @@
     <script src="/static/js/jquery_3.6.js"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/base.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/dialog.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/user.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/message.js') }}"></script>
     {% block script %}{% endblock %}
 </body>
 </html>

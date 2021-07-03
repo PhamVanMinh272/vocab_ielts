@@ -1,17 +1,12 @@
 import datetime
 from model.user import User, UserSchema
 from utils.exceptions import NotExistException, AlreadyExistException
-from constants.action_constants import DICTIONARY_TYPE
+from constants.action_constants import DICTIONARY_TYPE, NORMAL_USER_TYPE
 from main import db, bcrypt
 from flask_login import UserMixin
 
 
 class UserAction(UserMixin):
-    user_id = None
-
-    def __init__(self, user_id):
-        self.user_id = user_id
-
     @staticmethod
     def create(username, password, return_type=DICTIONARY_TYPE) -> dict:
         user = User.query.filter_by(username=username).first()
@@ -21,6 +16,7 @@ class UserAction(UserMixin):
         user = User(
             username=username,
             password=bcrypt.generate_password_hash(password).decode('utf-8'),
+            user_type=NORMAL_USER_TYPE,
             inserted_time=inserted_time
         )
         db.session.add(user)

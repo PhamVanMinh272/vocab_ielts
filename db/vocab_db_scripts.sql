@@ -2,13 +2,16 @@ CREATE TABLE user (
 	user_id INTEGER PRIMARY KEY,
 	username TEXT NOT NULL,
 	password TEXT NOT NULL,
-	inserted_time TEXT
+    user_type INTEGER, --1: normal, 0: admin
+	inserted_time INTEGER
 );
 
 CREATE TABLE list (
 	list_id INTEGER PRIMARY KEY,
 	list_name TEXT NOT NULL,
-	inserted_time TEXT,
+    decription TEXT,
+    type INTEGER, --0: public, 1:private
+	inserted_time INTEGER,
     user_id INTEGER,
     FOREIGN KEY (user_id)
         REFERENCES user (user_id)
@@ -16,65 +19,76 @@ CREATE TABLE list (
             ON UPDATE NO ACTION
 );
 
-CREATE TABLE class (
-	class_id INTEGER PRIMARY KEY,
-	class_name TEXT NOT NULL
+CREATE TABLE part_of_speech (
+	part_of_speech_id INTEGER PRIMARY KEY,
+	label TEXT NOT NULL
 );
 
-CREATE TABLE viet_words (
-	viet_id INTEGER PRIMARY KEY,
-	viet_word TEXT NOT NULL,
-	inserted_time TEXT
-);
-
-CREATE TABLE eng_words(
-    eng_id INTEGER PRIMARY KEY,
-	eng_word TEXT NOT NULL,
-	inserted_time TEXT
-);
-
-CREATE TABLE list_and_viet(
+CREATE TABLE word (
+	word_id INTEGER PRIMARY KEY,
+	word TEXT NOT NULL,
+    context TEXT,
+    languge INTEGER, --0: Vietnamese, 1: English
+	inserted_time INTEGER,
+    severity INTEGER, --0: has already remembered, 1: need learn more
     list_id INTEGER,
-	viet_id INTEGER,
-    PRIMARY KEY (list_id, viet_id),
+    FOREIGN KEY (list_id)
+        REFERENCES list (list_id)
+            ON DELETE CASCADE
+            ON UPDATE NO ACTION
+);
+
+CREATE TABLE list_word(
+    list_id INTEGER,
+	word_id INTEGER,
+    PRIMARY KEY (list_id, word_id),
     FOREIGN KEY (list_id)
         REFERENCES list (list_id)
             ON DELETE CASCADE
             ON UPDATE NO ACTION,
-    FOREIGN KEY (viet_id)
-        REFERENCES viet_words (viet_id)
+    FOREIGN KEY (word_id)
+        REFERENCES word (word_id)
             ON DELETE CASCADE
             ON UPDATE NO ACTION
 );
 
-CREATE TABLE class_and_viet(
-    class_id INTEGER,
-	viet_id INTEGER,
-    PRIMARY KEY (class_id, viet_id),
-    FOREIGN KEY (class_id)
-        REFERENCES class (class_id)
+CREATE TABLE part_of_speech_word(
+    part_of_speech_id INTEGER,
+	word_id INTEGER,
+    PRIMARY KEY (part_of_speech_id, word_id),
+    FOREIGN KEY (part_of_speech_id)
+        REFERENCES part_of_speech (part_of_speech_id)
             ON DELETE CASCADE
             ON UPDATE NO ACTION,
-    FOREIGN KEY (viet_id)
-        REFERENCES viet_words (viet_id)
+    FOREIGN KEY (word_id)
+        REFERENCES word (word_id)
             ON DELETE CASCADE
             ON UPDATE NO ACTION
 );
 
-CREATE TABLE viet_eng(
-    eng_id INTEGER,
-	viet_id INTEGER,
-    PRIMARY KEY (eng_id, viet_id),
-    FOREIGN KEY (eng_id) 
-        REFERENCES eng_words (eng_id) 
+CREATE TABLE word_meaning (
+    english_id INTEGER,
+	vietnamese_id INTEGER,
+    PRIMARY KEY (english_id, vietnamese_id),
+    FOREIGN KEY (english_id) 
+        REFERENCES word (word_id) 
             ON DELETE CASCADE 
             ON UPDATE NO ACTION,
-    FOREIGN KEY (viet_id) 
-        REFERENCES viet_words (viet_id) 
+    FOREIGN KEY (vietnamese_id) 
+        REFERENCES word (word_id) 
             ON DELETE CASCADE 
             ON UPDATE NO ACTION
 );
 
 --data
-INSERT INTO user(`user_id`, `username`, `password`, `inserted_time`) values(1, "general_user", '1', datetime());
-INSERT INTO list(`list_name`, `inserted_time`, `user_id`) values('3000 common words', datetime(), 1);
+INSERT INTO user(`user_id`, `username`, `password`, `user_type`, `inserted_time`) values(1, "admin", '1', 0, strftime('%s', 'now'));
+INSERT INTO list(`list_name`, `inserted_time`, `user_id`) values('3000 common words', strftime('%s', 'now'), 1);
+INSERT INTO part_of_speech(`part_of_speech_id`, `label`) values(1, 'Noun');
+INSERT INTO part_of_speech(`part_of_speech_id`, `label`) values(2, 'Verb');
+INSERT INTO part_of_speech(`part_of_speech_id`, `label`) values(3, 'Adj');
+INSERT INTO part_of_speech(`part_of_speech_id`, `label`) values(4, 'Adv');
+INSERT INTO part_of_speech(`part_of_speech_id`, `label`) values(5, 'Determiner');
+INSERT INTO part_of_speech(`part_of_speech_id`, `label`) values(6, 'Pronoun');
+INSERT INTO part_of_speech(`part_of_speech_id`, `label`) values(7, 'Prep');
+INSERT INTO part_of_speech(`part_of_speech_id`, `label`) values(8, 'Conjunction');
+INSERT INTO part_of_speech(`part_of_speech_id`, `label`) values(9, 'Interjection');
