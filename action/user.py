@@ -32,4 +32,9 @@ class UserAction(UserMixin):
             return user_obj
         return False
 
-
+    @staticmethod
+    def get_user_type(user_id):
+        user_obj = User.query.filter_by(user_id=user_id).first()
+        if not user_obj:
+            raise NotExistException("The user (user_id={}) does not exist".format(user_id))
+        return user_obj.user_type

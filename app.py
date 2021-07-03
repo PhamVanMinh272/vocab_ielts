@@ -5,7 +5,7 @@ import json
 from flask_login import login_user, login_required, logout_user, current_user
 from main import app
 from action.list import ListAction
-from action.viet import VietAction
+from action.word import WordAction
 from action.user import UserAction
 from utils.exceptions import (
     NotExistException, AlreadyExistException
@@ -56,7 +56,7 @@ def profile_page():
 def home_page():
     try:
         user_id = current_user.user_id if current_user.is_authenticated else None
-        lists = ListAction.get_all_lists_and_viet_words_quantity(
+        lists = ListAction.get_all_lists_and_words_quantity(
             user_id=user_id
         )
         return render_template('home.html', page="home_page", lists=lists)
@@ -121,7 +121,7 @@ def search_lists():
 def create_list():
     try:
         if not current_user.is_authenticated:
-            return {"erMsg": "Please login to create your own list"}, 400
+            return {"erMsg": "Please login to create your own list"}, 401
         list_name = rm_redundant_space(request.form['list_name'])
         if not list_name:
             return {"erMsg": "Failed to create your list. Your list's name is empty."}, 400
@@ -139,19 +139,22 @@ def create_list():
 @login_required
 def delete_list(list_id):
     try:
-        list_name = ListAction.delete(user_id=current_user.user_id, list_id=list_id)
-        return {"message": "The list {} was deleted".format(list_name)}, 200
+        if not current_user.is_authenticated:
+            return {"erMsg": "Please login to delete your list"}, 401
+        list_info = ListAction.delete(user_id=current_user.user_id, list_id=list_id)
+        return {"message": "The list {} was deleted".format(list_info["list_name"])}, 200
     except NotExistException as ex:
         logging.exception(ex)
-        return {'erMsg': 'Failed to delete the list. The list was not found.'}, 400
+        return {'erMsg': 'The list was not found'}, 400
     except Exception as ex:
         logging.exception(ex)
-        return {'erMsg': 'Failed to delete the list.'}, 500
+        return {'erMsg': 'Failed to delete the list'}, 500
 
 
 @app.route('/lists/<list_id>/words', methods=['GET'])
 def get_words(list_id):
     try:
+        user_id = current_user.user_id if current_user.is_authenticated else None
         lesson = request.args.get("lesson")
         if lesson:
             try:
@@ -159,9 +162,9 @@ def get_words(list_id):
             except Exception as ex:
                 logging.exception(ex)
                 return {'erMsg': 'The number of words is invalid.'}, 400
-            data = VietAction.get_words_for_a_lesson(list_id=list_id, quantity=number_of_words)
+            data = WordAction.get_words_for_a_lesson(list_id=list_id, quantity=number_of_words)
         else:
-            data = VietAction.get_words_by_list_id(list_id)
+            data = WordAction.get_words_by_list_id(user_id=user_id, list_id=list_id)
         return {"viets": data}, 200
     except NotExistException as ex:
         logging.exception(ex)
@@ -174,7 +177,7 @@ def get_words(list_id):
 @app.route('/words/<word_id>', methods=['GET'])
 def get_a_vietnamese_word(word_id):
     try:
-        viet_with_engs = VietAction.get_word_by_word_id(word_id=word_id)
+        viet_with_engs = WordAction.get_word_by_word_id(word_id=word_id)
         return viet_with_engs, 200
     except NotExistException as ex:
         logging.exception(ex)
@@ -192,7 +195,7 @@ def save_words(list_id):
         engs_value = json.loads(engs_value)
         if not viet_value or not engs_value:
             return {'erMsg': 'Failed to save. The words are empty.'}, 404
-        VietAction.create(list_id=list_id, viet_word=viet_value, eng_words=engs_value)
+        WordAction.create(list_id=list_id, viet_word=viet_value, eng_words=engs_value)
         return {"message": 'The words {} - {} were saved successfully.'.format(
             viet_value, " - ".join(engs_value)
         )}, 200
@@ -208,7 +211,7 @@ def save_words(list_id):
 def update_word(word_id):
     try:
         if not current_user.is_authenticated:
-            return {"erMsg": "Please login to update your word"}, 400
+            return {"erMsg": "Please login to update your word"}, 401
         if not word_id:
             return {'erMsg': "Failed to save. Please provide a word"}, 404
         viet_word = request.form.get("viet_word")
@@ -216,7 +219,7 @@ def update_word(word_id):
         eng_words = json.loads(eng_words)
         new_eng_words = request.form.get("new_eng_words")
         new_eng_words = json.loads(new_eng_words)
-        VietAction.update(user_id=current_user.user_id,
+        WordAction.update(user_id=current_user.user_id,
                           viet_id=word_id,
                           viet_word=viet_word,
                           list_engs=eng_words,
@@ -234,10 +237,10 @@ def update_word(word_id):
 def delete_word(word_id):
     try:
         if not current_user.is_authenticated:
-            return {"erMsg": "Please login to delete your word"}, 400
+            return {"erMsg": "Please login to delete your word"}, 401
         if not word_id:
             return {'erMsg': "Failed to save. Please provide a word"}, 404
-        deleted_word = VietAction.delete(user_id=current_user.user_id, viet_id=word_id)
+        deleted_word = WordAction.delete(user_id=current_user.user_id, viet_id=word_id)
         return {"message": 'The words {} were deleted'.format(deleted_word.get("viet_word"))}, 200
     except NotExistException as ex:
         logging.exception(ex)
@@ -252,7 +255,7 @@ def check_vocab(viet_id):
     try:
         eng_words = request.args["eng_words"]
         eng_words = json.loads(eng_words)
-        data = VietAction.check_english_words(viet_id=viet_id, eng_words=eng_words)
+        data = WordAction.check_english_words(viet_id=viet_id, eng_words=eng_words)
         return data, 200
     except Exception as ex:
         logging.exception(ex)

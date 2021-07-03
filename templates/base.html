@@ -98,10 +98,10 @@
         <div class="modal-content">
             <span class="close" onclick="this.parentElement.parentElement.style.display='none';">&times;</span>
             <div class="action-container">
-                <p class="item-delete"></p>
+                <p id="item-delete"></p>
             </div>
             <div class="dialog-footer">
-                <button id="sure-delete" onclick="this.parentElement.parentElement.parentElement.style.display='none';">Delete</button>
+                <button id="sure-delete" class="delete-btn" onclick="this.parentElement.parentElement.parentElement.style.display='none';">Delete</button>
                 <button onclick="this.parentElement.parentElement.parentElement.style.display='none';">Cancel</button>
             </div>
         </div>
@@ -116,7 +116,7 @@
                     <h2>Please select a list</h2>
                     <div class="management-list-btn-container disabled">
                         <button class="add-words-btn" >Add words</button>
-                        <button class="delete-list-btn" >Delete list</button>
+                        <button class="delete-list-btn delete-btn" >Delete list</button>
                     </div>
                 </div>
                 <div class="add-words-container">
@@ -162,6 +162,7 @@
     <script type="text/javascript" src="{{ url_for('static', filename='js/dialog.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/user.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/message.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/delete_confirmation.js') }}"></script>
     {% block script %}{% endblock %}
 </body>
 </html>

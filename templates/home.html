@@ -38,13 +38,15 @@
             <div class="no-data">NO DATA!</div>
             {% for list in lists %}
                 <div class="card-of-list" list-id="{{ list.list_id }}" list-name="{{ list.list_name }}">
-                    <div class="card-title">
-                        <img class="img-title" src="/static/public/bird.png">
-                    </div>
                     <div class="card-content">
                         <div class="name-of-list text-overflow-dot">{{ list.list_name }}</div>
                         <div class="property-of-list">
-                            {{ list.num_viets }} words
+                            <div>
+                                Vietnamese words: {{ list.num_viets }} words
+                            </div>
+                            <div>
+                                English words: {{ list.num_engs }} words
+                            </div>
                         </div>
                     </div>
                     <div class="card-footer">
@@ -59,4 +61,5 @@
 {% block script %}
   <script type="text/javascript" src="{{ url_for('static', filename='js/home.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='js/side_bar.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/list.js') }}"></script>
 {% endblock %}

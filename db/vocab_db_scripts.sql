@@ -9,8 +9,8 @@ CREATE TABLE user (
 CREATE TABLE list (
 	list_id INTEGER PRIMARY KEY,
 	list_name TEXT NOT NULL,
-    decription TEXT,
-    type INTEGER, --0: public, 1:private
+    description TEXT,
+    list_type INTEGER, --0: public, 1:private
 	inserted_time INTEGER,
     user_id INTEGER,
     FOREIGN KEY (user_id)
@@ -28,7 +28,7 @@ CREATE TABLE word (
 	word_id INTEGER PRIMARY KEY,
 	word TEXT NOT NULL,
     context TEXT,
-    languge INTEGER, --0: Vietnamese, 1: English
+    language_type INTEGER, --0: Vietnamese, 1: English
 	inserted_time INTEGER,
     severity INTEGER, --0: has already remembered, 1: need learn more
     list_id INTEGER,
@@ -82,7 +82,7 @@ CREATE TABLE word_meaning (
 
 --data
 INSERT INTO user(`user_id`, `username`, `password`, `user_type`, `inserted_time`) values(1, "admin", '1', 0, strftime('%s', 'now'));
-INSERT INTO list(`list_name`, `inserted_time`, `user_id`) values('3000 common words', strftime('%s', 'now'), 1);
+INSERT INTO list(`list_name`, `inserted_time`, `list_type`) values('3000 common words', strftime('%s', 'now'), 0);
 INSERT INTO part_of_speech(`part_of_speech_id`, `label`) values(1, 'Noun');
 INSERT INTO part_of_speech(`part_of_speech_id`, `label`) values(2, 'Verb');
 INSERT INTO part_of_speech(`part_of_speech_id`, `label`) values(3, 'Adj');

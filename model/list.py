@@ -6,9 +6,9 @@ class List(db.Model):
     __tablename__ = "list"
     list_id = db.Column(db.Integer, primary_key=True)
     list_name = db.Column(db.String(200), nullable=False)
-    decription = db.Column(db.String(1000))
+    description = db.Column(db.String(1000))
     inserted_time = db.Column(db.String(100), nullable=False)
-    type = db.Column(db.Integer)
+    list_type = db.Column(db.Integer)
     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
     words = db.relationship('Word', backref='list', lazy=True)
 
@@ -22,3 +22,4 @@ class List(db.Model):
 class ListSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = List
+        include_fk = True

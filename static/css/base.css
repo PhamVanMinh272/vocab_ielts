@@ -108,3 +108,7 @@ a {
 a:hover {
     cursor: pointer;
 }
+
+.delete-btn {
+    background: rgb(206, 66, 66);
+}

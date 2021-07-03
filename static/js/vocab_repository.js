@@ -154,8 +154,8 @@ $(".list-content-table").on("click", "tr.words-table-item", function() {
 $(".delete-list-btn").click(function() {
   let listId = $(".header-content-of-a-list").attr("list-id");
   let listName = $(".header-content-of-a-list").attr("list-name");
-  $(".item-delete").html(`Are you sure to delete ${listName}?`);
-  $(".item-delete").attr("list-id", listId);
+  $("#item-delete").html(`Are you sure to delete ${listName}?`);
+  $("#item-delete").attr("list-id", listId);
   $("#sure-delete").click(function() {
     deleteList(listId);
   });

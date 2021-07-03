@@ -1,36 +1,21 @@
 .card-of-list {
-    width: 240px;
-    height: 350px;
+    width: 100%;
+    height: 120px;
     color: var(--color-black);
-    border-radius: 5px;
-    margin: auto;
+    border-radius: 3px;
     margin-bottom: 30px;
-    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
     transition: transform var(--scale-time); /* Animation time */
     background: white;
+    display: flex;
 }
 
 .card-of-list:hover {
     transform: var(--scale-proportion);
 }
 
-.card-title {
-    width: 110px;
-    height: 110px;
-    margin: 10px 70px 0 70px;
-    border-radius: 50%;
-    box-shadow: 0 3px 6px rgb(0 0 0 / 16%), 0 3px 6px rgb(0 0 0 / 23%);
-}
-
-.card-title .img-title {
-    width: 60px;
-    height: 60px;
-    margin: 25px;
-}
-
 .card-content {
-    width: calc(100% - 10px);
-    height: 180px;
+    width: 60%;
+    height: 100%;
     padding: 10px 5px;
 }
 
@@ -39,9 +24,8 @@
     margin-bottom: 10px;
     padding: 10px 5px;
     text-transform: uppercase;
-    color: rgba(241, 234, 241, 0.75);;
-    background: linear-gradient(125deg, rgba(160,102,164,1) 0%, rgba(107,179,196,1) 100%);
-    box-shadow: 1px 1px 5px rgb(160 102 164);
+    color: black;
+    font-size: 20px;
 }
 
 .card-content .property-of-list {
@@ -49,18 +33,19 @@
 }
 
 .card-footer {
-    width: 100%;
-    height: 30px;
-    display: flex;
+    width: 40%;
+    height: 100%;
 }
 
 .card-footer a {
-    width: 50%;
+    display: block;
+    width: 100px;
     height: 30px;
-    color: var(--color-black);
+    margin-top: 20px;
+    color: white;
     text-align: center;
     line-height: 30px;
-    background: linear-gradient(125deg, rgb(218, 198, 219) 0%, rgb(201, 219, 223) 100%);
+    background: black;
     transition: transform var(--scale-time); /* Animation time */
     border-radius: 1px;
 }

@@ -5,50 +5,12 @@ $(".edit-list-btn").click(function() {
 });
 
 function getListWords(listId, listName) {
-  $.getJSON(`/lists/${listId}/words`)
-  .done(function(result){
-    $(".list-content").css("display", "block");
-    $(".header-content-of-a-list").children("h2").html(listName);
-    $(".header-content-of-a-list").attr("list-id", listId);
-    $(".header-content-of-a-list").attr("list-name", listName);
-    $(".management-list-btn-container").removeClass("disabled");
-    $(".list-content-table").html(`
-      <tr>
-        <th>No</th>
-        <th>Vietnamese</th>
-        <th>English</th>
-        <th>Delete</th>
-        <th>Edit</th>
-      </tr>
-    `);
-    $.each(result.viets, function(index, word) {
-      var tdEng = [];
-      $.each(word.eng_words, function(index, eng) {
-        tdEng.push(eng.eng_word);
-      });
-      $(".list-content-table").append(`
-        <tr class="words-table-item" viet-id="${word.viet_id}" viet-word="${word.viet_word}">
-          <td>${index+1}</td>
-          <td>${word.viet_word}</td>
-          <td>${tdEng.join(", ")}</td>
-          <td><a viet-id="${word.viet_id}" viet-word="${word.viet_word}" class="delete-word-btn"><img class="img-word-actions" src="/static/public/trash.png"></a></td>
-          <td><a viet-id="${word.viet_id}" viet-word="${word.viet_word}" class="edit-word-btn"><img class="img-word-actions" src="/static/public/edit.png"></a></td>
-        </tr>
-      `);
-    });
-  })
-  .fail(function(error) {
-    if (error.responseJSON) {
-      showMessage(error.responseJSON.erMsg, 'error');
-    } else {
-      showMessage("Cannot get the words.", 'error');
-    }
-  });
+  list.showListWords(listId, listName)
 }
 
 function showListDetail(listId, listName) {
   getListWords(listId, listName);
-  $("#manage-list-dialog").css("display", "block");
+  $("#manage-list-dialog").show();
 }
 
 // list detail dialog
@@ -205,37 +167,8 @@ function deleteVietWord(vietId) {
 }
 
 $(".delete-list-btn").click(function() {
-  let listId = $(".header-content-of-a-list").attr("list-id");
-  let listName = $(".header-content-of-a-list").attr("list-name");
-  $(".item-delete").html(`Are you sure to delete ${listName}?`);
-  $(".item-delete").attr("list-id", listId);
-  $("#sure-delete").click(function() {
-    deleteList(listId);
-  });
-  $("#confirm-delete-dialog").css("display", "block");
+  list.deleteList()
 });
-
-function deleteList(listId) {
-  $.ajax({
-    url: `/lists/${listId}`,
-    type: 'DELETE',
-    success: function(result) {
-      if (result.message) {
-        showMessage(result.message, 'success');
-      } else {
-        showMessage("The list deleted.", 'success');
-      }
-      location.reload();
-    },
-    error: function(error) {
-      if (error.responseJSON) {
-        showMessage(error.responseJSON.erMsg, 'error');
-      } else {
-        showMessage("Delete list failed.", 'error');
-      }
-    }
-  });
-}
 
 function clearDetailViet() {
   $("input#viet-word").val('');

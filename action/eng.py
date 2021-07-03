@@ -1,5 +1,5 @@
 import datetime
-from model.word import Word, VietSchema
+from model.word import Word, WordSchema
 from model.list import List, ListSchema
 from model.eng import Eng, EngSchema
 from utils.exceptions import NotExistException, AlreadyExistException

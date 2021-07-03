@@ -2,17 +2,19 @@ import datetime
 import logging
 import random
 
-from model.word import Word, VietSchema
+from model.word import Word, WordSchema
 from model.list import List, ListSchema
 from model.eng import Eng, EngSchema
 from action.eng import EngAction
+from action.list import ListAction
+from action.user import UserAction
 from utils.utils import rm_redundant_space
 from utils.exceptions import NotExistException, AlreadyExistException, InvalidValueException
-from constants.action_constants import DICTIONARY_TYPE, OBJECT_TYPE
+from constants.action_constants import DICTIONARY_TYPE, OBJECT_TYPE, ADMIN_USER_TYPE, VIETNAMESE_LANGUAGE_TYPE
 from main import db
 
 
-class VietAction:
+class WordAction:
     @staticmethod
     def get_words_for_a_lesson(list_id=None, quantity=20) -> list:
         """
@@ -22,9 +24,9 @@ class VietAction:
         :return: a list of Vietnamese words. The words have the order randomly and have a number order to show in UI.
         """
         if list_id and list_id != '0':
-            viet_words = VietAction.get_words_by_list_id(list_id=list_id)
+            viet_words = WordAction.get_words_by_list_id(list_id=list_id)
         else:
-            viet_words = VietAction.get_all_words()
+            viet_words = WordAction.get_all_words()
         if not viet_words:
             logging.info("No words for a lesson.")
             return []
@@ -41,21 +43,20 @@ class VietAction:
     @staticmethod
     def get_all_words():
         vietnamese_words = Word.query.all()
-        return VietSchema(many=True).dump(vietnamese_words)
+        return WordSchema(many=True).dump(vietnamese_words)
 
     @staticmethod
-    def get_words_by_list_id(list_id):
-        list_obj = List.query.filter_by(list_id=list_id).first()
-        if not list_obj:
-            raise NotExistException("The list (list_id={}) does not exist.".format(list_id))
-        vietnamese_words = list_obj.list_and_viet
+    def get_words_by_list_id(user_id, list_id):
+        list_obj = ListAction.get_list_by_id(user_id=user_id, list_id=list_id, return_type=OBJECT_TYPE)
+        vietnamese_words = Word.query.filter_by(list_id=list_obj.list_id, language_type=VIETNAMESE_LANGUAGE_TYPE).all()
         viets_with_engs = []
         for vietnamese_word in vietnamese_words:
-            item = vietnamese_word.to_json()
-            item.update({
-                'eng_words': EngSchema(many=True).dump(vietnamese_word.english_words)
-            })
-            viets_with_engs.append(item)
+            if vietnamese_word.languge == VIETNAMESE_LANGUAGE_TYPE:
+                item = vietnamese_word.to_json()
+                item.update({
+                    'eng_words': WordSchema(many=True).dump(vietnamese_words)
+                })
+                viets_with_engs.append(item)
         return viets_with_engs
 
     @staticmethod
