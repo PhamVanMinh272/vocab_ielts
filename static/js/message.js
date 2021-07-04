@@ -13,7 +13,7 @@ let toastMessage = (function() {
     messageElement.append(message)
     messageContainerSelector.append(messageElement)
     setTimeout(function(){
-      $(`#${messageId}`).removeClass("show-message")
+      $(`#${messageId}`).remove()
     }, showMessageTime);
   }
 
@@ -22,7 +22,7 @@ let toastMessage = (function() {
     $(".message-dialog").attr("id", messageId);
     // Delay the action
     setTimeout(function(){
-      $(`#${messageId}`).removeClass("show-message");
+      $(`#${messageId}`).remove();
     }, showMessageTime);
   }
 

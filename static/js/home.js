@@ -1,4 +1,4 @@
-$(".edit-list-btn").click(function() {
+$(".list-details-btn").click(function() {
   var listId = $(this).attr("list-id");
   var listName = $(this).attr("list-name");
   showListDetail(listId, listName);
@@ -69,7 +69,15 @@ $("#words-table").on("click", ".delete-word-btn", function() {
 });
 
 $(".delete-list-btn").click(function() {
-  list.deleteList()
+  let listId = $(this).attr("list-id")
+  let listName = $(this).attr("list-name")
+  list.deleteList(listId, listName)
+});
+
+$(".list-more-action-dropbtn").click(function(e) {
+  e.stopPropagation();
+  $(".list-more-action-dropdown").hide();
+  $(this).next().slideToggle(200);
 });
 
 function clearDetailViet() {

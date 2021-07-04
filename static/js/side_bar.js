@@ -12,7 +12,7 @@ $(".create-a-list-btn").click(function() {
   rmInputRedundantSpaces("#name-of-list-input");
   var listName = $("#name-of-list-input").val();
   if (!listName || listName.length > 50) {
-    toastMessage.showMessage("The list's name should within 1 to 50 characters", 'error');
+    toastMessage.showMessage("The list's name should within 1 to 50 characters", errorCategory);
     return false
   }
   $.post("/lists", { list_name: listName })
@@ -22,9 +22,9 @@ $(".create-a-list-btn").click(function() {
   })
   .fail(function(error) {
     if (error.responseJSON) {
-      toastMessage.showMessage(error.responseJSON.erMsg, 'error');
+      toastMessage.showMessage(error.responseJSON.erMsg, errorCategory);
     } else {
-      toastMessage.showMessage("Cannot create the list.", 'error');
+      toastMessage.showMessage("Cannot create the list.", errorCategory);
     }
   });
 });

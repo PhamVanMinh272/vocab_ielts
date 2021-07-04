@@ -19,7 +19,7 @@ $("#list-of-word-lists").keyup(function() {
 //   rmInputRedundantSpaces("#list-of-word-lists");
 //   var listName = $("#list-of-word-lists").val();
 //   if (listName.length > 50 ) {
-//     showMessage("The list's name must less than 50 characters.", 'error');
+//     showMessage("The list's name must less than 50 characters.", errorCategory);
 //     return false
 //   }
 //   $.post("/lists", { list_name: $("#list-of-word-lists").val() })
@@ -31,9 +31,9 @@ $("#list-of-word-lists").keyup(function() {
 //   })
 //   .fail(function(error) {
 //     if (error.responseJSON) {
-//       showMessage(error.responseJSON.erMsg, 'error');
+//       showMessage(error.responseJSON.erMsg, errorCategory);
 //     } else {
-//       showMessage("Cannot create the list.", 'error');
+//       showMessage("Cannot create the list.", errorCategory);
 //     }
 //   });
 // });
@@ -68,9 +68,9 @@ $(".create-words-btn").click(function() {
   })
   .fail(function(error) {
     if (error.responseJSON) {
-      showMessage(error.responseJSON.erMsg, 'error');
+      showMessage(error.responseJSON.erMsg, errorCategory);
     } else {
-      showMessage("Cannot create the words.", 'error');
+      showMessage("Cannot create the words.", errorCategory);
     }
   });
 });
@@ -109,9 +109,9 @@ $(".a-list-value").click(function() {
   })
   .fail(function(error) {
     if (error.responseJSON) {
-      showMessage(error.responseJSON.erMsg, 'error');
+      showMessage(error.responseJSON.erMsg, errorCategory);
     } else {
-      showMessage("Cannot get the words.", 'error');
+      showMessage("Cannot get the words.", errorCategory);
     }
   });
 });
@@ -144,9 +144,9 @@ $(".list-content-table").on("click", "tr.words-table-item", function() {
   })
   .fail(function(error) {
     if (error.responseJSON) {
-      showMessage(error.responseJSON.erMsg, 'error');
+      showMessage(error.responseJSON.erMsg, errorCategory);
     } else {
-      showMessage("Cannot get the Vietnamese word.", 'error');
+      showMessage("Cannot get the Vietnamese word.", errorCategory);
     }
   });
 });
@@ -176,9 +176,9 @@ function deleteList(listId) {
     },
     error: function(error) {
       if (error.responseJSON) {
-        showMessage(error.responseJSON.erMsg, 'error');
+        showMessage(error.responseJSON.erMsg, errorCategory);
       } else {
-        showMessage("Delete list failed.", 'error');
+        showMessage("Delete list failed.", errorCategory);
       }
     }
   });

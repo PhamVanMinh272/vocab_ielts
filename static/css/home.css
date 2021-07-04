@@ -7,7 +7,7 @@
 
 .search-container input {
     width: 90%;
-    height: 35px;
+    height: 30px;
     border-radius: 2px 0 0 2px;
     border: none;
     border-bottom: 1px solid var(--border-color);
@@ -55,13 +55,28 @@
 }
 
 #name-of-list-input {
-    width: 60%;
+    width: 30%;
+}
+
+/* Lists container */
+#lists-container {
+    width: 100%;
+}
+
+#general-actions-container {
+
+    padding-top: 90px;
 }
 
 .lists-cards-container {
     width: 75%;
     flex-wrap: wrap;
-    padding: 80px;
-    padding-top: 90px;
+    margin-top: 30px;
+    padding: 30px;
+    padding-right: 100px;
     min-height: 900px;
+    max-height: 900px;
+    background: rgb(246,247,248);
+    overflow: auto;
+    border-bottom: 1px solid var(--border-color);
 }

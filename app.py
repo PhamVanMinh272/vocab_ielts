@@ -162,13 +162,13 @@ def get_words(list_id):
             except Exception as ex:
                 logging.exception(ex)
                 return {'erMsg': 'The number of words is invalid.'}, 400
-            data = WordAction.get_words_for_a_lesson(list_id=list_id, quantity=number_of_words)
+            data = WordAction.get_words_for_a_lesson(user_id=user_id, list_id=list_id, quantity=number_of_words)
         else:
             data = WordAction.get_words_by_list_id(user_id=user_id, list_id=list_id)
         return {"viets": data}, 200
     except NotExistException as ex:
         logging.exception(ex)
-        return {'erMsg': 'The list does not exist.'}, 404
+        return {'erMsg': 'The list does not exist'}, 404
     except Exception as ex:
         logging.exception(ex)
         return {'erMsg': 'Failed to get all lists.'}, 500
@@ -256,13 +256,14 @@ def delete_word(word_id):
 @app.route('/words/<viet_id>/check-vocab', methods=['GET'])
 def check_vocab(viet_id):
     try:
+        user_id = current_user.user_id if current_user.is_authenticated else None
         eng_words = request.args["eng_words"]
         eng_words = json.loads(eng_words)
-        data = WordAction.check_english_words(viet_id=viet_id, eng_words=eng_words)
+        data = WordAction.check_english_words(user_id=user_id, viet_id=viet_id, eng_words=eng_words)
         return data, 200
     except Exception as ex:
         logging.exception(ex)
-        return {}
+        return {'erMsg': 'Failed to check answers'}, 500
 
 
 @app.route("/register", methods=["POST"])

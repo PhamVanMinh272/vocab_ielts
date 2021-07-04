@@ -33,7 +33,8 @@ $(".account-dropbtn").click(function(e) {
 
 // close dropdown btn
 $("body").click(function() {
-  $("#account-dropdown").removeClass("show");
+  $("#account-dropdown").hide();
+  $(".list-more-action-dropdown").hide();
 });
 
 // Execute something when DOM is ready:

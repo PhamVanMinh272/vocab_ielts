@@ -1,57 +1,122 @@
 .card-of-list {
     width: 100%;
-    height: 100px;
+    height: 80px;
     color: var(--color-black);
     border-radius: 3px;
-    margin-bottom: 30px;
-    transition: transform var(--scale-time); /* Animation time */
+    margin-bottom: 8px;
+    transition: var(--scale-time); /* Animation time */
     background: white;
-    border: 1px solid var(--border-color);
+    padding: 0 10px;
     display: flex;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 2px 3px;
 }
 
 .card-of-list:hover {
-    transform: var(--scale-proportion);
+    margin-left: 10px;
 }
 
 .card-content {
-    width: 60%;
-    height: 100%;
-    padding: 10px 5px;
+    width: 80%;
+    height: calc(100% - 20px);
+    padding: 10px 20px;
+    display: flex;
 }
 
 .card-content .name-of-list {
-    text-align: center;
-    margin-bottom: 10px;
-    padding: 5px;
-    text-transform: uppercase;
-    color: black;
-    font-size: 20px;
+    color: rgba(0, 0, 0, 0.8);;
+    font-weight: 700;
 }
 
-.card-content .property-of-list {
-    text-align: center;
+.card-content .property-of-list div {
+    color: rgba(0, 0, 0, 0.4);
+    font-weight: 700;
+    margin-top: 2px;
+}
+
+#list-basic-info-container {
+    flex-grow: 2;
+    margin-right: 10px;
+}
+
+#parts-of-speech-container {
+    flex-grow: 2;
+    padding: 0 10px;
+    margin-right: 10px;
+    border: 1px solid var(--border-color);
+    border-top: none;
+    border-bottom: none;
+}
+
+#parts-of-speech-container .property-of-list div {
+    display: flex;
+    width: 100%;
 }
 
 .card-footer {
-    width: 40%;
+    width: 20%;
     height: 100%;
+    display: flex;
 }
 
 .card-footer a {
     display: block;
     width: 100px;
     height: 30px;
-    margin-top: 13.3px;
+    margin: auto;
     color: white;
     text-align: center;
     line-height: 30px;
-    background: black;
-    transition: transform var(--scale-time); /* Animation time */
-    border-radius: 1px;
+    background: rgb(238,187,43);
+    border-radius: 3px;
 }
 
 .card-footer a:hover {
-    transform: scale(1.1);
     box-shadow: 0 3px 6px rgb(0 0 0 / 16%), 0 3px 6px rgb(0 0 0 / 23%);
 }
+
+.card-footer button {
+    margin: auto;
+}
+
+/* list more action dropdown */
+.card-of-list .dropdown {
+    width: 20px;
+}
+
+.list-more-action-dropbtn {
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    opacity: 0.5;
+    background: white;
+}
+
+.list-more-action-dropbtn:hover {
+    opacity: 1;
+    box-shadow: none;
+}
+
+.list-more-action-dropbtn img {
+    height: 20px;
+    width: 20px;
+}
+
+.list-more-action-dropdown button {
+    padding: 0;
+    padding-left: 2px;
+    background: white;
+    color: var(--color-black-general);
+    text-align: left;
+    width: 50px;
+}
+
+.list-more-action-dropdown {
+    width: 50px;
+}
+
+.list-more-action-dropdown button:hover {
+    color: black;
+    box-shadow: none;
+}
+
+

@@ -12,7 +12,9 @@
     {% block head %}{% endblock %}
     <!-- <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script> -->
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700&family=Nunito:wght@200;300;400;600;700&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Cutive+Mono&family=Fira+Code&family=Source+Code+Pro:ital,wght@0,200;0,300;0,400;0,500;1,200;1,300;1,400;1,500&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700&display=swap');
     </style>
 </head>
 <body>
@@ -101,8 +103,8 @@
                 <p id="item-delete"></p>
             </div>
             <div class="dialog-footer">
-                <button id="sure-delete" class="delete-btn" onclick="this.parentElement.parentElement.parentElement.style.display='none';">Delete</button>
-                <button onclick="this.parentElement.parentElement.parentElement.style.display='none';">Cancel</button>
+                <button class="cancel-btn-style" onclick="this.parentElement.parentElement.parentElement.style.display='none';">Cancel</button>
+                <button id="sure-delete" class="delete-btn-style" onclick="this.parentElement.parentElement.parentElement.style.display='none';">Delete</button>
             </div>
         </div>
     </div>

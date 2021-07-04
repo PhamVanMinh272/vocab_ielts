@@ -49,9 +49,9 @@ let list = (function() {
     })
     .fail(function(error) {
       if (error.responseJSON) {
-        toastMessage.showMessage(error.responseJSON.erMsg, 'error');
+        toastMessage.showMessage(error.responseJSON.erMsg, errorCategory);
       } else {
-        toastMessage.showMessage("Cannot get the words", 'error');
+        toastMessage.showMessage("Cannot get the words", errorCategory);
       }
     });
   }
@@ -83,9 +83,7 @@ let list = (function() {
     deleteConfirmation.closeDeleteConfirmation()
   }
 
-  let deleteList = function() {
-    let listId = currentListSelector.attr("list-id")
-    let listName = currentListSelector.attr("list-name")
+  let deleteList = function(listId, listName) {
     deleteConfirmation.showDeleteConfirmation(listId, listName, callDeleteListApi)
   }
 
@@ -104,16 +102,15 @@ let list = (function() {
                   <div class="name-of-list text-overflow-dot">${list.list_name}</div>
                   <div class="property-of-list">
                       <div>
-                          Vietnamese words: ${list.num_viets} words
+                          Vietnamese: ${list.num_viets} words
                       </div>
                       <div>
-                          English words: ${list.num_engs} words
+                          English: ${list.num_engs} words
                       </div>
                   </div>
               </div>
               <div class="card-footer">
                   <a class="quiz-list-btn" href="/lesson">Quiz</a>
-                  <a class="edit-list-btn" href="/vocab-repository">Edit</a>
               </div>
           </div>`
         );

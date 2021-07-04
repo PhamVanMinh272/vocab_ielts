@@ -64,10 +64,6 @@
     margin-top: 30px;
 }
 
-.modal .dialog-footer button {
-    width: calc(50% - 4px);
-}
-
 .modal b:hover {
     color: black;
     cursor: pointer;
@@ -85,8 +81,13 @@
 }
 
 #confirm-delete-dialog .modal-content {
+    width: 400px;
     min-height: 150px;
     height: 150px;
+}
+
+.modal .dialog-footer {
+    text-align: right;
 }
 
 /* list detail dialog */

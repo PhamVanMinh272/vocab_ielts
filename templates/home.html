@@ -14,10 +14,6 @@
             <div class="list-content">
                 <div class="header-content-of-a-list">
                     <h2>Please select a list</h2>
-                    <div class="management-list-btn-container disabled">
-                        <button class="edit-list-btn" >Edit List</button>
-                        <button class="delete-list-btn delete-btn" >Delete List</button>
-                    </div>
                 </div>
                 <div class="add-words-container">
                     <div class="field">
@@ -32,7 +28,7 @@
                         <button class="add-more-eng-word-field"></button>
                     </div>
                     <div id="add-update-btn-container" class="field">
-                        <button class="create-words-btn">Save</button>
+                        <button class="create-words-btn save-btn-style">Save</button>
                     </div>
                 </div>
                 <table class="list-content-table" id="words-table" style="width:100%"></table>
@@ -59,36 +55,71 @@
                     <img src="/static/public/search.svg">
                 </button>
             </div>
-            <div class="field">
-                <input
+        </div>
+        <div id="lists-container">
+            <div id="general-actions-container">
+                <div>
+                    <input
                         id="name-of-list-input"
                         placeholder="Type name of list"
-                >
-                <button class="create-a-list-btn">Create List</button>
+                    >
+                    <button class="create-a-list-btn save-btn-style">Create List</button>
+                </div>
             </div>
-        </div>
-        <div class="lists-cards-container">
-            <div class="no-data">NO DATA!</div>
-            {% for list in lists %}
-                <div class="card-of-list" list-id="{{ list.list_id }}" list-name="{{ list.list_name }}">
-                    <div class="card-content">
-                        <div class="name-of-list text-overflow-dot">{{ list.list_name }}</div>
-                        <div class="property-of-list">
-                            <div>
-                                Vietnamese words: {{ list.num_viets }} words
+            <div class="lists-cards-container">
+                <div class="no-data">NO DATA!</div>
+                {% for list in lists %}
+                    <div class="card-of-list" list-id="{{ list.list_id }}" list-name="{{ list.list_name }}">
+                        <div class="card-content">
+                            <div id="list-basic-info-container">
+                                <div class="name-of-list text-overflow-dot">{{ list.list_name }}</div>
+                                <div class="property-of-list">
+                                    <div>
+                                        {{ list.num_viets }} Vietnamese words
+                                    </div>
+                                    <div>
+                                        {{ list.num_engs }} English words
+                                    </div>
+                                </div>
                             </div>
-                            <div>
-                                English words: {{ list.num_engs }} words
+                            <div id="parts-of-speech-container">
+                                <div class="name-of-list text-overflow-dot">Parts Of Speech</div>
+                                <div class="property-of-list">
+                                    <div>
+                                        <div>0 Nouns</div>
+                                        <div>0 Adjectives</div>
+                                    </div>
+                                    <div>
+                                        <div>0 Verbs</div>
+                                        <div>0 Adverbs</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="severity-container">
+                                <div class="name-of-list text-overflow-dot">Status</div>
+                                <div class="property-of-list">
+                                    <div>
+                                        Completed 50%
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        <div class="card-footer">
+                            <a class="quiz-list-btn" href="/lesson/{{ list.list_id }}">Quiz</a>
+                        </div>
+                        <div class="dropdown">
+                            <button class="list-more-action-dropbtn"><img src="/static/public/more.png" ></button>
+                            <div class="list-more-action-dropdown dropdown-content">
+                              <button class="list-details-btn" list-id="{{ list.list_id }}" list-name="{{ list.list_name }}">Details</button>
+                              <button class="delete-list-btn" list-id="{{ list.list_id }}" list-name="{{ list.list_name }}">Delete</button>
                             </div>
                         </div>
                     </div>
-                    <div class="card-footer">
-                        <a class="quiz-list-btn" href="/lesson/{{ list.list_id }}">Quiz</a>
-                        <a class="edit-list-btn" list-id="{{ list.list_id }}" list-name="{{ list.list_name }}">Detail</a>
-                    </div>
-                </div>
-            {% endfor %}
+                {% endfor %}
+            </div>
         </div>
+        
     </div>
 {% endblock %}
 {% block script %}

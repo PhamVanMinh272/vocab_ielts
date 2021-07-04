@@ -22,19 +22,21 @@ from main import db
 
 class WordAction:
     @staticmethod
-    def get_words_for_a_lesson(list_id=None, quantity=20) -> list:
+    def get_words_for_a_lesson(user_id, list_id=None, quantity=20) -> list:
         """
         Get Vietnamese words for a lesson.
+        :param user_id: user_id to check user's permission
         :param list_id: list_id=0 means get words in all lists.
         :param quantity: quantity of words will be returned.
         :return: a list of Vietnamese words. The words have the order randomly and have a number order to show in UI.
         """
         if list_id and list_id != '0':
-            viet_words = WordAction.get_words_by_list_id(list_id=list_id)
+            viet_words = WordAction.get_words_by_list_id(user_id=user_id, list_id=list_id)
         else:
+            # currently just support create a lesson for a list
             viet_words = WordAction.get_all_words()
         if not viet_words:
-            logging.info("No words for a lesson.")
+            logging.info("No words for a lesson")
             return []
         random.shuffle(viet_words)
         if quantity < len(viet_words):
@@ -43,7 +45,7 @@ class WordAction:
         no = [i for i in range(1, len(viet_words) + 1)]
         random.shuffle(no)
         for i, row in enumerate(viet_words):
-            data.append({"id": row["viet_id"], "viet_word": row["viet_word"], 'no': no[i]})
+            data.append({"id": row["word_id"], "word": row["word"], 'no': no[i]})
         return data
 
     @staticmethod
@@ -196,23 +198,44 @@ class WordAction:
         return viet_info
 
     @staticmethod
-    def check_english_words(viet_id, eng_words: list) -> dict:
+    def check_english_words(user_id, viet_id, eng_words: list) -> dict:
         """
         Check English answers of users.
-        :param viet_id: id of Viet Object
+        :param user_id: to check user's permission
+        :param viet_id: id of Word Object. Use to get the object
         :param eng_words: list English answers of users
         :return: English words in DB and a list of user's checked English words
         """
-        vietnamese_word = Word.query.filter_by(viet_id=viet_id).first()
+        vietnamese_word = Word.query.filter_by(word_id=viet_id).first()
         if not vietnamese_word:
-            raise NotExistException("The Vietnamese word does not exist.")
+            raise NotExistException("The Vietnamese word does not exist")
+        if UserAction.get_user_type(user_id=user_id) == NORMAL_USER_TYPE:
+            list_obj = List.query.filter_by(user_id=user_id, list_id=vietnamese_word.list_id).first()
+            if not list_obj:
+                raise UserPermissionException("The word does not belong to the user with id {}".format(user_id))
         data = {}
-        if vietnamese_word.english_words:
-            for row in vietnamese_word.english_words:
-                data.update({row.eng_id: row.eng_word})
+        for row in WordAction.get_meaning(vietnamese_word):
+            data.update({row.word_id: row.word})
         for i, user_answer in enumerate(eng_words):
             if user_answer["eng_word"] in data.values():
                 eng_words[i].update({"status": 1})
             else:
                 eng_words[i].update({"status": 0})
         return {"eng_data": data, "eng_words": eng_words}
+
+    @staticmethod
+    def get_meaning(word_obj: Word):
+        if word_obj.language_type == VIETNAMESE_LANGUAGE_TYPE:
+            meaning_ids = WordMeaning.query.filter_by(vietnamese_id=word_obj.word_id).all()
+            meanings = []
+            for meaning_id in meaning_ids:
+                meanings.append(Word.query.filter_by(word_id=meaning_id.english_id).first())
+            return meanings
+        else:
+            meaning_ids = WordMeaning.query.filter_by(english_id=word_obj.word_id).all()
+            meanings = []
+            for meaning_id in meaning_ids:
+                meanings.append(Word.query.filter_by(word_id=meaning_id.vietnamese_id).first())
+            return meanings
+
+
