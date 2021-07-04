@@ -106,39 +106,6 @@
             </div>
         </div>
     </div>
-    <!-- The Modal -->
-    <div id="manage-list-dialog" class="modal">
-        <!-- Modal content -->
-        <div class="modal-content manage-list-content">
-            <span class="close" onclick="this.parentElement.parentElement.style.display='none';">&times;</span>
-            <div class="list-content">
-                <div class="header-content-of-a-list">
-                    <h2>Please select a list</h2>
-                    <div class="management-list-btn-container disabled">
-                        <button class="add-words-btn" >Add words</button>
-                        <button class="delete-list-btn delete-btn" >Delete list</button>
-                    </div>
-                </div>
-                <div class="add-words-container">
-                    <div class="field">
-                        <input id="viet-word" class="viet-word" type="text" name="viet-word" placeholder="Vietnamese"/><br>
-                    </div>
-                    <div id="default-eng-word-field" class="field">
-                        <input class="eng-word" type="text" name="eng-word" placeholder="English"/><br>
-                    </div>
-                    <div class="more-eng-field">
-                    </div>
-                    <div class="field add-more-eng-word-field-container">
-                        <button class="add-more-eng-word-field"></button>
-                    </div>
-                    <div id="add-update-btn-container" class="field">
-                        <button class="create-words-btn">Save</button>
-                    </div>
-                </div>
-                <table class="list-content-table" id="words-table" style="width:100%"></table>
-            </div>
-        </div>
-    </div>
     <div class="messages-container">
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}

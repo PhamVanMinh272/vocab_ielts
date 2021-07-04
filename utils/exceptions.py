@@ -17,3 +17,10 @@ class InvalidValueException(Exception):
     Receive unexpected values.
     """
     pass
+
+
+class UserPermissionException(Exception):
+    """
+    The user does not have permission to access a resource.
+    """
+    pass

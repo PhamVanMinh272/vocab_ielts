@@ -48,7 +48,7 @@ class ListAction:
         all_lists_with_words_quanity = []
         for list_info in all_lists:
             words = Word.query.filter_by(list_id=list_info["list_id"]).all()
-            vietnamese_words_quantity = len([i for i in words if words.language_type == VIETNAMESE_LANGUAGE_TYPE])
+            vietnamese_words_quantity = len([i for i in words if i.language_type == VIETNAMESE_LANGUAGE_TYPE])
             list_info.update({
                 "num_viets": vietnamese_words_quantity,
                 "num_engs": len(words) - vietnamese_words_quantity

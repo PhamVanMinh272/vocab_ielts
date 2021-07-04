@@ -38,20 +38,6 @@ CREATE TABLE word (
             ON UPDATE NO ACTION
 );
 
-CREATE TABLE list_word(
-    list_id INTEGER,
-	word_id INTEGER,
-    PRIMARY KEY (list_id, word_id),
-    FOREIGN KEY (list_id)
-        REFERENCES list (list_id)
-            ON DELETE CASCADE
-            ON UPDATE NO ACTION,
-    FOREIGN KEY (word_id)
-        REFERENCES word (word_id)
-            ON DELETE CASCADE
-            ON UPDATE NO ACTION
-);
-
 CREATE TABLE part_of_speech_word(
     part_of_speech_id INTEGER,
 	word_id INTEGER,

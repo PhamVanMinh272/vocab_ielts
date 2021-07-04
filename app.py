@@ -177,7 +177,8 @@ def get_words(list_id):
 @app.route('/words/<word_id>', methods=['GET'])
 def get_a_vietnamese_word(word_id):
     try:
-        viet_with_engs = WordAction.get_word_by_word_id(word_id=word_id)
+        user_id = current_user.user_id if current_user.is_authenticated else None
+        viet_with_engs = WordAction.get_word_by_word_id(user_id=user_id, word_id=word_id)
         return viet_with_engs, 200
     except NotExistException as ex:
         logging.exception(ex)
@@ -190,12 +191,14 @@ def get_a_vietnamese_word(word_id):
 @app.route('/lists/<list_id>/words', methods=['POST'])
 def save_words(list_id):
     try:
+        if not current_user.is_authenticated:
+            return {"erMsg": "Please login to create your words"}, 401
         viet_value = rm_redundant_space(request.form['viet'])
         engs_value = rm_redundant_space(request.form['engs'])
         engs_value = json.loads(engs_value)
         if not viet_value or not engs_value:
             return {'erMsg': 'Failed to save. The words are empty.'}, 404
-        WordAction.create(list_id=list_id, viet_word=viet_value, eng_words=engs_value)
+        WordAction.create(user_id=current_user.user_id, list_id=list_id, viet_word=viet_value, eng_words=engs_value)
         return {"message": 'The words {} - {} were saved successfully.'.format(
             viet_value, " - ".join(engs_value)
         )}, 200
@@ -237,9 +240,9 @@ def update_word(word_id):
 def delete_word(word_id):
     try:
         if not current_user.is_authenticated:
-            return {"erMsg": "Please login to delete your word"}, 401
+            return {"erMsg": "Please login to delete your words"}, 401
         if not word_id:
-            return {'erMsg': "Failed to save. Please provide a word"}, 404
+            return {'erMsg': "Please provide a word"}, 404
         deleted_word = WordAction.delete(user_id=current_user.user_id, viet_id=word_id)
         return {"message": 'The words {} were deleted'.format(deleted_word.get("viet_word"))}, 200
     except NotExistException as ex:
@@ -247,7 +250,7 @@ def delete_word(word_id):
         return {'erMsg': "The word does not exist"}, 500
     except Exception as ex:
         logging.exception(ex)
-        return {'erMsg': 'Failed to delete.'}, 500
+        return {'erMsg': 'Failed to delete words'}, 500
 
 
 @app.route('/words/<viet_id>/check-vocab', methods=['GET'])

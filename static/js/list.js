@@ -6,6 +6,11 @@ let list = (function() {
   let listContentSelector = $(".list-content")
   let currentListSelector = $(".header-content-of-a-list")
   let tableListDetailSelector = $(".list-content-table")
+
+  let getCurrentListSelector = function() {
+    return currentListSelector
+  }
+
   let showListWords = function(listId, listName) {
     $.getJSON(`/lists/${listId}/words`)
     .done(function(result){
@@ -23,20 +28,20 @@ let list = (function() {
           <th>Edit</th>
         </tr>
       `);
-      let rows = $()
+      let rows = "";
       $.each(result.viets, function(index, word) {
         var tdEng = [];
         $.each(word.eng_words, function(index, eng) {
-          tdEng.push(eng.eng_word);
+          tdEng.push(eng.word);
         });
         
-        rows.append(`
-          <tr class="words-table-item" viet-id="${word.viet_id}" viet-word="${word.viet_word}">
+        rows += (`
+          <tr class="words-table-item" viet-id="${word.word_id}" viet-word="${word.word}">
             <td>${index+1}</td>
-            <td>${word.viet_word}</td>
+            <td>${word.word}</td>
             <td>${tdEng.join(", ")}</td>
-            <td><a viet-id="${word.viet_id}" viet-word="${word.viet_word}" class="delete-word-btn"><img class="img-word-actions" src="/static/public/trash.png"></a></td>
-            <td><a viet-id="${word.viet_id}" viet-word="${word.viet_word}" class="edit-word-btn"><img class="img-word-actions" src="/static/public/edit.png"></a></td>
+            <td><a viet-id="${word.word_id}" viet-word="${word.word}" class="delete-word-btn"><img class="img-word-actions" src="/static/public/trash.png"></a></td>
+            <td><a viet-id="${word.word_id}" viet-word="${word.word}" class="edit-word-btn"><img class="img-word-actions" src="/static/public/edit.png"></a></td>
           </tr>
         `);
       });
@@ -126,7 +131,8 @@ let list = (function() {
   return {
     showListWords: showListWords,
     deleteList: deleteList,
-    callSearchApi: callSearchApi
+    callSearchApi: callSearchApi,
+    getCurrentListSelector: getCurrentListSelector
   }
 
 })();

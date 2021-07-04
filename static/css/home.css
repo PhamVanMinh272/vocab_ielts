@@ -61,8 +61,7 @@
 .lists-cards-container {
     width: 75%;
     flex-wrap: wrap;
-    padding: 40px;
+    padding: 80px;
     padding-top: 90px;
-    background: rgb(53,60,62);
     min-height: 900px;
 }
