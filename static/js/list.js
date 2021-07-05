@@ -49,9 +49,9 @@ let list = (function() {
     })
     .fail(function(error) {
       if (error.responseJSON) {
-        toastMessage.showMessage(error.responseJSON.erMsg, errorCategory);
+        toastMessage.showMessage(error.responseJSON.erMsg, ERROR_MESSAGE_TYPE);
       } else {
-        toastMessage.showMessage("Cannot get the words", errorCategory);
+        toastMessage.showMessage("Cannot get the words", ERROR_MESSAGE_TYPE);
       }
     });
   }
@@ -66,17 +66,17 @@ let list = (function() {
       type: 'DELETE',
       success: function(result) {
         if (result.message) {
-          toastMessage.showMessage(result.message, successCategory);
+          toastMessage.showMessage(result.message, SUCCESS_MESSAGE_TYPE);
         } else {
-          toastMessage.showMessage("The list deleted", successCategory);
+          toastMessage.showMessage("The list deleted", SUCCESS_MESSAGE_TYPE);
         }
         closeManagementDialog()
       },
       error: function(error) {
         if (error.responseJSON) {
-          toastMessage.showMessage(error.responseJSON.erMsg, errorCategory);
+          toastMessage.showMessage(error.responseJSON.erMsg, ERROR_MESSAGE_TYPE);
         } else {
-          toastMessage.showMessage("Delete list failed", errorCategory);
+          toastMessage.showMessage("Delete list failed", ERROR_MESSAGE_TYPE);
         }
       }
     });
@@ -92,7 +92,7 @@ let list = (function() {
     .done(function(result) {
       listCardsContainerSelector.html('');
       if (result.lists.length === 0) {
-        toastMessage.showMessage("No data", successCategory);
+        toastMessage.showMessage("No data", SUCCESS_MESSAGE_TYPE);
         return false;
       }
       $.each(result.lists, function(id, list) {
@@ -118,9 +118,9 @@ let list = (function() {
     })
     .fail(function(error) {
       if (error.responseJSON) {
-        toastMessage.showMessage(error.responseJSON.erMsg, errorCategory);
+        toastMessage.showMessage(error.responseJSON.erMsg, ERROR_MESSAGE_TYPE);
       } else {
-        toastMessage.showMessage("Cannot search lists", errorCategory);
+        toastMessage.showMessage("Cannot search lists", ERROR_MESSAGE_TYPE);
       }
     });
   }

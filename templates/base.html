@@ -52,7 +52,7 @@
                     <a class="account-dropbtn">{{ current_user.username }}</a>
                     <div id="account-dropdown" class="dropdown-content">
                       <a href="{{ url_for('profile_page') }}">Profile</a>
-                      <a id="logout-btn">Logout</a>
+                      <a href="{{ url_for('logout') }}" >Logout</a>
                     </div>
                 </div>
             {% else %}

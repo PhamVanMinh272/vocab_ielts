@@ -17,6 +17,26 @@ from constants.route_constants import (
 )
 
 
+@app.route("/register", methods=["POST"])
+def register():
+    try:
+        username = request.form.get("username")
+        password = request.form.get("password")
+        confirm_password = request.form.get("confirm_password")
+        if not username or not password or not confirm_password:
+            return {'erMsg': 'The input data are not valid'}, 400
+        if password != confirm_password:
+            return {'erMsg': 'The confirm-password does not match the password'}, 400
+        UserAction.create(username=username, password=password)
+        return {'message': 'Create your account successfully'}, 200
+    except AlreadyExistException as ex:
+        logging.exception(ex)
+        return {'erMsg': 'The username has already existed'}, 400
+    except Exception as ex:
+        logging.exception(ex)
+        return {'erMsg': 'Failed to register'}, 500
+
+
 @app.route('/login', methods=['POST'])
 def login():
     try:
@@ -39,11 +59,12 @@ def login():
         return redirect(url_for("home_page"))
 
 
-@app.route('/logout', methods=['POST'])
+@app.route('/logout', methods=['GET'])
 @login_required
 def logout():
     logout_user()
-    return {"message": "Logout successfully"}
+    flash("Logout successfully", SUCCESS_FLASH_MESSAGE_TYPE)
+    return redirect(url_for("home_page"))
 
 
 @app.route('/profile', methods=['GET'])
@@ -264,26 +285,6 @@ def check_vocab(viet_id):
     except Exception as ex:
         logging.exception(ex)
         return {'erMsg': 'Failed to check answers'}, 500
-
-
-@app.route("/register", methods=["POST"])
-def register():
-    try:
-        username = request.form.get("username")
-        password = request.form.get("password")
-        confirm_password = request.form.get("confirm_password")
-        if not username or not password or not confirm_password:
-            return {'erMsg': 'The input data are not valid'}, 400
-        if password != confirm_password:
-            return {'erMsg': 'The confirm-password does not match the password'}, 400
-        UserAction.create(username=username, password=password)
-        return {'message': 'Create your account successfully'}, 200
-    except AlreadyExistException as ex:
-        logging.exception(ex)
-        return {'erMsg': 'The username has already existed'}, 400
-    except Exception as ex:
-        logging.exception(ex)
-        return {'erMsg': 'Failed to register'}, 500
 
 
 if __name__ == "__main__":

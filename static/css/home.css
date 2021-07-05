@@ -78,5 +78,6 @@
     max-height: 900px;
     background: rgb(246,247,248);
     overflow: auto;
+    border-top: 1px solid var(--border-color);
     border-bottom: 1px solid var(--border-color);
 }
