@@ -7,10 +7,11 @@
     display: flex;
     color: rgba(35, 37, 36, 0.75);
     font-size: var(--font-size-small);
-    border-bottom: 1px solid var(--border-color);
+    /* border-bottom: 1px solid var(--border-color); */
     position: fixed;
     background-color: white;
     z-index: 10;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 2px 3px;
 }
 
 .menu a {
