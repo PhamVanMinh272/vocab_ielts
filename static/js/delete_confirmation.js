@@ -3,12 +3,13 @@ let deleteConfirmation = (function() {
   let contentConfirmationSelector = $("#item-delete")
   let sureDeleteBtn = $("#sure-delete")
 
-  let showDeleteConfirmation = function(objectId, objectName, handler) {
+  let showDeleteConfirmation = function(objectId, objectName, handler, successHandler, failureHandler) {
     contentConfirmationSelector.html(`Are you sure to delete <b>${objectName}</b>?`);
     contentConfirmationSelector.attr("object-id", objectId);
-    sureDeleteBtn.off("click") // make sure it just have on click handler
+    sureDeleteBtn.off("click") // make sure it just have one click handler
     sureDeleteBtn.click(function() {
-      handler(objectId);
+      handler(objectId, successHandler, failureHandler)
+      closeDeleteConfirmation()
     });
     deleteConfirmationSelector.show();
   }

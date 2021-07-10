@@ -27,11 +27,6 @@
         {% else %}
             <a href="{{ url_for('home_page') }}">Home</a>
         {% endif %}
-        {% if page == "vocab_repository_page" %}
-            <a class="current-page" href="{{ url_for('vocab_repository_page') }}">Vocabulary</a>
-        {% else %}
-            <a href="{{ url_for('vocab_repository_page') }}">Vocabulary</a>
-        {% endif %}
         {% if page == "about_us_page" %}
             <a class="current-page" href="#">About Us</a>
         {% else %}

@@ -1,5 +1,5 @@
-DICTIONARY_TYPE = 'dictionary'
-OBJECT_TYPE = 'object'
+DICTIONARY_TYPE = "dictionary"
+OBJECT_TYPE = "object"
 ADMIN_USER_TYPE = 0
 NORMAL_USER_TYPE = 1
 GENERAL_USER_ID = 1

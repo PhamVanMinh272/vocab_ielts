@@ -103,20 +103,15 @@
 
 .list-more-action-dropdown button {
     padding: 0;
-    padding-left: 2px;
-    background: white;
-    color: var(--color-black-general);
+    padding-left: 10px;
+    margin: 3px;
+    color: white;
     text-align: left;
-    width: 50px;
+    width: 90%;
+    height: 30px;
 }
 
 .list-more-action-dropdown {
-    width: 50px;
+    width: 100px;
+    
 }
-
-.list-more-action-dropdown button:hover {
-    color: black;
-    box-shadow: none;
-}
-
-

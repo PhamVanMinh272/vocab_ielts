@@ -9,7 +9,7 @@ class Word(db.Model):
     language_type = db.Column(db.Integer)
     inserted_time = db.Column(db.String(100), nullable=False)
     severity = db.Column(db.Integer)
-    list_id = db.Column(db.Integer, db.ForeignKey('list.list_id'), nullable=False)
+    list_id = db.Column(db.Integer, db.ForeignKey("list.list_id"), nullable=False)
 
     def __repr__(self):
         return self.word
@@ -25,8 +25,12 @@ class WordSchema(ma.SQLAlchemyAutoSchema):
 
 class WordMeaning(db.Model):
     __tablename__ = "word_meaning"
-    english_id = db.Column(db.Integer, db.ForeignKey('word.word_id'), primary_key=True, nullable=False)
-    vietnamese_id = db.Column(db.Integer, db.ForeignKey('word.word_id'), primary_key=True, nullable=False)
+    english_id = db.Column(
+        db.Integer, db.ForeignKey("word.word_id"), primary_key=True, nullable=False
+    )
+    vietnamese_id = db.Column(
+        db.Integer, db.ForeignKey("word.word_id"), primary_key=True, nullable=False
+    )
 
     def __repr__(self):
-        return f'english_id={self.english_id}, vietnamese_id={self.vietnamese_id}'
+        return f"english_id={self.english_id}, vietnamese_id={self.vietnamese_id}"

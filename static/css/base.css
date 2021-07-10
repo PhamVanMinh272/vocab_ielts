@@ -25,6 +25,7 @@ body {
     margin: 0;
     font-family: var(--font-family);
     font-size: var(--font-size-small);
+    font-weight: var(--font-weight);
     color: var(--color-black-general);
 }
 
@@ -77,6 +78,7 @@ input {
     padding: 2px 5px;
     font-size: var(--font-size-small);
     font-family: var(--font-family);
+    font-weight: var(--font-weight);
 }
 
 input[type="text"]:focus {
@@ -113,6 +115,10 @@ a {
 
 a:hover {
     cursor: pointer;
+}
+
+.action-btn-style {
+    background: rgb(238,187,43);
 }
 
 .delete-btn-style {

@@ -111,8 +111,8 @@
                         <div class="dropdown">
                             <button class="list-more-action-dropbtn"><img src="/static/public/more.png" ></button>
                             <div class="list-more-action-dropdown dropdown-content">
-                              <button class="list-details-btn" list-id="{{ list.list_id }}" list-name="{{ list.list_name }}">Details</button>
-                              <button class="delete-list-btn" list-id="{{ list.list_id }}" list-name="{{ list.list_name }}">Delete</button>
+                              <button class="list-details-btn detail-info-btn-style" list-id="{{ list.list_id }}" list-name="{{ list.list_name }}">Details</button>
+                              <button class="delete-list-btn delete-btn-style" list-id="{{ list.list_id }}" list-name="{{ list.list_name }}">Delete</button>
                             </div>
                         </div>
                     </div>
@@ -124,7 +124,6 @@
 {% endblock %}
 {% block script %}
   <script type="text/javascript" src="{{ url_for('static', filename='js/home.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='js/side_bar.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='js/list.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='js/word.js') }}"></script>
 {% endblock %}
