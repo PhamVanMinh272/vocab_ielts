@@ -1,13 +1,13 @@
 .menu {
-    height: 70px;
+    height: 50px;
+    line-height: 50px;
     width: 100%;
     min-width: 600px;
     border-radius: 2px;
     display: flex;
     color: rgba(35, 37, 36, 0.75);
-    line-height: 70px;
     font-size: var(--font-size-small);
-    box-shadow: rgba(0, 0, 0, 0.24) 0px 1px 5px;
+    border-bottom: 1px solid var(--border-color);
     position: fixed;
     background-color: white;
     z-index: 10;
@@ -41,10 +41,10 @@
 }
 
 .menu .logo {
-    width: 130px;
-    margin: 15px 0;
-    height: 40px;
-    line-height: 40px;
+    width: 150px;
+    margin: 10px 0;
+    height: 30px;
+    line-height: 30px;
     text-align: center;
     color: var(--color-white-purple);
     border-radius: 5px;
@@ -59,7 +59,7 @@
 .img-account {
     height: 30px;
     width: 30px;
-    margin: 20px 0;
+    margin: 10px 0;
 }
 
 .menu .img-account-link {

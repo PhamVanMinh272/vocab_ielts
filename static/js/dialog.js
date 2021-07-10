@@ -1,17 +1,3 @@
-$(".register-action").click(function(e) {
-  // use stopPropagation to prevent stopping modal when click body
-  e.stopPropagation();
-  closeDialog();
-  $("#register-dialog").css("display", "block");
-});
-
-$(".login-action").click(function(e) {
-  // use stopPropagation to prevent stopping modal when click body
-  e.stopPropagation();
-  closeDialog();
-  $("#login-dialog").css("display", "block")
-});
-
 $("body").mousedown(function() {
   closeDialog();
 });
@@ -29,7 +15,7 @@ $("#cancel-delete").click(function() {
 function closeDialog() {
   // register and login
   $(".message-in-dialog").html("");
-  $(".modal").css("display", "none");
+  $(".modal").hide();
   $(".modal input").val("");
   // confirm delete
   $("#sure-delete").off("click");
@@ -41,5 +27,5 @@ function closeDialog() {
 
 $("#confirm-delete-dialog").mousedown(function(e) {
   e.stopPropagation();
-  $(this).css("display", "none");
+  $(this).hide();
 });

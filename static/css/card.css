@@ -1,71 +1,117 @@
 .card-of-list {
-    width: 240px;
-    height: 350px;
+    width: 100%;
+    height: 80px;
     color: var(--color-black);
-    border-radius: 5px;
-    margin: auto;
-    margin-bottom: 30px;
-    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-    transition: transform var(--scale-time); /* Animation time */
+    border-radius: 3px;
+    margin-bottom: 8px;
+    transition: var(--scale-time); /* Animation time */
     background: white;
+    padding: 0 10px;
+    display: flex;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 2px 3px;
 }
 
 .card-of-list:hover {
-    transform: var(--scale-proportion);
-}
-
-.card-title {
-    width: 110px;
-    height: 110px;
-    margin: 10px 70px 0 70px;
-    border-radius: 50%;
-    box-shadow: 0 3px 6px rgb(0 0 0 / 16%), 0 3px 6px rgb(0 0 0 / 23%);
-}
-
-.card-title .img-title {
-    width: 60px;
-    height: 60px;
-    margin: 25px;
+    margin-left: 10px;
 }
 
 .card-content {
-    width: calc(100% - 10px);
-    height: 180px;
-    padding: 10px 5px;
+    width: 80%;
+    height: calc(100% - 20px);
+    padding: 10px 20px;
+    display: flex;
 }
 
 .card-content .name-of-list {
-    text-align: center;
-    margin-bottom: 10px;
-    padding: 10px 5px;
-    text-transform: uppercase;
-    color: rgba(241, 234, 241, 0.75);;
-    background: linear-gradient(125deg, rgba(160,102,164,1) 0%, rgba(107,179,196,1) 100%);
-    box-shadow: 1px 1px 5px rgb(160 102 164);
+    color: rgba(0, 0, 0, 0.8);;
+    font-weight: 700;
 }
 
-.card-content .property-of-list {
-    text-align: center;
+.card-content .property-of-list div {
+    color: rgba(0, 0, 0, 0.4);
+    font-weight: 700;
+    margin-top: 2px;
+}
+
+#list-basic-info-container {
+    flex-grow: 2;
+    margin-right: 10px;
+}
+
+#parts-of-speech-container {
+    flex-grow: 2;
+    padding: 0 10px;
+    margin-right: 10px;
+    border: 1px solid var(--border-color);
+    border-top: none;
+    border-bottom: none;
+}
+
+#parts-of-speech-container .property-of-list div {
+    display: flex;
+    width: 100%;
 }
 
 .card-footer {
-    width: 100%;
-    height: 30px;
+    width: 20%;
+    height: 100%;
     display: flex;
 }
 
 .card-footer a {
-    width: 50%;
+    display: block;
+    width: 100px;
     height: 30px;
-    color: var(--color-black);
+    margin: auto;
+    color: white;
     text-align: center;
     line-height: 30px;
-    background: linear-gradient(125deg, rgb(218, 198, 219) 0%, rgb(201, 219, 223) 100%);
-    transition: transform var(--scale-time); /* Animation time */
-    border-radius: 1px;
+    background: rgb(238,187,43);
+    border-radius: 3px;
 }
 
 .card-footer a:hover {
-    transform: scale(1.1);
     box-shadow: 0 3px 6px rgb(0 0 0 / 16%), 0 3px 6px rgb(0 0 0 / 23%);
+}
+
+.card-footer button {
+    margin: auto;
+}
+
+/* list more action dropdown */
+.card-of-list .dropdown {
+    width: 20px;
+}
+
+.list-more-action-dropbtn {
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    opacity: 0.5;
+    background: white;
+}
+
+.list-more-action-dropbtn:hover {
+    opacity: 1;
+    box-shadow: none;
+}
+
+.list-more-action-dropbtn img {
+    height: 20px;
+    width: 20px;
+}
+
+.list-more-action-dropdown button {
+    padding: 0;
+    padding-left: 10px;
+    margin: 3px;
+    color: white;
+    text-align: left;
+    width: 90%;
+    height: 30px;
+}
+
+.list-more-action-dropdown {
+    width: 100px;
+    
 }

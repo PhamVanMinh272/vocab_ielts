@@ -1,108 +1,159 @@
-var errorCategory = "error";
-var successCategory = "success";
-var showMessageTime = 3000;
+var ERROR_MESSAGE_TYPE = "error"
+var SUCCESS_MESSAGE_TYPE = "success"
+var MESSAGE_TIMEOUT = 3000
+var DEFAULT_LESSON_WORDS_QUANTITY = 20
 
 function rmInputRedundantSpaces(selector) {
-  $(selector).val($(selector).val().replace(/\s+/g, ' ').trim());
+  $(selector).val($(selector).val().replace(/\s+/g, ' ').trim())
 }
 
 function rmRedundantSpaces(value) {
-  return value.replace(/\s+/g, ' ').trim();
+  return value.replace(/\s+/g, ' ').trim()
 }
 
-function showMessage(message, category) {
-  let messageId = Date.now();
-  var html = `<div id="${messageId}" class="message-dialog show-message"> \
-                <img class="icon-message" src="/static/public/${category}.png">&nbsp; \
-                ${message} \
-              </div> `
+const HTTP_POST = 'POST'
+const HTTP_GET = 'GET'
+const HTTP_PUT = 'PUT'
+const HTTP_DELETE = 'DELETE'
+
+
+let callAPI = function(url, httpMethod, data, successHandler, failureHandler) {
+  $.ajax({
+    url: url,
+    type: httpMethod,
+    data: data,
+    success: function(result) {
+      successHandler(result)
+    },
+    error: function(error) {
+      failureHandler(error)
+    }
+  })
+}
+
+$(function() {
+  toastMessage.setTimeoutFlashMessage()
+  let userComponent = (function() {
+    // Include register, login
+    let registerActionBtn = $(".register-action")
+    let registerDialog = $("#register-dialog")
+    let registerUsername = $("input#register-username")
+    let registerPassword = $("input#register-password")
+    let registerConfirmPassword = $("input#register-confirm-password")
+    let registerMessage = $("#message-register-dialog")
+    let registerBtn = $("#register-btn")
   
-  $('.messages-container').append(html);
-  setTimeout(function(){
-    $(`#${messageId}`).removeClass("show-message");
- }, showMessageTime);
-}
-
-function clearMessages() {
-    $('.messages-container').html("");
-}
-
-$("#register-btn").click(function() {
-  let username = $("input#register-username").val();
-  let password = $("input#register-password").val();
-  let confirmPassword = $("input#register-confirm-password").val();
-  if (!username || !password || !confirmPassword) {
-    $("#message-register-dialog").html("Please fill out all fields.");
-    return false;
-  } else if (username.indexOf(" ") !== -1 || password.indexOf(" ") !== -1 || confirmPassword.indexOf(" ") !== -1) {
-    $("#message-register-dialog").html("Space characters do not allow.");
-    return false;
-  } else if (password !== confirmPassword) {
-    $("#message-register-dialog").html("The confirm-password does not match the password.");
-    return false;
-  }
-  $.post("/register", { 
-    "username": $("#register-username").val(),
-    "password": $("#register-password").val(),
-    "confirm_password": $("#register-confirm-password").val()
-  })
-  .done(function() {
-    $(".modal").css("display", "none");
-    showMessage("Create an account successfully.", "success");
-  })
-  .fail(function(error) {
-    if (error.responseJSON) {
-      $("#message-register-dialog").html(error.responseJSON.erMsg);
-    } else {
-      $("#message-register-dialog").html("Failed to create an account.");
+    let loginActionBtn = $(".login-action")
+    let loginDialog = $("#login-dialog")
+    let loginUsername = $("input#login-username")
+    let loginPassword = $("input#login-password")
+    let loginMessage = $("#message-login-dialog")
+    let loginForm = $("#login-form")
+  
+    let accountDropBtn = $(".account-dropbtn")
+    let accountDropdown = $("#account-dropdown")
+    let body = $("body")
+  
+    let allDialogs = $(".modal")
+    let messagesInAllDialogs = $(".message-in-dialog")
+    let inputsInAllDialogs = $(".modal input")
+  
+    // set handlers for user's actions area in menu
+    registerActionBtn.click(function(e) {
+      // use stopPropagation to prevent stopping modal when click body
+      e.stopPropagation();
+      closeDialogs();
+      registerDialog.show();
+    })
+  
+    loginActionBtn.click(function(e) {
+      // use stopPropagation to prevent stopping modal when click body
+      e.stopPropagation();
+      closeDialogs();
+      loginDialog.show()
+    })
+  
+    accountDropBtn.click(function(e) {
+      e.stopPropagation();
+      accountDropdown.hide()
+      accountDropdown.slideToggle()
+    })
+  
+    // close dropdown btn
+    body.click(function() {
+      accountDropdown.hide()
+    })
+  
+    let closeDialogs = function() {
+      // register and login
+      messagesInAllDialogs.html("");
+      allDialogs.hide();
+      inputsInAllDialogs.val("");
+      // confirm delete
+      $("#sure-delete").off("click");
+      // list detail
+      $("input#viet-word").val('');
+      $("input.eng-word").val('');
+      $(".more-eng-field").html('');
     }
-  });
-});
-
-$("#login-form").submit(function() {
-  let username = $("input#login-username").val();
-  let password = $("input#login-password").val();
-  if (!username || !password) {
-    $("#message-login-dialog").html("Please fill out all fields.");
-    return false;
-  }
-});
-
-$(".user-action").on("click", "#logout-btn", function() {
-  $.post("/logout")
-  .done(function() {
-    location.reload();
-  })
-  .fail(function(error) {
-    if (error.responseJSON) {
-      showMessage(error.responseJSON.erMsg);
-    } else {
-      showMessage("Failed to logout.");
+  
+    // register dialog
+    let checkRegisterInfo = function() {
+      let username = registerUsername.val();
+      let password = registerPassword.val();
+      let confirmPassword = registerConfirmPassword.val();
+      if (!username || !password || !confirmPassword) {
+        registerMessage.text("Please fill out all fields");
+        return false;
+      } else if (username.indexOf(" ") !== -1 || password.indexOf(" ") !== -1 || confirmPassword.indexOf(" ") !== -1) {
+        registerMessage.text("Space characters do not allow");
+        return false;
+      } else if (password !== confirmPassword) {
+        registerMessage.text("The confirm-password does not match the password");
+        return false;
+      }
+      return true
     }
-  });
-});
-
-$(".account-dropbtn").click(function(e) {
-  e.stopPropagation();
-  if ($("#account-dropdown").hasClass("show")) {
-    $("#account-dropdown").removeClass("show");
-  } else {
-    $("#account-dropdown").addClass("show");
-  }
-});
-
-// close dropdown btn
-$("body").click(function() {
-  $("#account-dropdown").removeClass("show");
-});
-
-// Execute something when DOM is ready:
-$(document).ready(function(){
-
-  let messageId = Date.now();
-  $(".message-dialog").attr("id", messageId);
-  // Delay the action
-  setTimeout(function(){
-     $(`#${messageId}`).removeClass("show-message");
-  }, showMessageTime);
-});
+  
+    let handleRegisterSuccess = function(result) {
+      allDialogs.hide()
+      toastMessage.showMessage(result.message, SUCCESS_MESSAGE_TYPE)
+    }
+  
+    let handleRegisterFailure = function(error) {
+      if (error.responseJSON) {
+        registerMessage.text(error.responseJSON.erMsg)
+      } else {
+        registerMessage.text("Failed to create an account")
+      }
+    }
+  
+    registerBtn.click(function() {
+      if (!checkRegisterInfo()) {
+        return false
+      }
+      let data = { 
+        "username": registerUsername.val(),
+        "password": registerPassword.val(),
+        "confirm_password": registerConfirmPassword.val()
+      }
+      user.callRegisterAPI(data, handleRegisterSuccess, handleRegisterFailure)
+    })
+  
+    // login dialog
+    let checkLoginInfo = function() {
+      let username = loginUsername.val()
+      let password = loginPassword.val()
+      if (!username || !password) {
+        loginMessage.text("Please fill out all fields")
+        return false
+      }
+      return true
+    }
+  
+    loginForm.submit(function() {
+      return checkLoginInfo()
+    })
+    
+  })()
+})

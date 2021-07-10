@@ -7,7 +7,7 @@
 {% block content %}
     <div class="list-name-title" list-id="{{ list.list_id }}">{{ list.list_name }}</div>
     <div class="action-container">
-            <button class="start-lesson-btn">Start a lesson</button>
+            <button class="start-lesson-btn action-btn-style">Start Lesson</button>
             <label>Quantity: </label>
             <input
                     id="quantity-of-words-input-id"
@@ -23,7 +23,7 @@
                     <option value="{{ num }}">
                 {% endfor %}
             </datalist>
-            <div class="lesson-area disabled">
+            <div class="lesson-area">
                 <div class="learning-progress">Progress: 0/0</div>
                 <button class="previous-word">Previous</button>
                 <button class="next-word disable">Next</button>
@@ -37,4 +37,5 @@
 {% endblock %}
 {% block script %}
   <script type="text/javascript" src="{{ url_for('static', filename='js/lesson.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/word.js') }}"></script>
 {% endblock %}

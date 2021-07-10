@@ -11,6 +11,11 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/message.css') }}">
     {% block head %}{% endblock %}
     <!-- <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script> -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700&family=Nunito:wght@200;300;400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Cutive+Mono&family=Fira+Code&family=Source+Code+Pro:ital,wght@0,200;0,300;0,400;0,500;1,200;1,300;1,400;1,500&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700&display=swap');
+    </style>
 </head>
 <body>
     <div class="menu">
@@ -21,11 +26,6 @@
             <a class="current-page" href="{{ url_for('home_page') }}">Home</a>
         {% else %}
             <a href="{{ url_for('home_page') }}">Home</a>
-        {% endif %}
-        {% if page == "vocab_repository_page" %}
-            <a class="current-page" href="{{ url_for('vocab_repository_page') }}">Vocabulary</a>
-        {% else %}
-            <a href="{{ url_for('vocab_repository_page') }}">Vocabulary</a>
         {% endif %}
         {% if page == "about_us_page" %}
             <a class="current-page" href="#">About Us</a>
@@ -47,7 +47,7 @@
                     <a class="account-dropbtn">{{ current_user.username }}</a>
                     <div id="account-dropdown" class="dropdown-content">
                       <a href="{{ url_for('profile_page') }}">Profile</a>
-                      <a id="logout-btn">Logout</a>
+                      <a href="{{ url_for('logout') }}" >Logout</a>
                     </div>
                 </div>
             {% else %}
@@ -64,9 +64,9 @@
             <h2>Register</h2>
             <div id="message-register-dialog" class="message-in-dialog"></div>
             <div class="action-container">
-                <input id="register-username" class="username" type="text" name="username" placeholder="Username"/><br>
-                <input id="register-password" type="password" name="password" placeholder="Password"/><br>
-                <input id="register-confirm-password" type="password" name="password" placeholder="Confirm-Password"/><br>
+                <input id="register-username" class="username" type="text" name="username" spellcheck="false" placeholder="Username"/><br>
+                <input id="register-password" type="password" name="password" spellcheck="false" placeholder="Password"/><br>
+                <input id="register-confirm-password" type="password" name="password" spellcheck="false" placeholder="Confirm-Password"/><br>
                 <button id="register-btn">Register</button>
                 <div class="dialog-footer">Have already an account? <b class="login-action">Login here</b></div>
             </div>
@@ -95,44 +95,11 @@
         <div class="modal-content">
             <span class="close" onclick="this.parentElement.parentElement.style.display='none';">&times;</span>
             <div class="action-container">
-                <p class="item-delete"></p>
+                <p id="item-delete"></p>
             </div>
             <div class="dialog-footer">
-                <button id="sure-delete" onclick="this.parentElement.parentElement.parentElement.style.display='none';">Delete</button>
-                <button onclick="this.parentElement.parentElement.parentElement.style.display='none';">Cancel</button>
-            </div>
-        </div>
-    </div>
-    <!-- The Modal -->
-    <div id="manage-list-dialog" class="modal">
-        <!-- Modal content -->
-        <div class="modal-content manage-list-content">
-            <span class="close" onclick="this.parentElement.parentElement.style.display='none';">&times;</span>
-            <div class="list-content">
-                <div class="header-content-of-a-list">
-                    <h2>Please select a list</h2>
-                    <div class="management-list-btn-container disabled">
-                        <button class="add-words-btn" >Add words</button>
-                        <button class="delete-list-btn" >Delete list</button>
-                    </div>
-                </div>
-                <div class="add-words-container">
-                    <div class="field">
-                        <input id="viet-word" class="viet-word" type="text" name="viet-word" placeholder="Vietnamese"/><br>
-                    </div>
-                    <div id="default-eng-word-field" class="field">
-                        <input class="eng-word" type="text" name="eng-word" placeholder="English"/><br>
-                    </div>
-                    <div class="more-eng-field">
-                    </div>
-                    <div class="field add-more-eng-word-field-container">
-                        <button class="add-more-eng-word-field"></button>
-                    </div>
-                    <div id="add-update-btn-container" class="field">
-                        <button class="create-words-btn">Save</button>
-                    </div>
-                </div>
-                <table class="list-content-table" id="words-table" style="width:100%"></table>
+                <button class="cancel-btn-style" onclick="this.parentElement.parentElement.parentElement.style.display='none';">Cancel</button>
+                <button id="sure-delete" class="delete-btn-style" onclick="this.parentElement.parentElement.parentElement.style.display='none';">Delete</button>
             </div>
         </div>
     </div>
@@ -157,6 +124,9 @@
     <script src="/static/js/jquery_3.6.js"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/base.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/dialog.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/user.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/message.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/delete_confirmation.js') }}"></script>
     {% block script %}{% endblock %}
 </body>
 </html>

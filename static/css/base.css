@@ -6,20 +6,27 @@
     --rgba-dark-main-color-50: rgba(26,64,64,0.5);
     --error-color: #EB6057;
     --success-color: #59B987;
-    --font-size-small: 12px;
+    --font-size-small: 13px;
     --color-black: rgba(35, 37, 36, 0.75);
     --color-white-purple: rgba(241, 234, 241, 0.75);
-    --border-color: rgba(114, 111, 111, 0.25);
+    --border-color: rgba(114, 111, 111, 0.1);
     --scale-proportion: scale(1.02);
     --scale-time: .2s;
+    --btn-background-purple: linear-gradient(125deg, rgb(218, 198, 219) 0%, rgb(201, 219, 223) 100%);
+    --font-family-montserrat: 'Montserrat', sans-serif;
+    --font-family-monospace: 'Source Code Pro', monospace;
+    --font-family: 'Nunito', sans-serif;
+    --font-weight: 700;
+    --color-black-general: rgba(0, 0, 0, 0.5);
 }
 
 body {
-    margin: 0;
-    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
     min-width: 600px;
+    margin: 0;
+    font-family: var(--font-family);
     font-size: var(--font-size-small);
-    color: var(--color-black);
+    font-weight: var(--font-weight);
+    color: var(--color-black-general);
 }
 
 .logo {
@@ -49,11 +56,13 @@ footer {
 button {
     height: 30px;
     width: 100px;
-    background: linear-gradient(125deg, rgb(218, 198, 219) 0%, rgb(201, 219, 223) 100%);
+    background: rgba(65, 106, 219, 0.9);
     border: none;
-    border-radius: 5px;
-    color: var(--color-black);
-    font-size: 12px;
+    border-radius: 3px;
+    color: white;
+    font-size: var(--font-size-small);
+    font-weight: var(--font-weight);
+    font-family: var(--font-family);
 }
 
 button:hover {
@@ -61,13 +70,15 @@ button:hover {
 }
 
 input {
-    color: var(--color-black);
+    color: var(--color-black-general);
     height: 30px;
     border-radius: 2px 0 0 2px;
     border: none;
     border-bottom: 1px solid var(--border-color);
     padding: 2px 5px;
     font-size: var(--font-size-small);
+    font-family: var(--font-family);
+    font-weight: var(--font-weight);
 }
 
 input[type="text"]:focus {
@@ -104,4 +115,26 @@ a {
 
 a:hover {
     cursor: pointer;
+}
+
+.action-btn-style {
+    background: rgb(238,187,43);
+}
+
+.delete-btn-style {
+    /* background: rgb(206, 66, 66); */
+    background: #f5222d;
+}
+
+.save-btn-style {
+    background: rgb(43,94,44);
+}
+
+.detail-info-btn-style {
+    background: rgb(59, 119, 230);
+}
+
+.cancel-btn-style {
+    background: white;
+    color: black;
 }

@@ -1,34 +1,32 @@
 import datetime
 from model.user import User, UserSchema
 from utils.exceptions import NotExistException, AlreadyExistException
-from constants.action_constants import DICTIONARY_TYPE
+from constants.action_constants import DICTIONARY_TYPE, NORMAL_USER_TYPE
 from main import db, bcrypt
 from flask_login import UserMixin
 
 
 class UserAction(UserMixin):
-    user_id = None
-
-    def __init__(self, user_id):
-        self.user_id = user_id
-
     @staticmethod
     def create(username, password, return_type=DICTIONARY_TYPE) -> dict:
         user = User.query.filter_by(username=username).first()
         if user:
-            raise AlreadyExistException("The username {} is already exists.".format(username))
+            raise AlreadyExistException(
+                "The username {} is already exists.".format(username)
+            )
         inserted_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         user = User(
             username=username,
-            password=bcrypt.generate_password_hash(password).decode('utf-8'),
-            inserted_time=inserted_time
+            password=bcrypt.generate_password_hash(password).decode("utf-8"),
+            user_type=NORMAL_USER_TYPE,
+            inserted_time=inserted_time,
         )
         db.session.add(user)
         db.session.commit()
         return user.to_json() if return_type == DICTIONARY_TYPE else user
 
     @staticmethod
-    def login(username, password) -> (User, bool):
+    def login(username, password) -> User:
         user_obj = User.query.filter_by(username=username).first()
         if not user_obj:
             raise NotExistException("The user does not exist.")
@@ -36,4 +34,11 @@ class UserAction(UserMixin):
             return user_obj
         return False
 
-
+    @staticmethod
+    def get_user_type(user_id):
+        user_obj = User.query.filter_by(user_id=user_id).first()
+        if not user_obj:
+            raise NotExistException(
+                "The user (user_id={}) does not exist".format(user_id)
+            )
+        return user_obj.user_type
