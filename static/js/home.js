@@ -18,7 +18,7 @@ $(function() {
 
     let listManagementDialogSelector = $("#manage-list-dialog")
     let currentList = $(".header-content-of-a-list")
-    let tableListDetailSelector = $(".list-content-table")
+    let defaultEnglishInput = $("#default-eng-word-field")
     let bodyElement = $("body")
 
     let getCurrentListSelector = function() {
@@ -29,9 +29,9 @@ $(function() {
       return {listId: currentList.attr("list-id"), listName: currentList.attr("list-name")}
     }
 
-    let showListDetail = function(listId, listName) {
-      list.callGetWordsAPI(listId, listName)
+    let showListDetailsDialog = function() {
       listManagementDialogSelector.show()
+      defaultEnglishInput.show()
     }
 
     // dropdown more actions
@@ -142,7 +142,7 @@ $(function() {
 
     let handleCreateListSuccess = function(result) {
       toastMessage.showMessage(`The list ${result.list_name} was saved successfully`, SUCCESS_MESSAGE_TYPE)
-      showListDetail(result.list_id, result.list_name)
+      showListDetailsDialog()
     }
 
     let handleCreateListFailure = function(error) {
@@ -191,16 +191,57 @@ $(function() {
       )
     });
 
-    // get words
+    // show list dialog
 
-    let handleGetWordsSuccess = function(result) {
-      let listId = listDetailsBtn.attr("list-id")
-      let listName = listDetailsBtn.attr("list-name")
-      listManagementDialogSelector.show()
+    listDetailsBtn.click(function() {
+      let listId = $(this).attr("list-id")
+      let listName = $(this).attr("list-name")
+      showListDetailsDialog()
       currentList.children("h2").text(listName)
       currentList.attr("list-id", listId)
       currentList.attr("list-name", listName)
+      wordComponent.getWords(listId)
+    })
+
+    return {
+      getCurrentListSelector,
+      getCurrentListInfo
+    }
+
+  })()
+
+  let wordComponent = (function() {
+    let vietnameseInput = $("input#viet-word")
+    let defaultEnglishInput = $("#default-eng-word-field")
+    let moreEnglishInputContainer = $(".more-eng-field")
+    let allEnglishInputs = $('.eng-word')
+    let addMoreEnglishInputBtn = $(".add-more-eng-word-field")
+    let wordActionBtnContainer = $("#add-update-btn-container")
+    let wordCreationBtn = $(".create-words-btn")
+
+    let tableWords = $("#words-table")
+    let tableListDetailSelector = $(".list-content-table")
+
+    let clearWordDetailsArea = function() {
+      vietnameseInput.val('')
+      defaultEnglishInput.show()
+      allEnglishInputs.val('')
+      moreEnglishInputContainer.html('')
+    }
+
+    addMoreEnglishInputBtn.click(function() {
+      moreEnglishInputContainer.append(`
+      <div class="field">
+        <input class="eng-word" type="text" name="eng-word" placeholder="English"/><br>
+      </div>
+      `)
+    })
+
+    // get words in a list
+
+    let handleGetWordsSuccess = function(result) {
       tableListDetailSelector.html(`
+      <thead>
         <tr>
           <th>No</th>
           <th>Vietnamese</th>
@@ -208,6 +249,7 @@ $(function() {
           <th>Delete</th>
           <th>Edit</th>
         </tr>
+      </thead>
       `)
       let rows = ""
       $.each(result.viets, function(index, word) {
@@ -226,7 +268,7 @@ $(function() {
           </tr>
         `);
       })
-      tableListDetailSelector.append(rows)
+      tableListDetailSelector.append(`<tbody> ${rows} </tbody>`)
     }
 
     let handleGetWordsFailure = function(error) {
@@ -237,42 +279,9 @@ $(function() {
       }
     }
 
-    listDetailsBtn.click(function() {
-      var listId = $(this).attr("list-id")
+    let getWords = function(listId) {
       list.callGetWordsAPI(listId, handleGetWordsSuccess, handleGetWordsFailure)
-    });
-
-    return {
-      getCurrentListSelector
     }
-
-  })()
-
-  let wordComponent = (function() {
-    let vietnameseInput = $("input#viet-word")
-    let defaultEnglishInput = $("#default-eng-word-field")
-    let moreEnglishInputContainer = $(".more-eng-field")
-    let allEnglishInputs = $('.eng-word')
-    let addMoreEnglishInputBtn = $(".add-more-eng-word-field")
-    let wordActionBtnContainer = $("#add-update-btn-container")
-    let wordCreationBtn = $(".create-words-btn")
-
-    let tableWords = $("#words-table")
-
-    let clearWordDetailsArea = function() {
-      vietnameseInput.val('')
-      defaultEnglishInput.show()
-      allEnglishInputs.val('')
-      moreEnglishInputContainer.html('')
-    }
-
-    addMoreEnglishInputBtn.click(function() {
-      moreEnglishInputContainer.append(`
-      <div class="field">
-        <input class="eng-word" type="text" name="eng-word" placeholder="English"/><br>
-      </div>
-      `)
-    })
 
     // get a word
     let handleGetWordSuccess = function(result) {
@@ -314,7 +323,7 @@ $(function() {
       rmInputRedundantSpaces(".viet-word")
       let newEngWords = []
       let engWords = {}
-      allEnglishInputs.slice(1).each(function() {
+      $('.eng-word').slice(1).each(function() {
         rmInputRedundantSpaces(this)
         let engWord = this.value
         let engId = $(this).attr("engid")
@@ -338,9 +347,7 @@ $(function() {
       } else {
         toastMessage.showMessage("The words was updated", SUCCESS_MESSAGE_TYPE)
       }
-      let listId = listComponent.getCurrentListSelector().attr("list-id")
-      let listName = listComponent.getCurrentListSelector().attr("list-name")
-      getListWords(listId, listName)
+      getWords(listComponent.getCurrentListInfo().listId)
     }
 
     let handleUpdateWordFailure = function(error) {
@@ -377,10 +384,11 @@ $(function() {
     }
 
     let handleCreateWordSuccess = function(result) {
+      getWords(listComponent.getCurrentListInfo().listId)
       toastMessage.showMessage(result.message, SUCCESS_MESSAGE_TYPE)
     }
 
-    let handleCreateWordFailure = function() {
+    let handleCreateWordFailure = function(error) {
       if (error.responseJSON) {
         toastMessage.showMessage(error.responseJSON.erMsg, ERROR_MESSAGE_TYPE)
       } else {
@@ -401,9 +409,7 @@ $(function() {
       } else {
         toastMessage.showMessage("The list deleted", SUCCESS_MESSAGE_TYPE)
       }
-      let listId = listComponent.getCurrentListSelector().attr("list-id")
-      let listName = listComponent.getCurrentListSelector().attr("list-name")
-      getListWords(listId, listName);
+      getWords(listComponent.getCurrentListInfo().listId)
     }
 
     let handleDeleteWordFailure = function() {
@@ -425,6 +431,10 @@ $(function() {
         handleDeleteWordFailure
       )
     })
+
+    return {
+      getWords
+    }
 
   })()
 

@@ -3,7 +3,7 @@
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
     z-index: 1; /* Sit on top */
-    padding-top: 100px; /* Location of the box */
+    padding-top: 70px; /* Location of the box */
     left: 0;
     top: 0;
     width: 100%; /* Full width */
@@ -27,8 +27,8 @@
 }
 
 @keyframes showing-modal {
-    from {opacity: 0; padding-top: 80px;}
-    to {opacity: 1; padding-top: 100px;}
+    from {opacity: 0; padding-top: 60px;}
+    to {opacity: 1; padding-top: 70px;}
 }
 
 .modal-content h2 {
@@ -90,28 +90,34 @@
     text-align: right;
 }
 
+/* list content */
+.list-content {
+    padding: 0 40px;
+}
+
 /* list detail dialog */
 .manage-list-content {
-    min-width: 600px;
+    min-width: 1000px;
 }
 
 .header-content-of-a-list {
-    padding: 20px;
-    padding-top: 0;
     color: var(--color-black);
     text-transform: uppercase;
 }
 
 .header-content-of-a-list h2 {
-    font-weight: lighter;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
+}
+
+#manage-words-in-list-container {
+    display: flex;
 }
 
 /* add word area */
 .add-words-container {
-    padding: 10px 100px 30px 100px;
+    width: 40%;
+    margin-right: 50px;
 }
-
 .add-words-container button.add-more-eng-word-field {
     background: url('../public/add.png');
     background-repeat: no-repeat;
@@ -122,11 +128,6 @@
     height: 30px;
     width: 30px;
     display: block;
-    transition: transform var(--scale-time); /* Animation */
-}
-
-.add-words-container button.add-more-eng-word-field:hover {
-    transform: var(--scale-proportion);
 }
 
 .add-more-eng-word-field-container {
@@ -141,25 +142,43 @@
 }
 
 /* table words */
+.list-content-table-container {
+    width: 60%;
+}
+
 .list-content-table {
     text-align: left;
     font-size: var(--font-size-small);
+    /* background: cadetblue; */
+    border-collapse: collapse;
+    border-radius: 5px 5px 0 0;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+.list-content-table tr {
+    height: 40px;
+}
+
+.list-content-table tbody tr:nth-of-type(even) {
+    background-color: #f3f3f3;
 }
 
 .list-content-table th {
-    color: black;
+    background-color: #009879;
+    color: #ffffff;
+    padding-left: 5px;
 }
 
 .list-content-table td {
-    height: 30px;
     white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis
-  }
+    text-overflow: ellipsis;
+    padding-left: 5px;
+}
 
-.list-content-table tr.words-table-item:hover {
-    color: black;
-    cursor: pointer;
+.list-content-table tbody tr:hover {
+    font-weight: bold;
+    color: #009879;
 }
 
 .img-word-actions {
