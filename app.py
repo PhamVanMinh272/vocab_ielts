@@ -5,7 +5,7 @@ from main import app
 from action.list import ListAction
 from action.word import WordAction
 from action.user import UserAction
-from utils.exceptions import NotExistException, AlreadyExistException
+from utils.exceptions import InvalidValueException, NotExistException, AlreadyExistException
 from utils.utils import rm_redundant_space
 from utils.log_config import logging
 from constants.route_constants import (
@@ -17,18 +17,30 @@ from constants.route_constants import (
 @app.route("/register", methods=["POST"])
 def register():
     try:
-        username = request.form.get("username")
-        password = request.form.get("password")
-        confirm_password = request.form.get("confirm_password")
+        if request.content_length > 500:
+            return {"erMsg": "The input data is too large"}, 400
+        data = request.get_data()
+        try:
+            json_data = json.loads(data)
+            username = json_data.get("username")
+            password = json_data.get("password")
+            confirm_password = json_data.get("confirm_password")
+        except Exception as ex:
+            logging.exception(ex)
+            return {"erMsg": "Cannot read the input data as a json"}, 400
         if not username or not password or not confirm_password:
-            return {"erMsg": "The input data are not valid"}, 400
+            return {"erMsg": "The input data is invalid"}, 400
         if password != confirm_password:
             return {"erMsg": "The confirm-password does not match the password"}, 400
         UserAction.create(username=username, password=password)
+        login()
         return {"message": "Create your account successfully"}, 200
     except AlreadyExistException as ex:
         logging.exception(ex)
         return {"erMsg": "The username has already existed"}, 400
+    except InvalidValueException as ex:
+        logging.error(ex)
+        return {"erMsg": "The input data is invalid"}, 400
     except Exception as ex:
         logging.exception(ex)
         return {"erMsg": "Failed to register"}, 500
@@ -37,30 +49,39 @@ def register():
 @app.route("/login", methods=["POST"])
 def login():
     try:
-        username = request.form.get("username")
-        password = request.form.get("password")
+        if request.content_length > 500:
+            return {"erMsg": "The input data is too large"}, 400
+        if request.content_type == 'application/x-www-form-urlencoded':
+            data = request.form
+        else:
+            data = request.get_data(parse_form_data=True)
+            try:
+                data = json.loads(data)
+            except Exception as ex:
+                logging.exception(ex)
+                return {"erMsg": "Cannot read the input data as a json"}, 400
+        username = data.get("username")
+        password = data.get("password")
+        if not username or not password:
+            return {"erMsg": "The input data is invalid"}, 400
         user = UserAction.login(username, password)
         if user:
             login_user(user)
-            flash("Login successfully", SUCCESS_FLASH_MESSAGE_TYPE)
-            return redirect(url_for("home_page"))
-        flash("The password is wrong", ERROR_FLASH_MESSAGE_TYPE)
-        return redirect(url_for("home_page"))
+            return {"message": "Login successfully"}
+        return {"erMsg": "Password is incorrect"}, 400
     except NotExistException as ex:
         logging.exception(ex)
-        flash("The user does not exist", ERROR_FLASH_MESSAGE_TYPE)
-        return redirect(url_for("home_page"))
+        return {"erMsg": "Username is incorrect"}, 400
     except Exception as ex:
         logging.exception(ex)
-        flash("Login failed", ERROR_FLASH_MESSAGE_TYPE)
-        return redirect(url_for("home_page"))
+        return {"erMsg": "Login failed"}, 500
 
 
 @app.route("/logout", methods=["GET"])
 @login_required
 def logout():
     logout_user()
-    flash("Logout successfully", SUCCESS_FLASH_MESSAGE_TYPE)
+    # flash("Logout successfully", SUCCESS_FLASH_MESSAGE_TYPE)
     return redirect(url_for("home_page"))
 
 
@@ -278,4 +299,4 @@ def check_vocab(viet_id):
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(host='0.0.0.0', port=80)

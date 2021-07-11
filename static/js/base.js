@@ -21,7 +21,9 @@ let callAPI = function(url, httpMethod, data, successHandler, failureHandler) {
   $.ajax({
     url: url,
     type: httpMethod,
-    data: data,
+    data: JSON.stringify(data),
+    contentType: 'application/json',
+    processData: false,
     success: function(result) {
       successHandler(result)
     },
@@ -49,6 +51,7 @@ $(function() {
     let loginPassword = $("input#login-password")
     let loginMessage = $("#message-login-dialog")
     let loginForm = $("#login-form")
+    let loginBtn = $("#login-btn")
   
     let accountDropBtn = $(".account-dropbtn")
     let accountDropdown = $("#account-dropdown")
@@ -99,25 +102,25 @@ $(function() {
   
     // register dialog
     let checkRegisterInfo = function() {
-      let username = registerUsername.val();
-      let password = registerPassword.val();
-      let confirmPassword = registerConfirmPassword.val();
+      let username = registerUsername.val()
+      let password = registerPassword.val()
+      let confirmPassword = registerConfirmPassword.val()
       if (!username || !password || !confirmPassword) {
-        registerMessage.text("Please fill out all fields");
+        registerMessage.text("Please fill out all fields")
         return false;
       } else if (username.indexOf(" ") !== -1 || password.indexOf(" ") !== -1 || confirmPassword.indexOf(" ") !== -1) {
-        registerMessage.text("Space characters do not allow");
-        return false;
+        registerMessage.text("Space characters do not allow")
+        return false
       } else if (password !== confirmPassword) {
-        registerMessage.text("The confirm-password does not match the password");
-        return false;
+        registerMessage.text("The confirm-password does not match the password")
+        return false
       }
       return true
     }
   
     let handleRegisterSuccess = function(result) {
-      allDialogs.hide()
-      toastMessage.showMessage(result.message, SUCCESS_MESSAGE_TYPE)
+      // toastMessage.showMessage(result.message, SUCCESS_MESSAGE_TYPE)
+      location.reload()
     }
   
     let handleRegisterFailure = function(error) {
@@ -141,19 +144,39 @@ $(function() {
     })
   
     // login dialog
-    let checkLoginInfo = function() {
+    let getLoginInfo = function() {
       let username = loginUsername.val()
       let password = loginPassword.val()
       if (!username || !password) {
         loginMessage.text("Please fill out all fields")
         return false
       }
-      return true
+      return {username, password}
+    }
+
+    let handleLoginSuccess = function(result) {
+      location.reload()
+      // if (result.message) {
+      //   toastMessage.showMessage(result.message, SUCCESS_MESSAGE_TYPE)
+      // } else {
+      //   toastMessage.showMessage("Login successfully", SUCCESS_MESSAGE_TYPE)
+      // }
+    }
+
+    let handleLoginFailure = function(error) {
+      if (error.responseJSON) {
+        loginMessage.text(error.responseJSON.erMsg)
+      } else {
+        loginMessage.text("Login failed")
+      }
     }
   
-    loginForm.submit(function() {
-      return checkLoginInfo()
+    loginBtn.click(function() {
+      let data = getLoginInfo()
+      if (!data) {
+        return false
+      }
+      user.callLoginAPI(data, handleLoginSuccess, handleLoginFailure)
     })
-    
   })()
 })

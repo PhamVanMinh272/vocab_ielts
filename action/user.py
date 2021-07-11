@@ -1,25 +1,27 @@
 import datetime
 from model.user import User, UserSchema
-from utils.exceptions import NotExistException, AlreadyExistException
+from utils.exceptions import InvalidValueException, NotExistException, AlreadyExistException
 from constants.action_constants import DICTIONARY_TYPE, NORMAL_USER_TYPE
 from main import db, bcrypt
 from flask_login import UserMixin
+from time import sleep
 
 
 class UserAction(UserMixin):
     @staticmethod
     def create(username, password, return_type=DICTIONARY_TYPE) -> dict:
+        if " " in username:
+            raise InvalidValueException("The space character does not allow")
         user = User.query.filter_by(username=username).first()
         if user:
             raise AlreadyExistException(
-                "The username {} is already exists.".format(username)
+                "The username {} is already exists".format(username)
             )
-        inserted_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         user = User(
             username=username,
             password=bcrypt.generate_password_hash(password).decode("utf-8"),
             user_type=NORMAL_USER_TYPE,
-            inserted_time=inserted_time,
+            inserted_time=int(datetime.datetime.now().timestamp())
         )
         db.session.add(user)
         db.session.commit()

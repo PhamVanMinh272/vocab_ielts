@@ -3,7 +3,8 @@ CREATE TABLE user (
 	username TEXT NOT NULL,
 	password TEXT NOT NULL,
     user_type INTEGER, --1: normal, 0: admin
-	inserted_time INTEGER
+	inserted_time INTEGER,
+    UNIQUE(username)
 );
 
 CREATE TABLE list (

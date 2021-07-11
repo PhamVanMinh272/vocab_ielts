@@ -7,9 +7,14 @@ let user = (function() {
     callAPI(registerEndpoint, HTTP_POST, data, successHandler, failureHandler)
   }
 
+  let callLoginAPI = function(data, successHandler, failureHandler) {
+    callAPI("/login", HTTP_POST, data, successHandler, failureHandler)
+  }
+
   // Public API
   return {
-    callRegisterAPI: callRegisterAPI
+    callRegisterAPI,
+    callLoginAPI
   }
 })()
  
