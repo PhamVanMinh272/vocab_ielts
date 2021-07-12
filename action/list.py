@@ -11,6 +11,7 @@ from main import db
 from constants.action_constants import (
     GENERAL_USER_ID,
     ADMIN_USER_TYPE,
+    PRIVATE_LIST_TYPE,
     PUBLIC_LIST_TYPE,
     DICTIONARY_TYPE,
     OBJECT_TYPE,
@@ -100,16 +101,18 @@ class ListAction:
     @staticmethod
     def create(list_name, user_id) -> dict:
         list_objs = List.query.filter_by(
-            list_name=list_name, user_id=GENERAL_USER_ID
+            list_name=list_name, list_type=PUBLIC_LIST_TYPE
         ).all()
         list_objs.extend(
             List.query.filter_by(list_name=list_name, user_id=user_id).all()
         )
         if list_objs:
             raise AlreadyExistException("The list {} already exists")
-        inserted_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         new_list_obj = List(
-            list_name=list_name, inserted_time=inserted_time, user_id=user_id
+            list_name=list_name,
+            inserted_time=int(datetime.now().timestamp()),
+            user_id=user_id,
+            list_type=PRIVATE_LIST_TYPE
         )
         db.session.add(new_list_obj)
         db.session.commit()

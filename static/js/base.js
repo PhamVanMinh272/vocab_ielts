@@ -18,19 +18,34 @@ const HTTP_DELETE = 'DELETE'
 
 
 let callAPI = function(url, httpMethod, data, successHandler, failureHandler) {
-  $.ajax({
-    url: url,
-    type: httpMethod,
-    data: JSON.stringify(data),
-    contentType: 'application/json',
-    processData: false,
-    success: function(result) {
-      successHandler(result)
-    },
-    error: function(error) {
-      failureHandler(error)
-    }
-  })
+  if (httpMethod === HTTP_GET) {
+    $.ajax({
+      url: url,
+      type: httpMethod,
+      data: data,
+      contentType: 'application/json',
+      success: function(result) {
+        successHandler(result)
+      },
+      error: function(error) {
+        failureHandler(error)
+      }
+    })
+  } else {
+    $.ajax({
+      url: url,
+      type: httpMethod,
+      data: JSON.stringify(data),
+      contentType: 'application/json',
+      processData: false,
+      success: function(result) {
+        successHandler(result)
+      },
+      error: function(error) {
+        failureHandler(error)
+      }
+    })
+  }
 }
 
 $(function() {

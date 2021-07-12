@@ -51,15 +51,12 @@ def login():
     try:
         if request.content_length > 500:
             return {"erMsg": "The input data is too large"}, 400
-        if request.content_type == 'application/x-www-form-urlencoded':
-            data = request.form
-        else:
-            data = request.get_data(parse_form_data=True)
-            try:
-                data = json.loads(data)
-            except Exception as ex:
-                logging.exception(ex)
-                return {"erMsg": "Cannot read the input data as a json"}, 400
+        data = request.get_data()
+        try:
+            data = json.loads(data)
+        except Exception as ex:
+            logging.exception(ex)
+            return {"erMsg": "Cannot read the input data as a json"}, 400
         username = data.get("username")
         password = data.get("password")
         if not username or not password:
@@ -94,13 +91,11 @@ def profile_page():
 @app.route("/", methods=["GET"])
 def home_page():
     try:
-        user_id = current_user.user_id if current_user.is_authenticated else None
-        lists = ListAction.get_all_lists_and_words_quantity(user_id=user_id)
-        return render_template("home.html", page="home_page", lists=lists)
+        return render_template("home.html", page="home_page")
     except Exception as ex:
         logging.exception(ex)
         flash("Failed to load the page", ERROR_FLASH_MESSAGE_TYPE)
-        return render_template("home.html", page="home_page", lists=[])
+        return render_template("home.html", page="home_page")
 
 
 @app.route("/lesson/<list_id>", methods=["GET"])
@@ -119,13 +114,33 @@ def lesson_page(list_id):
 @app.route("/search/lists", methods=["GET"])
 def search_lists():
     try:
+        # if not current_user.is_authenticated:
+        #     return {"erMsg": "Please login to create your own list"}, 401
+        # data = request.get_data()
+        # try:
+        #     data = json.loads(data)
+        # except Exception as ex:
+        #     logging.exception(ex)
+        #     return {"erMsg": "Cannot read the input data as a json"}, 400
+        # list_name = rm_redundant_space(data.get("list_name"))
         list_name = rm_redundant_space(request.args.get("list_name"))
         user_id = current_user.user_id if current_user.is_authenticated else None
         lists = ListAction.search_lists_by_name(user_id=user_id, list_name=list_name)
         return {"lists": lists}
     except Exception as ex:
         logging.exception(ex)
-        return {"erMsg": "Failed to search the lists"}, 500
+        return {"erMsg": "Failed to get the lists"}, 500
+
+
+@app.route("/lists", methods=["GET"])
+def get_list():
+    try:
+        user_id = current_user.user_id if current_user.is_authenticated else None
+        lists = ListAction.get_all_lists_and_words_quantity(user_id=user_id)
+        return {"lists": lists}, 200
+    except Exception as ex:
+        logging.exception(ex)
+        return {"erMsg": "Failed to get your lists"}, 500
 
 
 @app.route("/lists", methods=["POST"])
@@ -133,23 +148,28 @@ def create_list():
     try:
         if not current_user.is_authenticated:
             return {"erMsg": "Please login to create your own list"}, 401
-        list_name = rm_redundant_space(request.form["list_name"])
+        data = request.get_data()
+        try:
+            data = json.loads(data)
+        except Exception as ex:
+            logging.exception(ex)
+            return {"erMsg": "Cannot read the input data as a json"}, 400
+        list_name = rm_redundant_space(data.get("list_name"))
         if not list_name:
             return {
-                "erMsg": "Failed to create your list. Your list's name is empty."
+                "erMsg": "Your list's name is empty"
             }, 400
         new_list = ListAction.create(list_name=list_name, user_id=current_user.user_id)
         return new_list, 200
     except AlreadyExistException as ex:
         logging.exception(ex)
-        return {"erMsg": "Duplicate list name."}, 400
+        return {"erMsg": "Duplicate list name"}, 400
     except Exception as ex:
         logging.exception(ex)
-        return {"erMsg": "Failed to create your list."}, 500
+        return {"erMsg": "Failed to create your list"}, 500
 
 
 @app.route("/lists/<list_id>", methods=["DELETE"])
-@login_required
 def delete_list(list_id):
     try:
         if not current_user.is_authenticated:
@@ -160,7 +180,7 @@ def delete_list(list_id):
         }, 200
     except NotExistException as ex:
         logging.exception(ex)
-        return {"erMsg": "The list was not found"}, 400
+        return {"erMsg": "The list does not exist in your lists"}, 400
     except Exception as ex:
         logging.exception(ex)
         return {"erMsg": "Failed to delete the list"}, 500
@@ -299,4 +319,4 @@ def check_vocab(viet_id):
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=80)
+    app.run(host='0.0.0.0', port=5000)

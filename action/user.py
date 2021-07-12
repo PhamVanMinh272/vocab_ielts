@@ -4,7 +4,6 @@ from utils.exceptions import InvalidValueException, NotExistException, AlreadyEx
 from constants.action_constants import DICTIONARY_TYPE, NORMAL_USER_TYPE
 from main import db, bcrypt
 from flask_login import UserMixin
-from time import sleep
 
 
 class UserAction(UserMixin):

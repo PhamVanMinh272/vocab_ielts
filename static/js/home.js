@@ -7,12 +7,6 @@ $(function() {
     let listCreationBtn = $(".create-a-list-btn")
     let listCreationInput = $("#name-of-list-input")
 
-    let listMoreActionsDropBtn = $(".list-more-action-dropbtn")
-    let listMoreActionsDropdown = $(".list-more-action-dropdown")
-
-    let listDeletionBtn = $(".delete-list-btn")
-    let listDetailsBtn = $(".list-details-btn")
-
     let listCardsContainer = $(".lists-cards-container")
     let noDataContainer = $(".no-data")
 
@@ -35,31 +29,31 @@ $(function() {
     }
 
     // dropdown more actions
-    listMoreActionsDropBtn.click(function(e) {
+    listCardsContainer.on("click", ".list-more-action-dropbtn", function(e) {
       e.stopPropagation()
-      listMoreActionsDropdown.hide()
+      $(".list-more-action-dropdown").hide()
       $(this).next().slideToggle(200)
     })
 
     // close dropdown btn
     bodyElement.click(function() {
-      listMoreActionsDropdown.hide()
+      $(".list-more-action-dropdown").hide()
     })
 
     // search
     let getListSearchInfo = function() {
-      rmInputRedundantSpaces("#list-of-word-lists");
+      rmInputRedundantSpaces("#list-of-word-lists")
       let listName = searchListByNameInput.val()
       if (!listName) {
         return false
       }
-      return { list_name: listName }
+      return {list_name: listName}
     }
 
     let handleListSearchSuccess = function(result) {
       listCardsContainer.html('')
       if (result.lists.length === 0) {
-        toastMessage.showMessage("No data", SUCCESS_MESSAGE_TYPE);
+        toastMessage.showMessage("No data", SUCCESS_MESSAGE_TYPE)
         return false
       }
       $.each(result.lists, function(id, list) {
@@ -106,28 +100,37 @@ $(function() {
             <div class="dropdown">
                 <button class="list-more-action-dropbtn"><img src="/static/public/more.png" ></button>
                 <div class="list-more-action-dropdown dropdown-content">
-                  <button class="list-details-btn" list-id="${list.list_id}" list-name="${list.list_name}">Details</button>
-                  <button class="delete-list-btn" list-id="${list.list_id}" list-name="${list.list_name}">Delete</button>
+                  <button class="list-details-btn detail-info-btn-style" list-id="${list.list_id}" list-name="${list.list_name}">Details</button>
+                  <button class="delete-list-btn delete-btn-style" list-id="${list.list_id}" list-name="${list.list_name}">Delete</button>
                 </div>
             </div>
         </div>`
-        );
-      });
+        )
+      })
     }
 
     let handleListSearchFailure = function(error) {
       if (error.responseJSON) {
-        toastMessage.showMessage(error.responseJSON.erMsg, ERROR_MESSAGE_TYPE);
+        toastMessage.showMessage(error.responseJSON.erMsg, ERROR_MESSAGE_TYPE)
       } else {
-        toastMessage.showMessage("Cannot search lists", ERROR_MESSAGE_TYPE);
+        toastMessage.showMessage("Cannot get lists", ERROR_MESSAGE_TYPE)
       }
     }
 
     searchListByNameBtn.click(function() {
       noDataContainer.hide()
       let listData = getListSearchInfo()
+      if (!listData) {
+        toastMessage.showMessage("The list name is empty", ERROR_MESSAGE_TYPE)
+        return false
+      }
       list.callSearchAPI(listData, handleListSearchSuccess, handleListSearchFailure)
     })
+
+    // get lists
+    let getLists = function() {
+      list.callGetListAPI(handleListSearchSuccess, handleListSearchFailure)
+    }
 
     // create list
     let getListCreationInfo = function() {
@@ -143,6 +146,11 @@ $(function() {
     let handleCreateListSuccess = function(result) {
       toastMessage.showMessage(`The list ${result.list_name} was saved successfully`, SUCCESS_MESSAGE_TYPE)
       showListDetailsDialog()
+      currentList.children("h2").text(result.list_name)
+      currentList.attr("list-id", result.list_id)
+      currentList.attr("list-name", result.list_name)
+      wordComponent.getWords(result.list_id)
+      getLists()
     }
 
     let handleCreateListFailure = function(error) {
@@ -162,24 +170,25 @@ $(function() {
     })
 
     // delete list
-
     let handleDeleteListSuccess = function(result) {
       if (result.message) {
-        toastMessage.showMessage(result.message, SUCCESS_MESSAGE_TYPE);
+        toastMessage.showMessage(result.message, SUCCESS_MESSAGE_TYPE)
       } else {
-        toastMessage.showMessage("The list deleted", SUCCESS_MESSAGE_TYPE);
+        toastMessage.showMessage("The list deleted", SUCCESS_MESSAGE_TYPE)
       }
+      getLists()
     }
 
-    let handleDeleteListFailure = function() {
+    let handleDeleteListFailure = function(error) {
       if (error.responseJSON) {
-        toastMessage.showMessage(error.responseJSON.erMsg, ERROR_MESSAGE_TYPE);
+        toastMessage.showMessage(error.responseJSON.erMsg, ERROR_MESSAGE_TYPE)
       } else {
-        toastMessage.showMessage("Delete list failed", ERROR_MESSAGE_TYPE);
+        toastMessage.showMessage("Delete list failed", ERROR_MESSAGE_TYPE)
       }
+      // need to reload the list after delete a list
     }
 
-    listDeletionBtn.click(function() {
+    listCardsContainer.on("click", ".delete-list-btn", function() {
       let listId = $(this).attr("list-id")
       let listName = $(this).attr("list-name")
       deleteConfirmation.showDeleteConfirmation(
@@ -193,7 +202,7 @@ $(function() {
 
     // show list dialog
 
-    listDetailsBtn.click(function() {
+    listCardsContainer.on("click", ".list-details-btn", function() {
       let listId = $(this).attr("list-id")
       let listName = $(this).attr("list-name")
       showListDetailsDialog()
@@ -202,6 +211,9 @@ $(function() {
       currentList.attr("list-name", listName)
       wordComponent.getWords(listId)
     })
+
+    // default get lists
+    getLists()
 
     return {
       getCurrentListSelector,

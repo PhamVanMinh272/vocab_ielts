@@ -72,55 +72,6 @@
             </div>
             <div class="lists-cards-container">
                 <div class="no-data">NO DATA!</div>
-                {% for list in lists %}
-                    <div class="card-of-list" list-id="{{ list.list_id }}" list-name="{{ list.list_name }}">
-                        <div class="card-content">
-                            <div id="list-basic-info-container">
-                                <div class="name-of-list text-overflow-dot">{{ list.list_name }}</div>
-                                <div class="property-of-list">
-                                    <div>
-                                        {{ list.num_viets }} Vietnamese words
-                                    </div>
-                                    <div>
-                                        {{ list.num_engs }} English words
-                                    </div>
-                                </div>
-                            </div>
-                            <div id="parts-of-speech-container">
-                                <div class="name-of-list text-overflow-dot">Parts Of Speech</div>
-                                <div class="property-of-list">
-                                    <div>
-                                        <div>0 Nouns</div>
-                                        <div>0 Adjectives</div>
-                                    </div>
-                                    <div>
-                                        <div>0 Verbs</div>
-                                        <div>0 Adverbs</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div id="severity-container">
-                                <div class="name-of-list text-overflow-dot">Status</div>
-                                <div class="property-of-list">
-                                    <div>
-                                        Completed 50%
-                                    </div>
-                                </div>
-                            </div>
-                            
-                        </div>
-                        <div class="card-footer">
-                            <a class="quiz-list-btn" href="/lesson/{{ list.list_id }}">Quiz</a>
-                        </div>
-                        <div class="dropdown">
-                            <button class="list-more-action-dropbtn"><img src="/static/public/more.png" ></button>
-                            <div class="list-more-action-dropdown dropdown-content">
-                              <button class="list-details-btn detail-info-btn-style" list-id="{{ list.list_id }}" list-name="{{ list.list_name }}">Details</button>
-                              <button class="delete-list-btn delete-btn-style" list-id="{{ list.list_id }}" list-name="{{ list.list_name }}">Delete</button>
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
             </div>
         </div>
         
