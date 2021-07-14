@@ -19,6 +19,7 @@ from constants.action_constants import (
     DICTIONARY_TYPE,
     OBJECT_TYPE,
     ADMIN_USER_TYPE,
+    PRIVATE_LIST_TYPE,
     PUBLIC_LIST_TYPE,
     VIETNAMESE_LANGUAGE_TYPE,
     ENGLISH_LANGUAGE_TYPE,
@@ -123,7 +124,6 @@ class WordAction:
         eng_words: list,
         return_type=DICTIONARY_TYPE,
     ):
-        inserted_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         if UserAction.get_user_type(user_id=user_id) == ADMIN_USER_TYPE:
             list_obj = List.query.filter_by(list_id=list_id).first()
         else:
@@ -138,7 +138,7 @@ class WordAction:
                 word=viet_word,
                 list_id=list_id,
                 language_type=VIETNAMESE_LANGUAGE_TYPE,
-                inserted_time=inserted_time,
+                inserted_time=datetime.datetime.now().timestamp(),
             )
             db.session.add(vietnamese_word)
         eng_words = [rm_redundant_space(i) for i in eng_words]
@@ -152,7 +152,7 @@ class WordAction:
                 eng_obj = Word(
                     word=eng,
                     list_id=list_id,
-                    inserted_time=inserted_time,
+                    inserted_time=datetime.datetime.now().timestamp(),
                     language_type=ENGLISH_LANGUAGE_TYPE,
                 )
                 db.session.add(eng_obj)
@@ -179,55 +179,61 @@ class WordAction:
 
     @staticmethod
     def update(user_id, viet_id, viet_word, list_engs: dict, list_new_engs: list):
+        if not viet_word:
+            raise InvalidValueException("The vietnamse word is empty")
         viet_obj = Word.query.filter_by(word_id=viet_id).first()
-        if viet_obj:
-            # need check user's permission to update words
-            if UserAction.get_user_type(user_id=user_id) == NORMAL_USER_TYPE:
-                list_obj = ListAction.get_list_by_id(
-                    user_id=user_id, list_id=viet_obj.list_id
+        if not viet_obj:
+            raise NotExistException("The word (word_id={}) does not exist".format(viet_id))
+        # need check user's permission to update words
+        if UserAction.get_user_type(user_id=user_id) == NORMAL_USER_TYPE:
+            list_obj = List.query.filter_by(list_id=viet_obj.list_id, user_id=user_id).first()
+            if not list_obj:
+                raise UserPermissionException(
+                    "The word does not belong to the user with id {}".format(
+                        user_id
+                    )
                 )
-                if not list_obj:
-                    raise UserPermissionException(
-                        "The word does not belong to the user with id {}".format(
-                            user_id
-                        )
-                    )
-            viet_obj.word = viet_word  # update Vietnamese word
-            # update English meaning
-            for eng_id, eng_word in list_engs.items():
-                try:
-                    eng_obj = Word.query.filter_by(word_id=eng_id).first()
-                    if eng_word:
-                        eng_obj.word = eng_word
-                    else:
-                        db.session.delete(eng_obj)
-                except Exception as ex:
-                    logging.exception(ex)
-            # add new meaning
-            # remove duplicate eng_words
-            eng_words = set(list_new_engs)
-            for eng in eng_words:
-                eng_obj = Word.query.filter_by(
-                    word=eng, list_id=viet_obj.list_id
-                ).first()
-                if not eng_obj:
-                    eng_obj = Word(
-                        word=eng,
-                        list_id=viet_obj.list_id,
-                        language_type=ENGLISH_LANGUAGE_TYPE,
-                    )
-                    db.session.add(eng_obj)
-                    db.session.commit()
-                    WordAction.create_meaning(
-                        vietnamese_id=viet_id, english_id=eng_obj.word_id
-                    )
+        if viet_obj.word != viet_word:
+            viet_obj_with_new_word_value = Word.query.filter_by(list_id=viet_obj.list_id, word=viet_word).first()
+            if viet_obj_with_new_word_value:
+                raise AlreadyExistException("The Vietnamese word already exist in this list")
+        viet_obj.word = viet_word  # update Vietnamese word
+        # update English meaning
+        for eng_id, eng_word in list_engs.items():
+            try:
+                eng_obj = Word.query.filter_by(word_id=eng_id).first()
+                if eng_word:
+                    eng_obj.word = eng_word
                 else:
-                    WordAction.create_meaning(
-                        vietnamese_id=viet_id, english_id=eng_obj.word_id
-                    )
-            db.session.commit()
-            return True
-        raise NotExistException("The word (word_id={}) does not exist".format(viet_id))
+                    WordAction.delete_meaning_relationship(viet_id, eng_id)
+            except Exception as ex:
+                logging.exception(ex)
+        # add new meaning
+        # remove duplicate eng_words
+        eng_words = set(list_new_engs)
+        for eng in eng_words:
+            if not eng:
+                continue
+            eng_obj = Word.query.filter_by(
+                word=eng, list_id=viet_obj.list_id
+            ).first()
+            if not eng_obj:
+                eng_obj = Word(
+                    word=eng,
+                    list_id=viet_obj.list_id,
+                    language_type=ENGLISH_LANGUAGE_TYPE,
+                )
+                db.session.add(eng_obj)
+                db.session.commit()
+                WordAction.create_meaning(
+                    vietnamese_id=viet_id, english_id=eng_obj.word_id
+                )
+            else:
+                WordAction.create_meaning(
+                    vietnamese_id=viet_id, english_id=eng_obj.word_id
+                )
+        db.session.commit()
+        return True
 
     @staticmethod
     def delete(user_id, viet_id) -> dict:
@@ -239,9 +245,7 @@ class WordAction:
                 "The Vietnamese word (word_id={}) does not exist".format(viet_id)
             )
         if UserAction.get_user_type(user_id=user_id) == NORMAL_USER_TYPE:
-            list_obj = ListAction.get_list_by_id(
-                user_id=user_id, list_id=viet_obj.list_id
-            )
+            list_obj = List.query.filter_by(list_id=viet_obj.list_id, user_id=user_id).first()
             if not list_obj:
                 raise UserPermissionException(
                     "The word does not belong to the user with id {}".format(user_id)
@@ -311,3 +315,11 @@ class WordAction:
                     Word.query.filter_by(word_id=meaning_id.vietnamese_id).first()
                 )
             return meanings
+
+    @staticmethod
+    def delete_meaning_relationship(vietnamese_id, english_id):
+        meaning_relationship = WordMeaning.query.filter_by(
+                vietnamese_id=vietnamese_id, english_id=english_id
+            ).first()
+        db.session.delete(meaning_relationship)
+        db.session.commit()

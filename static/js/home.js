@@ -229,7 +229,6 @@ $(function() {
     let allEnglishInputs = $('.eng-word')
     let addMoreEnglishInputBtn = $(".add-more-eng-word-field")
     let wordActionBtnContainer = $("#add-update-btn-container")
-    let wordCreationBtn = $(".create-words-btn")
 
     let tableWords = $("#words-table")
     let tableListDetailSelector = $(".list-content-table")
@@ -310,7 +309,7 @@ $(function() {
         $.each(result.eng_words, function(index, eng) {
           moreEnglishInputContainer.append(`
             <div class="field">
-              <input class="eng-word" type="text" name="eng-word" engId="${eng.word_id}" value="${eng.word}"/><br>
+              <input class="eng-word exist-english-meaning" type="text" placeholder="This meaning will be delete if it is empty" name="eng-word" engId="${eng.word_id}" value="${eng.word}"/><br>
             </div>
           `);
         });
@@ -327,12 +326,61 @@ $(function() {
     tableWords.on("click", ".edit-word-btn", function() {
       let vietId = $(this).attr("viet-id")
       word.callGetWordAPI(vietId, handleGetWordSuccess, handleGetWordFailure)
-    });
+    })
+
+    // create word
+    let getWordCreationInfo = function() {
+      rmInputRedundantSpaces(".viet-word")
+      let vietWord = vietnameseInput.val()
+      let englishWords = []
+      $(".eng-word").each(function() {
+        rmInputRedundantSpaces(this)
+        if (this.value) {
+          englishWords.push(this.value)
+        }
+      })
+      if (!vietWord) {
+        toastMessage.showMessage("Vietnamese word is required", ERROR_MESSAGE_TYPE)
+        return false
+      }
+      if (englishWords.length === 0) {
+        toastMessage.showMessage("At least one English word is required", ERROR_MESSAGE_TYPE)
+        return false
+      }
+      let data = { 
+        viet: vietnameseInput.val(),
+        engs: JSON.stringify(englishWords)
+      }
+      return data
+    }
+
+    let handleCreateWordSuccess = function(result) {
+      getWords(listComponent.getCurrentListInfo().listId)
+      toastMessage.showMessage(result.message, SUCCESS_MESSAGE_TYPE)
+      clearWordDetailsArea()
+    }
+
+    let handleCreateWordFailure = function(error) {
+      if (error.responseJSON) {
+        toastMessage.showMessage(error.responseJSON.erMsg, ERROR_MESSAGE_TYPE)
+      } else {
+        toastMessage.showMessage("Cannot create the words", ERROR_MESSAGE_TYPE)
+      }
+    }
+
+    $(".add-words-container").on("click", ".create-words-btn", function() {
+      let listId = listComponent.getCurrentListSelector().attr("list-id")
+      let data = getWordCreationInfo()
+      if (!data) {
+        return false
+      }
+      word.callCreateWordAPI(listId, data, handleCreateWordSuccess, handleCreateWordFailure)
+    })
 
     // update word
     let getUpdateWordInfo = function() {
-      let vietWord = vietnameseInput.val()
       rmInputRedundantSpaces(".viet-word")
+      let vietWord = vietnameseInput.val()
       let newEngWords = []
       let engWords = {}
       $('.eng-word').slice(1).each(function() {
@@ -344,7 +392,11 @@ $(function() {
         } else {
           newEngWords.push(engWord)
         }
-      }).get()
+      })
+      if (!vietWord) {
+        toastMessage.showMessage("Vietnamese word is required", ERROR_MESSAGE_TYPE)
+        return false
+      }
       let data = {
         viet_word: vietWord,
         eng_words: JSON.stringify(engWords),
@@ -360,6 +412,7 @@ $(function() {
         toastMessage.showMessage("The words was updated", SUCCESS_MESSAGE_TYPE)
       }
       getWords(listComponent.getCurrentListInfo().listId)
+      clearWordDetailsArea()
     }
 
     let handleUpdateWordFailure = function(error) {
@@ -373,45 +426,15 @@ $(function() {
     wordActionBtnContainer.on("click", "#update-words-btn", function() {
       let vietId = $(this).attr("viet-id")
       let data = getUpdateWordInfo()
+      if (!data) {
+        return false
+      }
       word.callUpdateWordAPI(vietId, data, handleUpdateWordSuccess, handleUpdateWordFailure)
     })
 
     wordActionBtnContainer.on("click", "#cancel-update-words-btn", function() {
       clearWordDetailsArea()
       wordActionBtnContainer.html('<button class="create-words-btn save-btn-style">Save</button>')
-    })
-
-    // create word
-    let getWordCreationInfo = function() {
-      rmInputRedundantSpaces(".viet-word")
-      let english_words = allEnglishInputs.map(function() {
-        rmInputRedundantSpaces(this)
-        return this.value
-      }).get()
-      let data = { 
-        viet: vietnameseInput.val(),
-        engs: JSON.stringify(english_words)
-      }
-      return data
-    }
-
-    let handleCreateWordSuccess = function(result) {
-      getWords(listComponent.getCurrentListInfo().listId)
-      toastMessage.showMessage(result.message, SUCCESS_MESSAGE_TYPE)
-    }
-
-    let handleCreateWordFailure = function(error) {
-      if (error.responseJSON) {
-        toastMessage.showMessage(error.responseJSON.erMsg, ERROR_MESSAGE_TYPE)
-      } else {
-        toastMessage.showMessage("Cannot create the words", ERROR_MESSAGE_TYPE)
-      }
-    }
-
-    wordCreationBtn.click(function() {
-      let listId = listComponent.getCurrentListSelector().attr("list-id")
-      let data = getWordCreationInfo()
-      word.callCreateWordAPI(listId, data, handleCreateWordSuccess, handleCreateWordFailure)
     })
 
     // delete word

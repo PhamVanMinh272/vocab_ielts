@@ -114,15 +114,6 @@ def lesson_page(list_id):
 @app.route("/search/lists", methods=["GET"])
 def search_lists():
     try:
-        # if not current_user.is_authenticated:
-        #     return {"erMsg": "Please login to create your own list"}, 401
-        # data = request.get_data()
-        # try:
-        #     data = json.loads(data)
-        # except Exception as ex:
-        #     logging.exception(ex)
-        #     return {"erMsg": "Cannot read the input data as a json"}, 400
-        # list_name = rm_redundant_space(data.get("list_name"))
         list_name = rm_redundant_space(request.args.get("list_name"))
         user_id = current_user.user_id if current_user.is_authenticated else None
         lists = ListAction.search_lists_by_name(user_id=user_id, list_name=list_name)
@@ -232,11 +223,19 @@ def save_words(list_id):
     try:
         if not current_user.is_authenticated:
             return {"erMsg": "Please login to create your words"}, 401
-        viet_value = rm_redundant_space(request.form["viet"])
-        engs_value = rm_redundant_space(request.form["engs"])
-        engs_value = json.loads(engs_value)
+        if request.content_length > 5000:
+            return {"erMsg": "The input data is too large"}, 400
+        data = request.get_data()
+        try:
+            json_data = json.loads(data)
+            viet_value = json_data.get("viet")
+            engs_value = json_data.get("engs")
+            engs_value = json.loads(engs_value)
+        except Exception as ex:
+            logging.exception(ex)
+            return {"erMsg": "Cannot read the input data as a json"}, 400
         if not viet_value or not engs_value:
-            return {"erMsg": "Failed to save. The words are empty."}, 404
+            return {"erMsg": "The words are empty"}, 400
         WordAction.create(
             user_id=current_user.user_id,
             list_id=list_id,
@@ -250,10 +249,10 @@ def save_words(list_id):
         }, 200
     except NotExistException as ex:
         logging.exception(ex)
-        return {"erMsg": "The list does not exist"}, 500
+        return {"erMsg": "The list does not exist in your own list"}, 404
     except Exception as ex:
         logging.exception(ex)
-        return {"erMsg": "Failed to save."}, 500
+        return {"erMsg": "Failed to save"}, 500
 
 
 @app.route("/words/<word_id>", methods=["PUT"])
@@ -263,11 +262,19 @@ def update_word(word_id):
             return {"erMsg": "Please login to update your word"}, 401
         if not word_id:
             return {"erMsg": "Failed to save. Please provide a word"}, 404
-        viet_word = request.form.get("viet_word")
-        eng_words = request.form.get("eng_words")
-        eng_words = json.loads(eng_words)
-        new_eng_words = request.form.get("new_eng_words")
-        new_eng_words = json.loads(new_eng_words)
+        if request.content_length > 5000:
+            return {"erMsg": "The input data is too large"}, 400
+        data = request.get_data()
+        try:
+            json_data = json.loads(data)
+            viet_word = json_data.get("viet_word")
+            eng_words = json_data.get("eng_words")
+            eng_words = json.loads(eng_words)
+            new_eng_words = json_data.get("new_eng_words")
+            new_eng_words = json.loads(new_eng_words)
+        except Exception as ex:
+            logging.exception(ex)
+            return {"erMsg": "Cannot read the input data as a json"}, 400
         WordAction.update(
             user_id=current_user.user_id,
             viet_id=word_id,
@@ -278,10 +285,13 @@ def update_word(word_id):
         return {"message": "The words were updated"}, 200
     except NotExistException as ex:
         logging.exception(ex)
-        return {"erMsg": "The word does not exist"}, 500
+        return {"erMsg": "The word does not exist"}, 404
+    except AlreadyExistException as ex:
+        logging.exception(ex)
+        return {"erMsg": "The Vietnamese word already exist in this list"}, 400
     except Exception as ex:
         logging.exception(ex)
-        return {"erMsg": "Failed to update the word."}, 500
+        return {"erMsg": "Failed to update the word"}, 500
 
 
 @app.route("/words/<word_id>", methods=["DELETE"])

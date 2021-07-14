@@ -1,5 +1,6 @@
 # vocab_ielts
 This application will help your learning vocabulary journey.
+<a href="https://coveralls.io/github/kulshekhar/ts-jest?branch=master"><img src="https://coveralls.io/repos/github/kulshekhar/ts-jest/badge.svg?branch=master" alt="Coverage status"/> </a>
 
 ## Requirements
 ### List

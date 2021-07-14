@@ -130,6 +130,10 @@
     display: block;
 }
 
+.modal .exist-english-meaning {
+    border-bottom: 1px solid #009879;
+}
+
 .add-more-eng-word-field-container {
     height: 30px;
     padding: 0;
