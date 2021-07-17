@@ -16,3 +16,29 @@ Parts of speech: Noun, Verb, Adj, Adv, determiner, Pronoun, Preposition, Conjunc
 ### Lesson
 Users can start a lesson with some requirements: amount of words, list information, time limit, from Vietnamese to English or English to Vietnamese. The test can include the words in a list or in all the lists.
 Users can save status of a test then re-test the test later. The scores are saved with some information: the lists, amount of words, time limit, from Vietnamese to English or English to Vietnamese, score and the words which users have answered wrong, status (finish or not). 
+
+## Docker image
+**Use public image**: 
+
+_docker run -d -p 8000:5000 \
+-v db_file:/vocab/db/ \
+-v vocab_log:/vocab/log \
+--name vocab_instance1 \
+phamvanminh272/vocab:1_
+
+**Build**: _docker build -t [image-name] ._
+
+Example: docker build -t phamvanminh272/vocab:1 .
+
+**Run**: _docker run -d -p [host-available-port]:5000 -v db_file:/vocab/db/ -v vocab_log:/vocab/log --name [container-name] [image-name]_
+
+Example:
+
+_docker run -d -p 8000:5000 \
+-v db_file:/vocab/db/ \
+-v vocab_log:/vocab/log \
+--name vocab_instance1 \
+phamvanminh272/vocab:1_
+
+
+
