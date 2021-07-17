@@ -230,6 +230,7 @@ $(function() {
     let addMoreEnglishInputBtn = $(".add-more-eng-word-field")
     let wordActionBtnContainer = $("#add-update-btn-container")
 
+    let noData = $(".list-content-table-container .no-data")
     let tableWords = $("#words-table")
     let tableListDetailSelector = $(".list-content-table")
 
@@ -251,6 +252,12 @@ $(function() {
     // get words in a list
 
     let handleGetWordsSuccess = function(result) {
+      if (result.viets.length === 0) {
+        noData.show()
+        tableListDetailSelector.html("")
+        return false
+      }
+      noData.hide()
       tableListDetailSelector.html(`
       <thead>
         <tr>
@@ -309,7 +316,7 @@ $(function() {
         $.each(result.eng_words, function(index, eng) {
           moreEnglishInputContainer.append(`
             <div class="field">
-              <input class="eng-word exist-english-meaning" type="text" placeholder="This meaning will be delete if it is empty" name="eng-word" engId="${eng.word_id}" value="${eng.word}"/><br>
+              <input class="eng-word exist-english-meaning" type="text" placeholder="This meaning will be deleted if it is empty" name="eng-word" engId="${eng.word_id}" value="${eng.word}"/><br>
             </div>
           `);
         });
@@ -413,6 +420,7 @@ $(function() {
       }
       getWords(listComponent.getCurrentListInfo().listId)
       clearWordDetailsArea()
+      $("#add-update-btn-container #cancel-update-words-btn").trigger("click")
     }
 
     let handleUpdateWordFailure = function(error) {
@@ -447,7 +455,7 @@ $(function() {
       getWords(listComponent.getCurrentListInfo().listId)
     }
 
-    let handleDeleteWordFailure = function() {
+    let handleDeleteWordFailure = function(error) {
       if (error.responseJSON) {
         toastMessage.showMessage(error.responseJSON.erMsg, ERROR_MESSAGE_TYPE)
       } else {

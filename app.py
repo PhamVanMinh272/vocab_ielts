@@ -303,7 +303,7 @@ def delete_word(word_id):
             return {"erMsg": "Please provide a word"}, 404
         deleted_word = WordAction.delete(user_id=current_user.user_id, viet_id=word_id)
         return {
-            "message": "The words {} were deleted".format(deleted_word.get("word"))
+            "message": "The word {} was deleted".format(deleted_word.get("word"))
         }, 200
     except NotExistException as ex:
         logging.exception(ex)

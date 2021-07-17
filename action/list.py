@@ -86,13 +86,13 @@ class ListAction:
                     [
                         i
                         for i in words
-                        if words.language_type == VIETNAMESE_LANGUAGE_TYPE
+                        if i.language_type == VIETNAMESE_LANGUAGE_TYPE
                     ]
                 )
                 list_info.update(
                     {
                         "num_viets": vietnamese_words_quantity,
-                        "num_engs": len(words) - vietnamese_words_quantity,
+                        "num_engs": len(words) - vietnamese_words_quantity
                     }
                 )
                 data.append(list_info)

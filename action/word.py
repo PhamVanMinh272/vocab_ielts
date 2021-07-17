@@ -3,9 +3,7 @@ import logging
 import random
 
 from model.word import Word, WordSchema, WordMeaning
-from model.list import List, ListSchema
-from model.eng import Eng, EngSchema
-from action.eng import EngAction
+from model.list import List
 from action.list import ListAction
 from action.user import UserAction
 from utils.utils import rm_redundant_space
@@ -138,7 +136,7 @@ class WordAction:
                 word=viet_word,
                 list_id=list_id,
                 language_type=VIETNAMESE_LANGUAGE_TYPE,
-                inserted_time=datetime.datetime.now().timestamp(),
+                inserted_time=int(datetime.datetime.now().timestamp()),
             )
             db.session.add(vietnamese_word)
         eng_words = [rm_redundant_space(i) for i in eng_words]
@@ -146,13 +144,13 @@ class WordAction:
         eng_words = set(eng_words)
         for eng in eng_words:
             eng_obj = Word.query.filter_by(
-                word=eng, language_type=ENGLISH_LANGUAGE_TYPE
+                word=eng, language_type=ENGLISH_LANGUAGE_TYPE, list_id=list_id
             ).first()
             if not eng_obj:
                 eng_obj = Word(
                     word=eng,
                     list_id=list_id,
-                    inserted_time=datetime.datetime.now().timestamp(),
+                    inserted_time=int(datetime.datetime.now().timestamp()),
                     language_type=ENGLISH_LANGUAGE_TYPE,
                 )
                 db.session.add(eng_obj)
@@ -202,10 +200,14 @@ class WordAction:
         for eng_id, eng_word in list_engs.items():
             try:
                 eng_obj = Word.query.filter_by(word_id=eng_id).first()
+                if not eng_obj:
+                    continue
                 if eng_word:
                     eng_obj.word = eng_word
                 else:
                     WordAction.delete_meaning_relationship(viet_id, eng_id)
+                    if not WordAction.get_meanings(eng_obj):
+                        db.session.delete(eng_obj)
             except Exception as ex:
                 logging.exception(ex)
         # add new meaning
@@ -215,13 +217,14 @@ class WordAction:
             if not eng:
                 continue
             eng_obj = Word.query.filter_by(
-                word=eng, list_id=viet_obj.list_id
+                word=eng, list_id=viet_obj.list_id, language_type=ENGLISH_LANGUAGE_TYPE
             ).first()
             if not eng_obj:
                 eng_obj = Word(
                     word=eng,
                     list_id=viet_obj.list_id,
                     language_type=ENGLISH_LANGUAGE_TYPE,
+                    inserted_time=int(datetime.datetime.now().timestamp())
                 )
                 db.session.add(eng_obj)
                 db.session.commit()
@@ -250,8 +253,17 @@ class WordAction:
                 raise UserPermissionException(
                     "The word does not belong to the user with id {}".format(user_id)
                 )
+        meanings = WordAction.get_meanings(viet_obj)
+        # remove meaning rows
+        meaning_objs = WordMeaning.query.filter_by(vietnamese_id=viet_id).all()
+        for i in meaning_objs:
+            db.session.delete(i)
         viet_info = viet_obj.to_json()
         db.session.delete(viet_obj)
+        for meaning in meanings:
+            # remove dangling words
+            if not WordAction.get_meanings(meaning):
+                db.session.delete(meaning)
         db.session.commit()
         return viet_info
 
@@ -286,7 +298,7 @@ class WordAction:
             )
 
         data = {}
-        for row in WordAction.get_meaning(vietnamese_word):
+        for row in WordAction.get_meanings(vietnamese_word):
             data.update({row.word_id: row.word})
         for i, user_answer in enumerate(eng_words):
             if user_answer["eng_word"] in data.values():
@@ -296,7 +308,7 @@ class WordAction:
         return {"eng_data": data, "eng_words": eng_words}
 
     @staticmethod
-    def get_meaning(word_obj: Word):
+    def get_meanings(word_obj: Word):
         if word_obj.language_type == VIETNAMESE_LANGUAGE_TYPE:
             meaning_ids = WordMeaning.query.filter_by(
                 vietnamese_id=word_obj.word_id

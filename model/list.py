@@ -10,7 +10,7 @@ class List(db.Model):
     inserted_time = db.Column(db.String(100), nullable=False)
     list_type = db.Column(db.Integer)
     user_id = db.Column(db.Integer, db.ForeignKey("user.user_id"))
-    words = db.relationship("Word", backref="list", lazy=True)
+    words = db.relationship("Word", backref="list", cascade="all, delete", lazy=True)
 
     def __repr__(self):
         return self.list_name

@@ -67,8 +67,9 @@ CREATE TABLE word_meaning (
             ON UPDATE NO ACTION
 );
 
+PRAGMA foreign_keys = ON;
 --data
-INSERT INTO user(`user_id`, `username`, `password`, `user_type`, `inserted_time`) values(1, "admin", '1', 0, strftime('%s', 'now'));
+INSERT INTO user(`user_id`, `username`, `password`, `user_type`, `inserted_time`) values(1, "admin", '$2b$12$B92bR1cJF5Ye7P9S2ZnJcuwhWSB9op5UtsQKrv/a3J8/iOPbK3wnG', 0, strftime('%s', 'now'));
 INSERT INTO list(`list_name`, `inserted_time`, `list_type`) values('3000 common words', strftime('%s', 'now'), 0);
 INSERT INTO part_of_speech(`part_of_speech_id`, `label`) values(1, 'Noun');
 INSERT INTO part_of_speech(`part_of_speech_id`, `label`) values(2, 'Verb');

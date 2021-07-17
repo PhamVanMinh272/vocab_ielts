@@ -8,7 +8,7 @@ from flask_login import LoginManager
 app = Flask(__name__)
 app.secret_key = secrets.token_hex()
 DATABASE = "db/vocab_test.db"
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///db/vocab_test.db"
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///db/vocab.db"
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
 bcrypt = Bcrypt(app)
