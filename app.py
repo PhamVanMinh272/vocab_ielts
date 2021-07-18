@@ -14,6 +14,9 @@ from constants.route_constants import (
 )
 
 
+logger = logging.getLogger("app")
+
+
 @app.route("/register", methods=["POST"])
 def register():
     try:
@@ -26,7 +29,7 @@ def register():
             password = json_data.get("password")
             confirm_password = json_data.get("confirm_password")
         except Exception as ex:
-            logging.exception(ex)
+            logger.exception(ex)
             return {"erMsg": "Cannot read the input data as a json"}, 400
         if not username or not password or not confirm_password:
             return {"erMsg": "The input data is invalid"}, 400
@@ -36,13 +39,13 @@ def register():
         login()
         return {"message": "Create your account successfully"}, 200
     except AlreadyExistException as ex:
-        logging.exception(ex)
+        logger.exception(ex)
         return {"erMsg": "The username has already existed"}, 400
     except InvalidValueException as ex:
-        logging.error(ex)
+        logger.error(ex)
         return {"erMsg": "The input data is invalid"}, 400
     except Exception as ex:
-        logging.exception(ex)
+        logger.exception(ex)
         return {"erMsg": "Failed to register"}, 500
 
 
@@ -55,7 +58,7 @@ def login():
         try:
             data = json.loads(data)
         except Exception as ex:
-            logging.exception(ex)
+            logger.exception(ex)
             return {"erMsg": "Cannot read the input data as a json"}, 400
         username = data.get("username")
         password = data.get("password")
@@ -67,10 +70,10 @@ def login():
             return {"message": "Login successfully"}
         return {"erMsg": "Password is incorrect"}, 400
     except NotExistException as ex:
-        logging.exception(ex)
+        logger.exception(ex)
         return {"erMsg": "Username is incorrect"}, 400
     except Exception as ex:
-        logging.exception(ex)
+        logger.exception(ex)
         return {"erMsg": "Login failed"}, 500
 
 
@@ -93,7 +96,7 @@ def home_page():
     try:
         return render_template("home.html", page="home_page")
     except Exception as ex:
-        logging.exception(ex)
+        logger.exception(ex)
         flash("Failed to load the page", ERROR_FLASH_MESSAGE_TYPE)
         return render_template("home.html", page="home_page")
 
@@ -106,7 +109,7 @@ def lesson_page(list_id):
         # use home_page to show lesson
         return render_template("lesson.html", page="home_page", list=list_dict)
     except Exception as ex:
-        logging.exception(ex)
+        logger.exception(ex)
         flash("Failed to load the page", ERROR_FLASH_MESSAGE_TYPE)
         return render_template("home.html", page="home_page", lists=[])
 
@@ -119,7 +122,7 @@ def search_lists():
         lists = ListAction.search_lists_by_name(user_id=user_id, list_name=list_name)
         return {"lists": lists}
     except Exception as ex:
-        logging.exception(ex)
+        logger.exception(ex)
         return {"erMsg": "Failed to get the lists"}, 500
 
 
@@ -130,7 +133,7 @@ def get_list():
         lists = ListAction.get_all_lists_and_words_quantity(user_id=user_id)
         return {"lists": lists}, 200
     except Exception as ex:
-        logging.exception(ex)
+        logger.exception(ex)
         return {"erMsg": "Failed to get your lists"}, 500
 
 
@@ -143,7 +146,7 @@ def create_list():
         try:
             data = json.loads(data)
         except Exception as ex:
-            logging.exception(ex)
+            logger.exception(ex)
             return {"erMsg": "Cannot read the input data as a json"}, 400
         list_name = rm_redundant_space(data.get("list_name"))
         if not list_name:
@@ -153,10 +156,10 @@ def create_list():
         new_list = ListAction.create(list_name=list_name, user_id=current_user.user_id)
         return new_list, 200
     except AlreadyExistException as ex:
-        logging.exception(ex)
+        logger.exception(ex)
         return {"erMsg": "Duplicate list name"}, 400
     except Exception as ex:
-        logging.exception(ex)
+        logger.exception(ex)
         return {"erMsg": "Failed to create your list"}, 500
 
 
@@ -170,10 +173,10 @@ def delete_list(list_id):
             "message": "The list {} was deleted".format(list_info["list_name"])
         }, 200
     except NotExistException as ex:
-        logging.exception(ex)
+        logger.exception(ex)
         return {"erMsg": "The list does not exist in your lists"}, 400
     except Exception as ex:
-        logging.exception(ex)
+        logger.exception(ex)
         return {"erMsg": "Failed to delete the list"}, 500
 
 
@@ -186,7 +189,7 @@ def get_words(list_id):
             try:
                 number_of_words = int(request.args["number_of_words"])
             except Exception as ex:
-                logging.exception(ex)
+                logger.exception(ex)
                 return {"erMsg": "The number of words is invalid."}, 400
             data = WordAction.get_words_for_a_lesson(
                 user_id=user_id, list_id=list_id, quantity=number_of_words
@@ -195,10 +198,10 @@ def get_words(list_id):
             data = WordAction.get_words_by_list_id(user_id=user_id, list_id=list_id)
         return {"viets": data}, 200
     except NotExistException as ex:
-        logging.exception(ex)
+        logger.exception(ex)
         return {"erMsg": "The list does not exist"}, 404
     except Exception as ex:
-        logging.exception(ex)
+        logger.exception(ex)
         return {"erMsg": "Failed to get all lists."}, 500
 
 
@@ -211,10 +214,10 @@ def get_a_vietnamese_word(word_id):
         )
         return viet_with_engs, 200
     except NotExistException as ex:
-        logging.exception(ex)
+        logger.exception(ex)
         return {"erMsg": "Cannot find the Vietnamese word."}, 404
     except Exception as ex:
-        logging.exception(ex)
+        logger.exception(ex)
         return {"erMsg": "Failed to get Vietnamese word."}, 500
 
 
@@ -232,7 +235,7 @@ def save_words(list_id):
             engs_value = json_data.get("engs")
             engs_value = json.loads(engs_value)
         except Exception as ex:
-            logging.exception(ex)
+            logger.exception(ex)
             return {"erMsg": "Cannot read the input data as a json"}, 400
         if not viet_value or not engs_value:
             return {"erMsg": "The words are empty"}, 400
@@ -248,10 +251,10 @@ def save_words(list_id):
             )
         }, 200
     except NotExistException as ex:
-        logging.exception(ex)
+        logger.exception(ex)
         return {"erMsg": "The list does not exist in your own list"}, 404
     except Exception as ex:
-        logging.exception(ex)
+        logger.exception(ex)
         return {"erMsg": "Failed to save"}, 500
 
 
@@ -273,7 +276,7 @@ def update_word(word_id):
             new_eng_words = json_data.get("new_eng_words")
             new_eng_words = json.loads(new_eng_words)
         except Exception as ex:
-            logging.exception(ex)
+            logger.exception(ex)
             return {"erMsg": "Cannot read the input data as a json"}, 400
         WordAction.update(
             user_id=current_user.user_id,
@@ -284,13 +287,13 @@ def update_word(word_id):
         )
         return {"message": "The words were updated"}, 200
     except NotExistException as ex:
-        logging.exception(ex)
+        logger.exception(ex)
         return {"erMsg": "The word does not exist"}, 404
     except AlreadyExistException as ex:
-        logging.exception(ex)
+        logger.exception(ex)
         return {"erMsg": "The Vietnamese word already exist in this list"}, 400
     except Exception as ex:
-        logging.exception(ex)
+        logger.exception(ex)
         return {"erMsg": "Failed to update the word"}, 500
 
 
@@ -306,10 +309,10 @@ def delete_word(word_id):
             "message": "The word {} was deleted".format(deleted_word.get("word"))
         }, 200
     except NotExistException as ex:
-        logging.exception(ex)
+        logger.exception(ex)
         return {"erMsg": "The word does not exist"}, 500
     except Exception as ex:
-        logging.exception(ex)
+        logger.exception(ex)
         return {"erMsg": "Failed to delete words"}, 500
 
 
@@ -324,7 +327,7 @@ def check_vocab(viet_id):
         )
         return data, 200
     except Exception as ex:
-        logging.exception(ex)
+        logger.exception(ex)
         return {"erMsg": "Failed to check answers"}, 500
 
 

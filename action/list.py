@@ -1,6 +1,6 @@
 from datetime import datetime
 from model.list import List, ListSchema
-from model.word import Word, WordSchema
+from model.word import Word
 from action.user import UserAction
 from utils.exceptions import (
     NotExistException,

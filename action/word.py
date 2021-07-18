@@ -26,6 +26,9 @@ from constants.action_constants import (
 from main import db
 
 
+logger = logging.getLogger("WordAction")
+
+
 class WordAction:
     @staticmethod
     def get_words_for_a_lesson(user_id, list_id=None, quantity=20) -> list:
@@ -44,7 +47,7 @@ class WordAction:
             # currently just support create a lesson for a list
             viet_words = WordAction.get_all_words()
         if not viet_words:
-            logging.info("No words for a lesson")
+            logger.info("No words for a lesson")
             return []
         random.shuffle(viet_words)
         if quantity < len(viet_words):
@@ -169,7 +172,7 @@ class WordAction:
             vietnamese_id=vietnamese_id, english_id=english_id
         ).first()
         if meaning:
-            logging.info("The meaning exists")
+            logger.info("The meaning exists")
             return True
         meaning = WordMeaning(vietnamese_id=vietnamese_id, english_id=english_id)
         db.session.add(meaning)
@@ -209,7 +212,7 @@ class WordAction:
                     if not WordAction.get_meanings(eng_obj):
                         db.session.delete(eng_obj)
             except Exception as ex:
-                logging.exception(ex)
+                logger.exception(ex)
         # add new meaning
         # remove duplicate eng_words
         eng_words = set(list_new_engs)
