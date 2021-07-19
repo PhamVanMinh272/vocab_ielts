@@ -41,26 +41,6 @@
         </div>
     </div>
     <div class="list-and-sidebar-container">
-        <div class="sidebar-menu">
-            <div class="search-container">
-                <input
-                    id="list-of-word-lists"
-                    placeholder="Search by name of the lists"
-                    list="list-of-lists"
-                    name="list-of-word-lists"
-                    class="input-checkbox"
-                    autocomplete="off"
-                >
-                <datalist id="list-of-lists" class="data-list-list-of-word-lists">
-                    {% for list in lists %}
-                        <option list-id="{{ list.list_id }}" value="{{ list.list_name }}">
-                    {% endfor %}
-                </datalist>
-                <button class="search-btn">
-                    <img src="/static/public/search.svg">
-                </button>
-            </div>
-        </div>
         <div id="lists-container">
             <div id="general-actions-container">
                 <div>
@@ -70,12 +50,29 @@
                     >
                     <button class="create-a-list-btn save-btn-style">Create List</button>
                 </div>
+                <div class="search-container">
+                    <input
+                        id="list-of-word-lists"
+                        placeholder="Search by name of the lists"
+                        list="list-of-lists"
+                        name="list-of-word-lists"
+                        class="input-checkbox"
+                        autocomplete="off"
+                    >
+                    <datalist id="list-of-lists" class="data-list-list-of-word-lists">
+                        {% for list in lists %}
+                            <option list-id="{{ list.list_id }}" value="{{ list.list_name }}">
+                        {% endfor %}
+                    </datalist>
+                    <button class="search-btn">
+                        <img src="/static/public/search.svg">
+                    </button>
+                </div>
             </div>
             <div class="lists-cards-container">
                 <div class="no-data">NO DATA!</div>
             </div>
-        </div>
-        
+        </div>  
     </div>
 {% endblock %}
 {% block script %}

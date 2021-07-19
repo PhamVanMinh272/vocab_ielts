@@ -1,5 +1,5 @@
 .card-of-list {
-    width: 100%;
+    width: calc(100% - 20px);
     height: 80px;
     color: var(--color-black);
     border-radius: 3px;
@@ -12,7 +12,7 @@
 }
 
 .card-of-list:hover {
-    margin-left: 5px;
+    box-shadow: rgba(0, 0, 0, 0.5) 0px 2px 3px;
 }
 
 .card-content {
@@ -107,8 +107,8 @@
     margin: 3px;
     color: white;
     text-align: left;
-    width: 90%;
-    height: 30px;
+    width: 70px;
+    height: 40px;
 }
 
 .list-more-action-dropdown {
