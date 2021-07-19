@@ -5,7 +5,11 @@ from main import app
 from action.list import ListAction
 from action.word import WordAction
 from action.user import UserAction
-from utils.exceptions import InvalidValueException, NotExistException, AlreadyExistException
+from utils.exceptions import (
+    InvalidValueException,
+    NotExistException,
+    AlreadyExistException,
+)
 from utils.utils import rm_redundant_space
 from utils.log_config import logging
 from constants.route_constants import (
@@ -150,9 +154,7 @@ def create_list():
             return {"erMsg": "Cannot read the input data as a json"}, 400
         list_name = rm_redundant_space(data.get("list_name"))
         if not list_name:
-            return {
-                "erMsg": "Your list's name is empty"
-            }, 400
+            return {"erMsg": "Your list's name is empty"}, 400
         new_list = ListAction.create(list_name=list_name, user_id=current_user.user_id)
         return new_list, 200
     except AlreadyExistException as ex:
@@ -332,4 +334,4 @@ def check_vocab(viet_id):
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0')
+    app.run(host="0.0.0.0")

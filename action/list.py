@@ -83,16 +83,12 @@ class ListAction:
             if list_name in list_info["list_name"]:
                 words = Word.query.filter_by(list_id=list_info["list_id"]).all()
                 vietnamese_words_quantity = len(
-                    [
-                        i
-                        for i in words
-                        if i.language_type == VIETNAMESE_LANGUAGE_TYPE
-                    ]
+                    [i for i in words if i.language_type == VIETNAMESE_LANGUAGE_TYPE]
                 )
                 list_info.update(
                     {
                         "num_viets": vietnamese_words_quantity,
-                        "num_engs": len(words) - vietnamese_words_quantity
+                        "num_engs": len(words) - vietnamese_words_quantity,
                     }
                 )
                 data.append(list_info)
@@ -112,7 +108,7 @@ class ListAction:
             list_name=list_name,
             inserted_time=int(datetime.now().timestamp()),
             user_id=user_id,
-            list_type=PRIVATE_LIST_TYPE
+            list_type=PRIVATE_LIST_TYPE,
         )
         db.session.add(new_list_obj)
         db.session.commit()
