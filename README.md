@@ -1,6 +1,8 @@
 # vocab_ielts
 This application will help your learning vocabulary journey.
 
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+
 ## Requirements
 ### List
 Users want to have a list of words. The list have a bunch of words, users can add a Vietnamese word and its meaning. They can update or delete Vietnamese words and its meaning. Show the list of Vietnamese words and its meaning or English words and its Vietnamese meaning are supported too. They can delete their lists of they want, when the list was deleted the words belong to its will be deleted as well.

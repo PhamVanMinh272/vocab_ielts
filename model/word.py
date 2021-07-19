@@ -21,10 +21,16 @@ class Word(db.Model):
 class WordMeaning(db.Model):
     __tablename__ = "word_meaning"
     english_id = db.Column(
-        db.Integer, db.ForeignKey("word.word_id", ondelete="CASCADE"), primary_key=True, nullable=False, 
+        db.Integer,
+        db.ForeignKey("word.word_id", ondelete="CASCADE"),
+        primary_key=True,
+        nullable=False,
     )
     vietnamese_id = db.Column(
-        db.Integer, db.ForeignKey("word.word_id", ondelete="CASCADE"), primary_key=True, nullable=False
+        db.Integer,
+        db.ForeignKey("word.word_id", ondelete="CASCADE"),
+        primary_key=True,
+        nullable=False,
     )
 
     def __repr__(self):

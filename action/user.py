@@ -1,6 +1,10 @@
 import datetime
 from model.user import User, UserSchema
-from utils.exceptions import InvalidValueException, NotExistException, AlreadyExistException
+from utils.exceptions import (
+    InvalidValueException,
+    NotExistException,
+    AlreadyExistException,
+)
 from constants.action_constants import DICTIONARY_TYPE, NORMAL_USER_TYPE
 from main import db, bcrypt
 from flask_login import UserMixin
@@ -20,7 +24,7 @@ class UserAction(UserMixin):
             username=username,
             password=bcrypt.generate_password_hash(password).decode("utf-8"),
             user_type=NORMAL_USER_TYPE,
-            inserted_time=int(datetime.datetime.now().timestamp())
+            inserted_time=int(datetime.datetime.now().timestamp()),
         )
         db.session.add(user)
         db.session.commit()
