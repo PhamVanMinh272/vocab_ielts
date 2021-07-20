@@ -10,9 +10,7 @@ $(function() {
     let listCardsContainer = $(".lists-cards-container")
     let noDataContainer = $(".no-data")
 
-    let listManagementDialogSelector = $("#manage-list-dialog")
-    let currentList = $(".header-content-of-a-list")
-    let defaultEnglishInput = $("#default-eng-word-field")
+    let currentList = null
     let bodyElement = $("body")
 
     let getCurrentListSelector = function() {
@@ -23,16 +21,19 @@ $(function() {
       return {listId: currentList.attr("list-id"), listName: currentList.attr("list-name")}
     }
 
-    let showListDetailsDialog = function() {
-      listManagementDialogSelector.show()
-      defaultEnglishInput.show()
+    let setCurrentList = function(selector) {
+      currentList = selector
     }
 
     // dropdown more actions
+    listCardsContainer.on("click", ".dropdown", function(e) {
+      e.stopPropagation()
+    })
+
     listCardsContainer.on("click", ".list-more-action-dropbtn", function(e) {
       e.stopPropagation()
       $(".list-more-action-dropdown").hide()
-      $(this).next().slideToggle(200)
+      $(this).next().slideToggle(100)
     })
 
     // close dropdown btn
@@ -59,52 +60,59 @@ $(function() {
       $.each(result.lists, function(id, list) {
         listCardsContainer.append(
           `<div class="card-of-list" list-id="${list.list_id}" list-name="${list.list_name}">
-            <div class="card-content">
-                <div id="list-basic-info-container">
-                    <div class="name-of-list text-overflow-dot">${list.list_name}</div>
-                    <div class="property-of-list">
-                        <div>
-                            ${list.num_viets} Vietnamese words
-                        </div>
-                        <div>
-                            ${list.num_engs} English words
-                        </div>
-                    </div>
-                </div>
-                <div id="parts-of-speech-container">
-                    <div class="name-of-list text-overflow-dot">Parts Of Speech</div>
-                    <div class="property-of-list">
-                        <div>
-                            <div>0 Nouns</div>
-                            <div>0 Adjectives</div>
-                        </div>
-                        <div>
-                            <div>0 Verbs</div>
-                            <div>0 Adverbs</div>
-                        </div>
-                    </div>
-                </div>
-                <div id="severity-container">
-                    <div class="name-of-list text-overflow-dot">Status</div>
-                    <div class="property-of-list">
-                        <div>
-                            Completed 50%
-                        </div>
-                    </div>
-                </div>
-                
+            <div class="list-info-container" list-id="${list.list_id}" list-name="${list.list_name}">
+              <div class="card-content">
+                  <div id="list-basic-info-container">
+                      <div class="name-of-list text-overflow-dot">${list.list_name}</div>
+                      <div class="property-of-list">
+                          <div>
+                              ${list.num_viets} Vietnamese words
+                          </div>
+                          <div>
+                              ${list.num_engs} English words
+                          </div>
+                      </div>
+                  </div>
+                  <div id="parts-of-speech-container">
+                      <div class="name-of-list text-overflow-dot">Parts Of Speech</div>
+                      <div class="property-of-list">
+                          <div>
+                              <div>0 Nouns</div>
+                              <div>0 Adjectives</div>
+                          </div>
+                          <div>
+                              <div>0 Verbs</div>
+                              <div>0 Adverbs</div>
+                          </div>
+                      </div>
+                  </div>
+                  <div id="severity-container">
+                      <div class="name-of-list text-overflow-dot">Status</div>
+                      <div class="property-of-list">
+                          <div>
+                              Completed 50%
+                          </div>
+                      </div>
+                  </div>
+                  
+              </div>
+              <div class="card-footer">
+                  <a class="quiz-list-btn" href="/lesson/${list.list_id}">Quiz</a>
+              </div>
+              <div class="dropdown">
+                  <button class="list-more-action-dropbtn"><img src="/static/public/more.png" ></button>
+                  <div class="list-more-action-dropdown dropdown-content">
+                    <button class="delete-list-btn delete-btn-style" list-id="${list.list_id}" list-name="${list.list_name}">Delete</button>
+                  </div>
+              </div>
             </div>
-            <div class="card-footer">
-                <a class="quiz-list-btn" href="/lesson/${list.list_id}">Quiz</a>
+            <div class="list-detail-container">
+              <button class="add-words-action" list-id="${list.list_id}" list-name="${list.list_name}">Add words</button>
+              <div class="no-data">NO DATA!</div>
+              <table class="list-content-table" id="words-table" style="width:100%"></table>
             </div>
-            <div class="dropdown">
-                <button class="list-more-action-dropbtn"><img src="/static/public/more.png" ></button>
-                <div class="list-more-action-dropdown dropdown-content">
-                  <button class="list-details-btn detail-info-btn-style" list-id="${list.list_id}" list-name="${list.list_name}">Details</button>
-                  <button class="delete-list-btn delete-btn-style" list-id="${list.list_id}" list-name="${list.list_name}">Delete</button>
-                </div>
-            </div>
-        </div>`
+        </div>
+        `
         )
       })
     }
@@ -145,10 +153,9 @@ $(function() {
 
     let handleCreateListSuccess = function(result) {
       toastMessage.showMessage(`The list ${result.list_name} was saved successfully`, SUCCESS_MESSAGE_TYPE)
-      showListDetailsDialog()
-      currentList.children("h2").text(result.list_name)
-      currentList.attr("list-id", result.list_id)
-      currentList.attr("list-name", result.list_name)
+      // currentList.attr("list-id", result.list_id)
+      // currentList.attr("list-name", result.list_name)
+      wordComponent.showListDetailsDialog()
       wordComponent.getWords(result.list_id)
       getLists()
     }
@@ -201,14 +208,14 @@ $(function() {
     });
 
     // show list dialog
+    listCardsContainer.on("click", ".card-of-list", function() {
+      setCurrentList($(this))
+    })
 
-    listCardsContainer.on("click", ".list-details-btn", function() {
+    listCardsContainer.on("click", ".list-info-container", function() {
+      let listDetailContainer = $(this).next(".list-detail-container")
+      listDetailContainer.slideToggle(100)
       let listId = $(this).attr("list-id")
-      let listName = $(this).attr("list-name")
-      showListDetailsDialog()
-      currentList.children("h2").text(listName)
-      currentList.attr("list-id", listId)
-      currentList.attr("list-name", listName)
       wordComponent.getWords(listId)
     })
 
@@ -217,12 +224,16 @@ $(function() {
 
     return {
       getCurrentListSelector,
-      getCurrentListInfo
+      getCurrentListInfo,
+      setCurrentList
     }
 
   })()
 
   let wordComponent = (function() {
+    let listCardsContainer = $(".lists-cards-container")
+    let listManagementDialogSelector = $("#manage-list-dialog")
+
     let vietnameseInput = $("input#viet-word")
     let defaultEnglishInput = $("#default-eng-word-field")
     let moreEnglishInputContainer = $(".more-eng-field")
@@ -230,15 +241,17 @@ $(function() {
     let addMoreEnglishInputBtn = $(".add-more-eng-word-field")
     let wordActionBtnContainer = $("#add-update-btn-container")
 
-    let noData = $(".list-content-table-container .no-data")
-    let tableWords = $("#words-table")
-    let tableListDetailSelector = $(".list-content-table")
-
     let clearWordDetailsArea = function() {
       vietnameseInput.val('')
       defaultEnglishInput.show()
       allEnglishInputs.val('')
       moreEnglishInputContainer.html('')
+    }
+
+    let showListActionsDialog = function() {
+      clearWordDetailsArea()
+      $(".header-content-of-a-list").html(`<h2>${listComponent.getCurrentListInfo().listName}</h2>`)
+      listManagementDialogSelector.show()
     }
 
     addMoreEnglishInputBtn.click(function() {
@@ -251,7 +264,9 @@ $(function() {
 
     // get words in a list
 
-    let handleGetWordsSuccess = function(result) {
+    let handleGetWordsSuccess = function(result) { 
+      let tableListDetailSelector = listComponent.getCurrentListSelector().children(".list-detail-container").children(".list-content-table")
+      let noData = tableListDetailSelector.prev()
       if (result.viets.length === 0) {
         noData.show()
         tableListDetailSelector.html("")
@@ -301,40 +316,6 @@ $(function() {
       list.callGetWordsAPI(listId, handleGetWordsSuccess, handleGetWordsFailure)
     }
 
-    // get a word
-    let handleGetWordSuccess = function(result) {
-      clearWordDetailsArea();
-      wordActionBtnContainer.html(
-        `
-          <button id="cancel-update-words-btn" class="cancel-btn-style">Cancel</button>
-          <button id="update-words-btn" class="save-btn-style" viet-id="${result.word_id}">Update</button>
-        `
-      )
-      vietnameseInput.val(result.word)
-      defaultEnglishInput.hide()
-      if (result.eng_words.length>0) {
-        $.each(result.eng_words, function(index, eng) {
-          moreEnglishInputContainer.append(`
-            <div class="field">
-              <input class="eng-word exist-english-meaning" type="text" placeholder="This meaning will be deleted if it is empty" name="eng-word" engId="${eng.word_id}" value="${eng.word}"/><br>
-            </div>
-          `);
-        });
-      }
-    }
-    let handleGetWordFailure = function(error) {
-      if (error.responseJSON) {
-        toastMessage.showMessage(error.responseJSON.erMsg, ERROR_MESSAGE_TYPE)
-      } else {
-        toastMessage.showMessage("Cannot get the Vietnamese word", ERROR_MESSAGE_TYPE)
-      }
-    }
-
-    tableWords.on("click", ".edit-word-btn", function() {
-      let vietId = $(this).attr("viet-id")
-      word.callGetWordAPI(vietId, handleGetWordSuccess, handleGetWordFailure)
-    })
-
     // create word
     let getWordCreationInfo = function() {
       rmInputRedundantSpaces(".viet-word")
@@ -375,6 +356,11 @@ $(function() {
       }
     }
 
+    listCardsContainer.on("click", ".add-words-action", function() {
+      listComponent.setCurrentList($(this).parent().parent())
+      showListActionsDialog()
+    })
+
     $(".add-words-container").on("click", ".create-words-btn", function() {
       let listId = listComponent.getCurrentListSelector().attr("list-id")
       let data = getWordCreationInfo()
@@ -385,6 +371,41 @@ $(function() {
     })
 
     // update word
+    let handleGetWordSuccess = function(result) {
+      clearWordDetailsArea()
+      wordActionBtnContainer.html(
+        `
+          <button id="cancel-update-words-btn" class="cancel-btn-style">Cancel</button>
+          <button id="update-words-btn" class="save-btn-style" viet-id="${result.word_id}">Update</button>
+        `
+      )
+      vietnameseInput.val(result.word)
+      defaultEnglishInput.hide()
+      if (result.eng_words.length>0) {
+        $.each(result.eng_words, function(index, eng) {
+          moreEnglishInputContainer.append(`
+            <div class="field">
+              <input class="eng-word exist-english-meaning" type="text" placeholder="This meaning will be deleted if it is empty" name="eng-word" engId="${eng.word_id}" value="${eng.word}"/><br>
+            </div>
+          `);
+        });
+      }
+    }
+    let handleGetWordFailure = function(error) {
+      if (error.responseJSON) {
+        toastMessage.showMessage(error.responseJSON.erMsg, ERROR_MESSAGE_TYPE)
+      } else {
+        toastMessage.showMessage("Cannot get the Vietnamese word", ERROR_MESSAGE_TYPE)
+      }
+    }
+
+    $(".lists-cards-container").on("click", ".list-content-table .edit-word-btn", function() {
+      let vietId = $(this).attr("viet-id")
+      listComponent.setCurrentList($(this).parents(".card-of-list"))
+      showListActionsDialog()
+      word.callGetWordAPI(vietId, handleGetWordSuccess, handleGetWordFailure)
+    })
+
     let getUpdateWordInfo = function() {
       rmInputRedundantSpaces(".viet-word")
       let vietWord = vietnameseInput.val()
@@ -463,7 +484,7 @@ $(function() {
       }
     }
 
-    tableWords.on("click", ".delete-word-btn", function() {
+    $(".lists-cards-container").on("click", ".list-content-table .delete-word-btn", function() {
       let vietId = $(this).attr("viet-id")
       let vietWord = $(this).attr("viet-word")
       deleteConfirmation.showDeleteConfirmation(
@@ -476,7 +497,8 @@ $(function() {
     })
 
     return {
-      getWords
+      getWords,
+      showListDetailsDialog: showListActionsDialog
     }
 
   })()
