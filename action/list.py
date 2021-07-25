@@ -103,7 +103,7 @@ class ListAction:
             List.query.filter_by(list_name=list_name, user_id=user_id).all()
         )
         if list_objs:
-            raise AlreadyExistException("The list {} already exists")
+            raise AlreadyExistException("The list {} already exists".format(list_name))
         new_list_obj = List(
             list_name=list_name,
             inserted_time=int(datetime.now().timestamp()),
