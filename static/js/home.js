@@ -25,6 +25,10 @@ $(function() {
       currentList = selector
     }
 
+    listCardsContainer.on("click", ".quiz-list-btn", function(e) {
+      e.stopPropagation()
+    })
+
     // dropdown more actions
     listCardsContainer.on("click", ".dropdown", function(e) {
       e.stopPropagation()
@@ -73,28 +77,6 @@ $(function() {
                           </div>
                       </div>
                   </div>
-                  <div id="parts-of-speech-container">
-                      <div class="name-of-list text-overflow-dot">Parts Of Speech</div>
-                      <div class="property-of-list">
-                          <div>
-                              <div>0 Nouns</div>
-                              <div>0 Adjectives</div>
-                          </div>
-                          <div>
-                              <div>0 Verbs</div>
-                              <div>0 Adverbs</div>
-                          </div>
-                      </div>
-                  </div>
-                  <div id="severity-container">
-                      <div class="name-of-list text-overflow-dot">Status</div>
-                      <div class="property-of-list">
-                          <div>
-                              Completed 50%
-                          </div>
-                      </div>
-                  </div>
-                  
               </div>
               <div class="card-footer">
                   <a class="quiz-list-btn" href="/lesson/${list.list_id}">Quiz</a>
@@ -153,10 +135,12 @@ $(function() {
 
     let handleCreateListSuccess = function(result) {
       toastMessage.showMessage(`The list ${result.list_name} was saved successfully`, SUCCESS_MESSAGE_TYPE)
-      // currentList.attr("list-id", result.list_id)
-      // currentList.attr("list-name", result.list_name)
+      setCurrentList($('<div></div>'))
+      currentList.attr("list-id", result.list_id)
+      currentList.attr("list-name", result.list_name)
       wordComponent.showListDetailsDialog()
       wordComponent.getWords(result.list_id)
+      listCreationInput.html("")
       getLists()
     }
 
@@ -254,6 +238,10 @@ $(function() {
       listManagementDialogSelector.show()
     }
 
+    let hideListActionDialog = function() {
+      listManagementDialogSelector.hide()
+    }
+
     addMoreEnglishInputBtn.click(function() {
       moreEnglishInputContainer.append(`
       <div class="field">
@@ -343,6 +331,7 @@ $(function() {
     }
 
     let handleCreateWordSuccess = function(result) {
+      hideListActionDialog()
       getWords(listComponent.getCurrentListInfo().listId)
       toastMessage.showMessage(result.message, SUCCESS_MESSAGE_TYPE)
       clearWordDetailsArea()
@@ -434,8 +423,9 @@ $(function() {
     }
 
     let handleUpdateWordSuccess = function(result) {
+      hideListActionDialog()
       if (result.message) {
-        toastMessage.showMessage(result.message, SUCCESS_MESSAGE_TYPE);
+        toastMessage.showMessage(result.message, SUCCESS_MESSAGE_TYPE)
       } else {
         toastMessage.showMessage("The words was updated", SUCCESS_MESSAGE_TYPE)
       }
@@ -504,3 +494,25 @@ $(function() {
   })()
 
 })
+
+{/* <div id="parts-of-speech-container">
+  <div class="name-of-list text-overflow-dot">Parts Of Speech</div>
+    <div class="property-of-list">
+        <div>
+            <div>0 Nouns</div>
+            <div>0 Adjectives</div>
+        </div>
+        <div>
+            <div>0 Verbs</div>
+            <div>0 Adverbs</div>
+        </div>
+    </div>
+</div>
+<div id="severity-container">
+    <div class="name-of-list text-overflow-dot">Status</div>
+    <div class="property-of-list">
+        <div>
+            Completed 50%
+        </div>
+    </div>
+</div> */}
