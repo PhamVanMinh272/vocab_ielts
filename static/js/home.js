@@ -254,6 +254,10 @@ $(function() {
       listManagementDialogSelector.show()
     }
 
+    let hideListActionDialog = function() {
+      listManagementDialogSelector.hide()
+    }
+
     addMoreEnglishInputBtn.click(function() {
       moreEnglishInputContainer.append(`
       <div class="field">
@@ -343,6 +347,7 @@ $(function() {
     }
 
     let handleCreateWordSuccess = function(result) {
+      hideListActionDialog()
       getWords(listComponent.getCurrentListInfo().listId)
       toastMessage.showMessage(result.message, SUCCESS_MESSAGE_TYPE)
       clearWordDetailsArea()
@@ -434,8 +439,9 @@ $(function() {
     }
 
     let handleUpdateWordSuccess = function(result) {
+      hideListActionDialog()
       if (result.message) {
-        toastMessage.showMessage(result.message, SUCCESS_MESSAGE_TYPE);
+        toastMessage.showMessage(result.message, SUCCESS_MESSAGE_TYPE)
       } else {
         toastMessage.showMessage("The words was updated", SUCCESS_MESSAGE_TYPE)
       }

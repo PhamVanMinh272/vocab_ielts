@@ -208,11 +208,37 @@ class WordAction:
         # update English meaning
         for eng_id, eng_word in list_engs.items():
             try:
-                eng_obj = Word.query.filter_by(word_id=eng_id).first()
-                if not eng_obj:
+                if not WordMeaning.query.filter_by(vietnamese_id=viet_id, english_id=eng_id).first():
+                    logger.error("The English word (id={}) does not belog to the Vietnamese word (id={})".format(eng_id, viet_id))
                     continue
+                eng_obj = Word.query.filter_by(word_id=eng_id).first()
                 if eng_word:
-                    eng_obj.word = eng_word
+                    existed_eng_obj = Word.query.filter_by(
+                        word=eng_word,
+                        list_id=viet_obj.list_id,
+                        language_type=ENGLISH_LANGUAGE_TYPE
+                    ).first()
+                    if eng_obj.word != eng_word and existed_eng_obj:
+                        WordAction.delete_meaning_relationship(viet_id, eng_id)
+                        if not WordAction.get_meanings(eng_obj):
+                            db.session.delete(eng_obj)
+                        WordAction.create_meaning(viet_obj.word_id, existed_eng_obj.word_id)
+                    elif eng_obj.word != eng_word and not existed_eng_obj:
+                        if len(WordAction.get_meanings(eng_obj)) > 1:
+                            # this case to avoid change English meaning of other Vietnamese words
+                            WordAction.delete_meaning_relationship(viet_id, eng_id)
+                            new_english_word = Word(
+                                word=eng_word,
+                                list_id=viet_obj.list_id,
+                                inserted_time=int(datetime.datetime.now().timestamp()),
+                                language_type=ENGLISH_LANGUAGE_TYPE
+                            )
+                            db.session.add(new_english_word)
+                            db.session.commit()
+                            WordAction.create_meaning(viet_obj.word_id, new_english_word.word_id)
+                        else: 
+                            eng_obj.word = eng_word
+                    
                 else:
                     WordAction.delete_meaning_relationship(viet_id, eng_id)
                     if not WordAction.get_meanings(eng_obj):

@@ -3,11 +3,11 @@ from logging import handlers
 
 
 logger = logging.getLogger()
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.WARNING)
 formatter = logging.Formatter("%(levelname)s - %(asctime)s - %(name)s - %(message)s")
 # stream logging
 stream_handler = logging.StreamHandler()
-stream_handler.setLevel(logging.DEBUG)
+stream_handler.setLevel(logging.WARNING)
 stream_handler.setFormatter(formatter)
 logger.addHandler(stream_handler)
 # rotate logging
