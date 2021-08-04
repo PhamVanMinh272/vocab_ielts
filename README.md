@@ -1,5 +1,5 @@
 # vocab_ielts
-This application will help your learning vocabulary journey.
+This application will help you save and get testing your vocabulary.
 
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
